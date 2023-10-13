@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "255036669928",
+    "project_id": "on-demand-7ed55",
+    "storage_bucket": "on-demand-7ed55.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:255036669928:android:420bda792fe01b9c31ee5d",
+        "android_client_info": {
+          "package_name": "com.cube.on_demand"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCKOCE72DztUi1WUuCg2bfyDg8CsbzkcV8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
