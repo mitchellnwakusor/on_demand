@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:on_demand/methods.dart';
+import 'package:on_demand/registration_methods.dart';
 import 'firebase_options.dart';
 
 void main() async {

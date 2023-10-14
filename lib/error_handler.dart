@@ -20,7 +20,7 @@ class ErrorHandler {
         return _errorMessage;
       // Sign in with email errors
       case 'user-not-found':
-        _errorMessage = 'Sorry no account is linked to this user. Create an account first and then log in.';
+        _errorMessage = 'Sorry no account is linked to this user. Create an account first and then try again.';
         return _errorMessage;
       case 'user-disabled':
         _errorMessage = 'Sorry this account has been disabled. Contact support for assistance.';

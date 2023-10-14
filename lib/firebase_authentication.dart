@@ -9,6 +9,10 @@ class FirebaseAuthServices {
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
+  String? get currentUserUID{
+    return _auth.currentUser?.uid;
+  }
+
   int? _forceResendingToken;
   String _verificationId = '';
 
@@ -42,14 +46,16 @@ class FirebaseAuthServices {
     );
   }
 
-  Future<void> verifySMSCode(String smsCode,BuildContext context) async {
+  Future<User?> verifySMSCode(String smsCode,BuildContext context) async {
     try {
       //get credential from verificationId and smsCode then sign in
       PhoneAuthCredential credential = PhoneAuthProvider.credential(verificationId: _verificationId, smsCode: smsCode);
-      await _auth.signInWithCredential(credential);
+      UserCredential userCredential = await _auth.signInWithCredential(credential);
+      return userCredential.user;
     } on FirebaseAuthException catch (exception) {
       //call error handler
       ErrorHandler().authDisplayError(exception, context);
+      return null;
     }
   }
 
