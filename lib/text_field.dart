@@ -4,7 +4,8 @@ import 'package:flutter/services.dart';
 enum TextFieldType {
   name,
   email,
-  phoneNumber,
+  phone,
+  number,
   date,
   password
 }
@@ -129,7 +130,10 @@ class _CustomTextFieldState extends State<CustomTextField> {
   void displayDatePicker() async {
    var date = await showDatePicker(context: context, initialDate: lastDate, firstDate: firstDate, lastDate: lastDate);
    setState(() {
-     widget.controller.text = date.toString();
+     if(date!=null){
+       String formattedDate = '${date.month}/${date.day}/${date.year}';
+       widget.controller.text = formattedDate;
+     }
    });
   }
 
@@ -171,8 +175,8 @@ class _CustomTextFieldState extends State<CustomTextField> {
             border: const OutlineInputBorder(),
           ),
         );
-        //number
-      case TextFieldType.phoneNumber:
+        //phone
+      case TextFieldType.phone:
         return TextFormField(
           controller: widget.controller,
           validator: requiredValidator,
@@ -182,6 +186,23 @@ class _CustomTextFieldState extends State<CustomTextField> {
           textInputAction: TextInputAction.next,
           decoration: InputDecoration(
             prefixText: '+234',
+            labelText: widget.label,
+            hintText: widget.hint,
+            contentPadding: const EdgeInsets.all(16),
+            filled: true,
+            border: const OutlineInputBorder(),
+          ),
+        );
+        //number
+      case TextFieldType.number:
+        return TextFormField(
+          controller: widget.controller,
+          validator: requiredValidator,
+          inputFormatters: phoneFormatter,
+          keyboardType: TextInputType.phone,
+          textCapitalization: TextCapitalization.none,
+          textInputAction: TextInputAction.next,
+          decoration: InputDecoration(
             labelText: widget.label,
             hintText: widget.hint,
             contentPadding: const EdgeInsets.all(16),
@@ -219,7 +240,10 @@ class _CustomTextFieldState extends State<CustomTextField> {
             hintText: widget.hint,
             contentPadding: const EdgeInsets.all(16),
             filled: true,
-            suffixIcon: IconButton(onPressed: displayDatePicker, icon: const Icon(Icons.calendar_today),),
+            suffixIcon: Padding(
+              padding: const EdgeInsets.only(right: 12),
+              child: IconButton(onPressed: displayDatePicker, icon: const Icon(Icons.calendar_month),),
+            ),
             border: const OutlineInputBorder(),
           ),
         );

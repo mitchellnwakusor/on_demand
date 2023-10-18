@@ -63,6 +63,7 @@ class ErrorHandler {
     }
   }
 
+  //error has two overrides, one accepts a method to try-catch, the other accepts an exception to display a dialog
   void authDisplayError(FirebaseAuthException exception, BuildContext context) {
     String errorMessage = _authGetErrorMessage(exception);
 
@@ -74,7 +75,6 @@ class ErrorHandler {
               children: [Text(errorMessage)],
             ));
   }
-
   void authCheckMethod( dynamic Function() method,BuildContext context) {
     try{
       method();

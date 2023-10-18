@@ -6,7 +6,7 @@ import 'package:on_demand/firebase_authentication.dart';
 import 'package:on_demand/error_handler.dart';
 
 class FirestoreCloudServices {
-
+  //Singleton instance
   static FirestoreCloudServices instance = FirestoreCloudServices._init();
   FirestoreCloudServices._init();
 
@@ -22,7 +22,6 @@ class FirestoreCloudServices {
       if(documentPath!=null) {
         Map<String,dynamic> data = {'uid': FirebaseAuthServices.instance.currentUserUID};
         await _firestore.collection(collectionPath).doc(documentPath).set(data);
-
       }
       else {
         ErrorHandler().authDisplayError(FirebaseAuthException(code: 'user-not-found'), context);
