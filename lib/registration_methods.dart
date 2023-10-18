@@ -8,8 +8,8 @@ class HelperMethod {
   static final FirebaseAuthServices _authServices = FirebaseAuthServices.instance;
   static final FirestoreCloudServices _cloudServices = FirestoreCloudServices.instance;
 
- static void registerArtisanPhoneNumber(String phoneNumber,Map<String,dynamic>? data ,BuildContext context) async {
-    await _authServices.phoneNumberSignupWithNavigation(phoneNumber, data, context);
+ static void sendOTPCode(String phoneNumber,Map<String,dynamic>? data ,BuildContext context) async {
+    await _authServices.sendCodeWithNavigation(phoneNumber, data, context);
   }
 
  static void registerArtisanUser(String smsCode,Map<String,dynamic> data,BuildContext context) async{

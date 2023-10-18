@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:on_demand/error_handler.dart';
-import 'package:on_demand/firebase_database.dart';
 
 class FirebaseAuthServices {
   //Singleton instance
@@ -11,6 +10,7 @@ class FirebaseAuthServices {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   int? _resendToken;
   late String _verificationId;
+
 
   registerNumber(String phoneNumber,BuildContext context) async{
     void navigate({required BuildContext context, String? route, Widget? widget}){
@@ -26,6 +26,8 @@ class FirebaseAuthServices {
         throw Exception('both route and widget were passed as arguments, use only one');
       }
     }
+
+
     await _auth.verifyPhoneNumber(
         phoneNumber: '+234$phoneNumber',
         forceResendingToken: _resendToken,
@@ -45,7 +47,7 @@ class FirebaseAuthServices {
     PhoneAuthCredential credential = PhoneAuthProvider.credential(verificationId: verificationId, smsCode: smsCode);
     try{
       UserCredential userCredential = await _auth.signInWithCredential(credential);
-      //assuming one code is shared, login and registration can happen from here but registration data will be passed as an argument
+      //assuming one method is used for both signup and login, login and registration can happen from here but registration data will be passed as an argument
       /*
       AdditionalUserInfo? userInfo = userCredential.additionalUserInfo;
       if(userInfo!=null){
@@ -66,8 +68,6 @@ class FirebaseAuthServices {
       ErrorHandler().authDisplayError(exception, context);
     }
   }
-
-
 
 }
 

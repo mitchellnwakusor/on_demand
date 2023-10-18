@@ -135,7 +135,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => HelperMethod.registerArtisanPhoneNumber(phoneController.text, mapData(), context),
+        onPressed: () => HelperMethod.sendOTPCode(phoneController.text, mapData(), context),
         tooltip: 'Login',
         child: const Icon(Icons.navigate_next),
       ), // This trailing comma makes auto-formatting nicer for build methods.
