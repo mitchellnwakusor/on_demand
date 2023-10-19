@@ -11,7 +11,6 @@ class HelperMethod {
   static final FirestoreCloudServices _cloudServices = FirestoreCloudServices.instance;
 
  static void sendOTPCode(String phoneNumber,Map<String,dynamic>? data ,BuildContext context) async {
-   //check if user exists in db
     await _authServices.sendCodeWithNavigation(phoneNumber, data, context);
   }
 
@@ -46,10 +45,18 @@ class HelperMethod {
 
  }
 
- static test(String phoneNumber) async{
-   bool userExists = await _cloudServices.doesNumberExist(phoneNumber);
-   print(userExists);
- }
+  static void signupWithPhoneNumber(String phoneNumber, BuildContext context) async {
+    Map<String,dynamic>? data;
+    final query =  await FirebaseFirestore.instance
+        .collection('user detail')
+        .where('phone_number', isEqualTo: phoneNumber)
+        .get();
+
+    query.docs.isEmpty == false ?  Fluttertoast.showToast(msg: "phone number is already registered.") : sendOTPCode(phoneNumber,data,context);
+
+  }
+
+
 
 }
 
