@@ -135,7 +135,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => HelperMethod.sendOTPCode(phoneController.text, mapData(), context),
+        onPressed: () => HelperMethod.signupWithPhoneNumber(phoneController.text, context),
         // onPressed: () => HelperMethod.test('8033044118'),
         tooltip: 'Login',
         child: const Icon(Icons.navigate_next),

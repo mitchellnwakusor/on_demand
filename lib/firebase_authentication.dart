@@ -17,7 +17,10 @@ class FirebaseAuthServices {
   int? _forceResendingToken;
   String _verificationId = '';
 
-  Future<void> sendCodeWithNavigation(String phoneNumber,Map<String,dynamic>? data,BuildContext context) async {
+  Future<void> sendCodeWithNavigation(
+      {required String phoneNumber,
+      Map<String, dynamic>? data,
+      required BuildContext context}) async {
     await _auth.verifyPhoneNumber(
       phoneNumber: '+234$phoneNumber',
       forceResendingToken: _forceResendingToken,

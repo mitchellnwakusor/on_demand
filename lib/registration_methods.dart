@@ -10,9 +10,9 @@ class HelperMethod {
   static final FirebaseAuthServices _authServices = FirebaseAuthServices.instance;
   static final FirestoreCloudServices _cloudServices = FirestoreCloudServices.instance;
 
- static void sendOTPCode(String phoneNumber,Map<String,dynamic>? data ,BuildContext context) async {
-   await _authServices.sendCodeWithNavigation(phoneNumber, data, context);
-  }
+ // static void sendOTPCode(String phoneNumber,Map<String,dynamic>? data ,BuildContext context) async {
+ //   await _authServices.sendCodeWithNavigation(phoneNumber, data, context);
+ //  }
 
  static void registerArtisanUser(String smsCode,Map<String,dynamic> data,BuildContext context) async{
     User? user = await _authServices.verifySMSCode(smsCode, context);
@@ -42,16 +42,13 @@ class HelperMethod {
       .get();
 
   if(query.docs.isEmpty==false){
-    Fluttertoast.showToast(msg: "phone number is not Valid.")
+    Fluttertoast.showToast(msg: "phone number is not Valid.");
   }
   else{
     if(context.mounted){
-      _authServices.sendCodeWithNavigation(phoneNumber,data,context);
+      _authServices.sendCodeWithNavigation(phoneNumber:phoneNumber,data:data,context:context);
     }
   }
-
-  // query.docs.isEmpty == false ?  Fluttertoast.showToast(msg: "phone number is not Valid.") : _authServices.sendCodeWithNavigation(phoneNumber,data,context);
-
  }
 
  static void signupWithPhoneNumber(String phoneNumber, BuildContext context) async {
@@ -61,8 +58,14 @@ class HelperMethod {
        .where('phone_number', isEqualTo: phoneNumber)
        .get();
 
-    query.docs.isEmpty == true ?  Fluttertoast.showToast(msg: "phone number is already registered.") : _authServices.sendCodeWithNavigation(phoneNumber,data,context);
-
+   if(query.docs.isEmpty==false){
+     Fluttertoast.showToast(msg: "phone number is already registered.");
+   }
+   else{
+     if(context.mounted){
+       _authServices.sendCodeWithNavigation(phoneNumber:phoneNumber,data: data,context:context);
+     }
+   }
   }
 
 
