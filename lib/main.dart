@@ -80,16 +80,16 @@ class _MyHomePageState extends State<MyHomePage> {
 
 
 
-  // Map<String, dynamic> mapData(){
-  //   Map<String,dynamic> data = {
-  //     'first_name': fNameController.text,
-  //     'last_name': lNameController.text,
-  //     'email': emailController.text,
-  //     'phone_number': phoneController.text,
-  //     'date_of_reg': dateController.text,
-  //   };
-  //   return data;
-  // }
+  Map<String, dynamic> mapData(){
+    Map<String,dynamic> data = {
+      'first_name': fNameController.text,
+      'last_name': lNameController.text,
+      'email': emailController.text,
+      'phone_number': phoneController.text,
+      'date_of_birth': dateController.text,
+    };
+    return data;
+  }
 
 
 
@@ -149,8 +149,21 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => HelperMethod.signupWithPhoneNumber(phoneController.text, context),
-        // onPressed: () => HelperMethod.test('8033044118'),
+        // onPressed: () => HelperMethod.signupWithPhoneNumber(phoneController.text, context),
+        onPressed: () {
+          UserData.instance.setData(mapData());
+          Navigator.push(context, MaterialPageRoute(builder: (_){
+            return Placeholder(
+              child: Center(child: ElevatedButton(
+                onPressed: (){
+                  UserData userData = UserData.instance.getUserData();
+                  print(userData.firName);
+                },
+                child: Text('Click me'),
+              ),),
+            );
+          }));
+        },
         tooltip: 'Login',
         child: const Icon(Icons.navigate_next),
       ), // This trailing comma makes auto-formatting nicer for build methods.

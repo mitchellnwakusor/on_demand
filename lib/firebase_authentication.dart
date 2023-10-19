@@ -9,29 +9,27 @@ class FirebaseAuthServices {
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-
-  String? get currentUserUID{
+  String? get currentUserUID {
     return _auth.currentUser?.uid;
   }
 
   int? _forceResendingToken;
   String _verificationId = '';
 
-  Future<void> sendCodeWithNavigation(
-      {required String phoneNumber,
-      Map<String, dynamic>? data,
-      required BuildContext context}) async {
+  Future<void> sendCodeWithNavigation({required String phoneNumber, Map<String, dynamic>? data, required BuildContext context}) async {
     await _auth.verifyPhoneNumber(
       phoneNumber: '+234$phoneNumber',
       forceResendingToken: _forceResendingToken,
       timeout: const Duration(seconds: 60),
       verificationCompleted: (PhoneAuthCredential credential) async {},
-      verificationFailed: (FirebaseAuthException exception) => ErrorHandler().authDisplayError(exception, context),
+      verificationFailed: (FirebaseAuthException exception) =>
+          ErrorHandler().authDisplayError(exception, context),
       codeSent: (String verificationID, int? forceResendingToken) {
         //navigate to otp input screen (and) set values
         _forceResendingToken = forceResendingToken;
         _verificationId = verificationID;
-        Navigator.push(context, MaterialPageRoute(builder: (BuildContext context){
+        Navigator.push(context,
+            MaterialPageRoute(builder: (BuildContext context) {
           //pass signup data to otp screen
           return const Placeholder();
         }));
@@ -41,11 +39,13 @@ class FirebaseAuthServices {
   }
 
   //verify smsCode
-  Future<User?> verifySMSCode(String smsCode,BuildContext context) async {
+  Future<User?> verifySMSCode(String smsCode, BuildContext context) async {
     try {
       //get credential from verificationId and smsCode then sign in
-      PhoneAuthCredential credential = PhoneAuthProvider.credential(verificationId: _verificationId, smsCode: smsCode);
-      UserCredential userCredential = await _auth.signInWithCredential(credential);
+      PhoneAuthCredential credential = PhoneAuthProvider.credential(
+          verificationId: _verificationId, smsCode: smsCode);
+      UserCredential userCredential =
+          await _auth.signInWithCredential(credential);
       return userCredential.user;
     } on FirebaseAuthException catch (exception) {
       //call error handler
@@ -53,8 +53,4 @@ class FirebaseAuthServices {
       return null;
     }
   }
-
 }
-
-
-
