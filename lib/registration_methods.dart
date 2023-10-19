@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:on_demand/firebase_authentication.dart';
 import 'package:on_demand/firebase_database.dart';
 
@@ -28,6 +30,19 @@ class HelperMethod {
 
  static void dbStoreUserDetail(Map<String,dynamic> data,BuildContext context) async {
    await _cloudServices.createUserDetailDocument(data, context);
+ }
+
+
+
+ static void loginWithPhoneNumber(String phoneNumber, BuildContext context) async {
+   Map<String,dynamic>? data;
+  final query =  await FirebaseFirestore.instance
+      .collection('user detail')
+      .where('phone_number', isEqualTo: phoneNumber)
+      .get();
+
+  query.docs.isEmpty == true ?  Fluttertoast.showToast(msg: "phone number is not Valid.") : sendOTPCode(phoneNumber,data,context);
+
  }
 
 }
