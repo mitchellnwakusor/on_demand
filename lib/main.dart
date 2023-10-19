@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:on_demand/registration_methods.dart';
 import 'package:on_demand/text_field.dart';
+import 'package:on_demand/user_data.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -68,6 +69,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  UserData userData = UserData();
 
   TextEditingController fNameController = TextEditingController();
   TextEditingController lNameController = TextEditingController();
@@ -75,18 +77,30 @@ class _MyHomePageState extends State<MyHomePage> {
   TextEditingController phoneController = TextEditingController();
   TextEditingController dateController = TextEditingController();
 
-  Map<String, dynamic> mapData(){
-    Map<String,dynamic> data = {
-      'first_name': fNameController.text,
-      'last_name': lNameController.text,
-      'email': emailController.text,
-      'phone_number': phoneController.text,
-      'date_of_reg': dateController.text,
-    };
-    return data;
-  }
+
+
+
+  // Map<String, dynamic> mapData(){
+  //   Map<String,dynamic> data = {
+  //     'first_name': fNameController.text,
+  //     'last_name': lNameController.text,
+  //     'email': emailController.text,
+  //     'phone_number': phoneController.text,
+  //     'date_of_reg': dateController.text,
+  //   };
+  //   return data;
+  // }
+
+
+
+
   @override
   Widget build(BuildContext context) {
+    userData.firName = fNameController.text.trim();
+    userData.lastName = lNameController.text.trim();
+    userData.email = emailController.text.trim();
+    userData.phoneNumber = phoneController.text.trim();
+    userData.dateOfBirth = dateController.text.trim();
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //

@@ -49,6 +49,9 @@ class HelperMethod {
       _authServices.sendCodeWithNavigation(phoneNumber:phoneNumber,data:data,context:context);
     }
   }
+
+  // query.docs.isEmpty == false ?  Fluttertoast.showToast(msg: "phone number is not Valid.") : _authServices.sendCodeWithNavigation(phoneNumber,data,context);
+
  }
 
  static void signupWithPhoneNumber(String phoneNumber, BuildContext context) async {
