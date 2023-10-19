@@ -21,6 +21,7 @@ class FirebaseAuthServices {
       {required String phoneNumber,
       Map<String, dynamic>? data,
       required BuildContext context}) async {
+
     await _auth.verifyPhoneNumber(
       phoneNumber: '+234$phoneNumber',
       forceResendingToken: _forceResendingToken,

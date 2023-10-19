@@ -1,17 +1,8 @@
-class UserData{
-  String? firName;
-  String? lastName;
-  String? email;
-  String? phoneNumber;
-  String? dateOfBirth;
+import 'package:flutter/cupertino.dart';
 
-  UserData({
-    this.firName,
-    this.lastName,
-    this.email,
-    this.phoneNumber,
-    this.dateOfBirth
-  });
+class UserData extends ChangeNotifier{
+
+  Map<String, dynamic>? mapData={};
 
 }
 

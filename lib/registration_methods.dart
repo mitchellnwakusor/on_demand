@@ -4,8 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:on_demand/firebase_authentication.dart';
 import 'package:on_demand/firebase_database.dart';
+import 'package:on_demand/user_data.dart';
+import 'package:provider/provider.dart';
 
 class HelperMethod {
+
 
   static final FirebaseAuthServices _authServices = FirebaseAuthServices.instance;
   static final FirestoreCloudServices _cloudServices = FirestoreCloudServices.instance;
@@ -35,6 +38,7 @@ class HelperMethod {
 
 
  static void loginWithPhoneNumber(String phoneNumber, BuildContext context) async {
+
    Map<String,dynamic>? data;
   final query =  await FirebaseFirestore.instance
       .collection('user detail')
@@ -46,6 +50,7 @@ class HelperMethod {
   }
   else{
     if(context.mounted){
+      data = Provider.of<UserData>(context,listen: false).mapData;
       _authServices.sendCodeWithNavigation(phoneNumber:phoneNumber,data:data,context:context);
     }
   }
@@ -55,6 +60,7 @@ class HelperMethod {
  }
 
  static void signupWithPhoneNumber(String phoneNumber, BuildContext context) async {
+
    Map<String,dynamic>? data;
    final query =  await FirebaseFirestore.instance
        .collection('user detail')
@@ -66,12 +72,12 @@ class HelperMethod {
    }
    else{
      if(context.mounted){
+       data = Provider.of<UserData>(context,listen: false).mapData;
        _authServices.sendCodeWithNavigation(phoneNumber:phoneNumber,data: data,context:context);
      }
    }
+
   }
-
-
 
 }
 
