@@ -11,7 +11,7 @@ class HelperMethod {
   static final FirestoreCloudServices _cloudServices = FirestoreCloudServices.instance;
 
  static void sendOTPCode(String phoneNumber,Map<String,dynamic>? data ,BuildContext context) async {
-    await _authServices.sendCodeWithNavigation(phoneNumber, data, context);
+   await _authServices.sendCodeWithNavigation(phoneNumber, data, context);
   }
 
  static void registerArtisanUser(String smsCode,Map<String,dynamic> data,BuildContext context) async{
@@ -41,18 +41,27 @@ class HelperMethod {
       .where('phone_number', isEqualTo: phoneNumber)
       .get();
 
-  query.docs.isEmpty == true ?  Fluttertoast.showToast(msg: "phone number is not Valid.") : sendOTPCode(phoneNumber,data,context);
+  if(query.docs.isEmpty==false){
+    Fluttertoast.showToast(msg: "phone number is not Valid.")
+  }
+  else{
+    if(context.mounted){
+      _authServices.sendCodeWithNavigation(phoneNumber,data,context);
+    }
+  }
+
+  // query.docs.isEmpty == false ?  Fluttertoast.showToast(msg: "phone number is not Valid.") : _authServices.sendCodeWithNavigation(phoneNumber,data,context);
 
  }
 
-  static void signupWithPhoneNumber(String phoneNumber, BuildContext context) async {
-    Map<String,dynamic>? data;
-    final query =  await FirebaseFirestore.instance
-        .collection('user detail')
-        .where('phone_number', isEqualTo: phoneNumber)
-        .get();
+ static void signupWithPhoneNumber(String phoneNumber, BuildContext context) async {
+   Map<String,dynamic>? data;
+   final query =  await FirebaseFirestore.instance
+       .collection('user detail')
+       .where('phone_number', isEqualTo: phoneNumber)
+       .get();
 
-    query.docs.isEmpty == false ?  Fluttertoast.showToast(msg: "phone number is already registered.") : sendOTPCode(phoneNumber,data,context);
+    query.docs.isEmpty == true ?  Fluttertoast.showToast(msg: "phone number is already registered.") : _authServices.sendCodeWithNavigation(phoneNumber,data,context);
 
   }
 
