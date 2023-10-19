@@ -11,6 +11,7 @@ class HelperMethod {
   static final FirestoreCloudServices _cloudServices = FirestoreCloudServices.instance;
 
  static void sendOTPCode(String phoneNumber,Map<String,dynamic>? data ,BuildContext context) async {
+   //check if user exists in db
     await _authServices.sendCodeWithNavigation(phoneNumber, data, context);
   }
 
@@ -43,6 +44,11 @@ class HelperMethod {
 
   query.docs.isEmpty == true ?  Fluttertoast.showToast(msg: "phone number is not Valid.") : sendOTPCode(phoneNumber,data,context);
 
+ }
+
+ static test(String phoneNumber) async{
+   bool userExists = await _cloudServices.doesNumberExist(phoneNumber);
+   print(userExists);
  }
 
 }

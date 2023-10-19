@@ -53,6 +53,22 @@ class FirestoreCloudServices {
         return null;
       }
     }
+
+  //check if user exists in db
+  Future<bool> doesNumberExist(String phoneNumber) async{
+      late bool numberExists;
+      String collectionPath = 'user detail';
+      Query query = _firestore.collection(collectionPath).where('phone_number',whereIn: [phoneNumber]).limit(1);
+      var snapshot = await query.get();
+      if(snapshot.docs.isEmpty){
+        numberExists = false;
+      }
+      else{
+        numberExists = true;
+      }
+      return numberExists;
+  }
+
 }
 
 
