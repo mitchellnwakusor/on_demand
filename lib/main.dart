@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:on_demand/registration_methods.dart';
 import 'package:on_demand/text_field.dart';
-import 'package:on_demand/user_data.dart';
+import 'package:on_demand/user_data.dart' ;
+import 'package:provider/provider.dart';
 import 'firebase_options.dart';
+
+
+
 
 void main() async {
 
@@ -14,7 +17,16 @@ void main() async {
   );
 
   runApp(
-      const MyApp()
+
+    MultiProvider(
+        providers: [
+      Provider.value(value: UserData(),
+      )
+        ],
+      child:const MyApp() ,
+    )
+
+
   );
 }
 
@@ -69,7 +81,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  UserData userData = UserData();
+
 
   TextEditingController fNameController = TextEditingController();
   TextEditingController lNameController = TextEditingController();
@@ -78,29 +90,23 @@ class _MyHomePageState extends State<MyHomePage> {
   TextEditingController dateController = TextEditingController();
 
 
+  void updateUserData() {
 
+      Map<String,dynamic> data = {
+        'first_name': fNameController.text.trim(),
+        'last_name': lNameController.text.trim(),
+        'email': emailController.text.trim(),
+        'phone_number': phoneController.text.trim(),
+        'date_of_reg': dateController.text.trim(),
+      };
+      Provider.of<UserData>(context,listen: false).mapData = data;
 
-  Map<String, dynamic> mapData(){
-    Map<String,dynamic> data = {
-      'first_name': fNameController.text,
-      'last_name': lNameController.text,
-      'email': emailController.text,
-      'phone_number': phoneController.text,
-      'date_of_birth': dateController.text,
-    };
-    return data;
   }
-
-
 
 
   @override
   Widget build(BuildContext context) {
-    userData.firName = fNameController.text.trim();
-    userData.lastName = lNameController.text.trim();
-    userData.email = emailController.text.trim();
-    userData.phoneNumber = phoneController.text.trim();
-    userData.dateOfBirth = dateController.text.trim();
+
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //
@@ -112,7 +118,7 @@ class _MyHomePageState extends State<MyHomePage> {
         // TRY THIS: Try changing the color here to a specific color (to
         // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
         // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        backgroundColor: Theme.of(context,).colorScheme.inversePrimary,
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
@@ -149,24 +155,19 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        // onPressed: () => HelperMethod.signupWithPhoneNumber(phoneController.text, context),
-        onPressed: () {
-          UserData.instance.setData(mapData());
-          Navigator.push(context, MaterialPageRoute(builder: (_){
-            return Placeholder(
-              child: Center(child: ElevatedButton(
-                onPressed: (){
-                  UserData userData = UserData.instance.getUserData();
-                  print(userData.firName);
-                },
-                child: Text('Click me'),
-              ),),
-            );
-          }));
-        },
+        onPressed: ()
+    {
+         setState(() {
+           updateUserData();
+           HelperMethod.signupWithPhoneNumber(phoneController.text, context);
+         });
+         },
+        // onPressed: () => HelperMethod.test('8033044118'),
         tooltip: 'Login',
         child: const Icon(Icons.navigate_next),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
+
+
 }

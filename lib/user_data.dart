@@ -1,31 +1,8 @@
-class UserData{
-  String? firName;
-  String? lastName;
-  String? email;
-  String? phoneNumber;
-  String? dateOfBirth;
+import 'package:flutter/cupertino.dart';
 
-  static UserData instance = UserData._init();
+class UserData extends ChangeNotifier{
 
-  UserData._init();
+  Map<String, dynamic>? mapData={};
 
-  UserData({
-    this.firName,
-    this.lastName,
-    this.email,
-    this.phoneNumber,
-    this.dateOfBirth
-  });
-
-  setData(Map<String,dynamic> data){
-    firName = data['first_name'];
-    lastName = data['last_name'];
-    email = data['email'];
-    phoneNumber = data['phone_number'];
-    dateOfBirth = data['date_of_birth'];
 }
 
-  UserData getUserData(){
-    return UserData.instance;
-  }
-  }
