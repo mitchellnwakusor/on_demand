@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
-import 'package:on_demand/firebase_authentication.dart';
-import 'package:on_demand/error_handler.dart';
+import 'firebase_authentication.dart';
+// import '../1.dart';
+import 'error_handler.dart';
 
 class FirestoreCloudServices {
   //Singleton instance

@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:on_demand/error_handler.dart';
+import 'error_handler.dart';
 
 class FirebaseAuthServices {
   //Singleton instance

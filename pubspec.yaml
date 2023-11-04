@@ -39,7 +39,7 @@ dependencies:
   firebase_auth:
   cloud_firestore:
   provider:
-  fluttertoast: ^8.2.2
+  fluttertoast:
 
 dev_dependencies:
   flutter_test:

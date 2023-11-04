@@ -2,9 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:on_demand/firebase_authentication.dart';
-import 'package:on_demand/firebase_database.dart';
-import 'package:on_demand/user_data.dart';
+import 'firebase_authentication.dart';
+import 'firebase_database.dart';
+import 'user_data.dart';
 import 'package:provider/provider.dart';
 
 class HelperMethod {
