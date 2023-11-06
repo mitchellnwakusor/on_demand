@@ -110,17 +110,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     const SizedBox(
                       height: 8,
                     ),
-                    DropdownButtonFormField(
-                      value: occupationFieldValue,
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder()
-                      ),
-                      hint: const Text('Select Occupation'),
-                      items: dropDownItems(occupationsList),
-                      onChanged: (value) {
-                        occupationFieldValue = value;
-                      },
-                    ),
+                    const SearchField(),
+                    // DropdownButtonFormField(
+                    //   value: occupationFieldValue,
+                    //   decoration: const InputDecoration(
+                    //     border: OutlineInputBorder()
+                    //   ),
+                    //   hint: const Text('Select Occupation'),
+                    //   items: dropDownItems(occupationsList),
+                    //   onChanged: (value) {
+                    //     occupationFieldValue = value;
+                    //   },
+                    // ),
                   ],
                 ),
               ),
@@ -160,3 +161,23 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 }
 
+class SearchField extends StatefulWidget {
+  const SearchField({super.key});
+
+  @override
+  State<SearchField> createState() => _SearchFieldState();
+}
+
+class _SearchFieldState extends State<SearchField> {
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      decoration: const InputDecoration(
+        border: OutlineInputBorder(),
+        prefixIcon: Icon(Icons.search),
+      ),
+      onTap: () => Navigator.pushNamed(context, loginScreen), //Todo Search screen
+      readOnly: true,
+    );
+  }
+}
