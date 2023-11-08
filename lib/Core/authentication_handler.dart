@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:on_demand/Core/local_database.dart';
-import 'package:sqflite/sqflite.dart';
 import '../UI/Screens/start_screen.dart';
 import 'authentication.dart';
 
@@ -12,22 +10,6 @@ class AuthenticationHandler extends StatefulWidget {
 }
 
 class _AuthenticationHandlerState extends State<AuthenticationHandler> {
-  //ideally set database using provider
-  Database? _database;
-  void initDatabase() async{
-    _database = await LocalDatabase.instance.database;
-    var query = await _database?.query('occupation',columns: ['name'],where: 'name = ?',whereArgs: ['']);
-
-    query?.forEach((element) {
-      print(element);
-    });
-  }
-  @override
-  void initState() {
-    // init database
-    initDatabase();
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {

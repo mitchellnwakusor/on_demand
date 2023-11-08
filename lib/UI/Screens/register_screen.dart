@@ -16,8 +16,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   TextEditingController fNameField = TextEditingController();
   TextEditingController lNameField = TextEditingController();
+  TextEditingController emailField = TextEditingController();
   TextEditingController phoneField = TextEditingController();
-  Object? occupationFieldValue;
+  String? occupationFieldValue;
   bool isChecked = false;
 
   //Map or list of occupations
@@ -99,6 +100,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       height: 24,
                     ),
                     CustomTextField(
+                      controller: emailField,
+                      type: TextFieldType.email,
+                      label: 'Email',
+                    ),
+                    const SizedBox(
+                      height: 24,
+                    ),
+                    CustomTextField(
                       controller: phoneField,
                       type: TextFieldType.phone,
                       label: 'Phone number',
@@ -110,7 +119,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     const SizedBox(
                       height: 8,
                     ),
-                    const SearchField(),
+                    const OccupationSearchField(),
                     // DropdownButtonFormField(
                     //   value: occupationFieldValue,
                     //   decoration: const InputDecoration(
@@ -161,22 +170,58 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 }
 
-class SearchField extends StatefulWidget {
-  const SearchField({super.key});
+class OccupationSearchField extends StatefulWidget {
+  const OccupationSearchField({super.key,});
 
   @override
-  State<SearchField> createState() => _SearchFieldState();
+  State<OccupationSearchField> createState() => _OccupationSearchFieldState();
 }
 
-class _SearchFieldState extends State<SearchField> {
+class _OccupationSearchFieldState extends State<OccupationSearchField> {
+
+  late TextEditingController occupationFieldController;
+  late FocusNode occupationFieldFocusNode;
+  String? occupationValue;
+
+  @override
+  void initState() {
+    occupationFieldController = TextEditingController();
+    occupationFieldFocusNode = FocusNode();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    occupationFieldController.dispose();
+    occupationFieldFocusNode.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      controller: occupationFieldController,
+      focusNode: occupationFieldFocusNode,
+      enableSuggestions: true,
       decoration: const InputDecoration(
         border: OutlineInputBorder(),
         prefixIcon: Icon(Icons.search),
       ),
-      onTap: () => Navigator.pushNamed(context, loginScreen), //Todo Search screen
+      onTap: () async {
+        // *** disable all cases of focus on tap and after selection
+        FocusScopeNode currentFocus = FocusScope.of(context);
+        if(currentFocus.hasPrimaryFocus){
+          FocusManager.instance.primaryFocus?.unfocus();
+        }
+          currentFocus.unfocus();
+          occupationFieldFocusNode.unfocus();
+        var value = await Navigator.pushNamed(context, searchScreen);
+        if(value!=null){
+          occupationValue = value as String;
+          occupationFieldController.text = occupationValue!;
+        }
+        //Todo: store value with provider
+      },
       readOnly: true,
     );
   }

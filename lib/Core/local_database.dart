@@ -11,7 +11,10 @@ class LocalDatabase {
   LocalDatabase._init();
 
   final _databaseRef = 'config.db';
+
   static Database? _database;
+
+  //database init
   Future<Database> get database async {
     if(_database!=null) return _database!;
 
@@ -19,7 +22,7 @@ class LocalDatabase {
     return _database!;
   }
 
-
+  //init method
   Future<Database?> _initializeDatabase() async {
     //locally scoped database reference
     Database? db;
@@ -48,6 +51,7 @@ class LocalDatabase {
     return db;
   }
 
+  //extracted init methods
   Future<String> _getLocalDatabasePath() async {
     late String localDatabasePath;
     if (Platform.isAndroid) {
