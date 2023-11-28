@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../UI/Screens/start_screen.dart';
-import 'authentication.dart';
+import '../UI/Screens/account_selection_screen.dart';
+import '../Services/authentication.dart';
 
 class AuthenticationHandler extends StatefulWidget {
   const AuthenticationHandler({super.key});
@@ -27,7 +27,7 @@ class _AuthenticationHandlerState extends State<AuthenticationHandler> {
             screen = const Placeholder(child: Text('Home Screen'));
             return screen;
           case false:
-            screen = const StartScreen();
+            screen = const AccountSelectionScreen();
             return screen;
         }
       },

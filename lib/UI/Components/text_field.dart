@@ -96,6 +96,7 @@ final List<TextInputFormatter> _emailFormatter = [
 ];
 final List<TextInputFormatter> _phoneFormatter = [
   FilteringTextInputFormatter.digitsOnly,
+  LengthLimitingTextInputFormatter(10)
 ];
 
 
@@ -119,7 +120,7 @@ class CustomTextField extends StatefulWidget {
 
 class _CustomTextFieldState extends State<CustomTextField> {
 
-  bool isVisible = false;
+  bool isVisible = true;
   DateTime firstDate = DateTime(1900,1,1);
   DateTime lastDate = DateTime.now();
   void toggleVisibility() {
@@ -139,7 +140,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
 
   @override
   Widget build(BuildContext context) {
-
+    //no label
    if(widget.label==null){
      switch (widget.type) {
      //name
@@ -262,6 +263,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
              TextFormField(
                controller: widget.controller,
                validator: _requiredValidator,
+               autovalidateMode: AutovalidateMode.onUserInteraction,
                inputFormatters: _nameFormatter,
                keyboardType: TextInputType.name,
                textCapitalization: TextCapitalization.none,
@@ -286,12 +288,14 @@ class _CustomTextFieldState extends State<CustomTextField> {
              TextFormField(
                controller: widget.controller,
                validator: _emailValidator,
+               autovalidateMode: AutovalidateMode.onUserInteraction,
                inputFormatters: _emailFormatter,
                keyboardType: TextInputType.emailAddress,
                textCapitalization: TextCapitalization.none,
                textInputAction: TextInputAction.next,
                decoration: InputDecoration(
                  // labelText: widget.label,
+                 errorMaxLines: 2,
                  hintText: widget.hint,
                  contentPadding: const EdgeInsets.all(16),
                  filled: true,
@@ -310,6 +314,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
              TextFormField(
                controller: widget.controller,
                validator: _requiredValidator,
+               autovalidateMode: AutovalidateMode.onUserInteraction,
                inputFormatters: _phoneFormatter,
                keyboardType: TextInputType.phone,
                textCapitalization: TextCapitalization.none,
@@ -383,6 +388,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
              TextFormField(
                controller: widget.controller,
                validator: _dateOfBirthValidator,
+               autovalidateMode: AutovalidateMode.onUserInteraction,
                inputFormatters: _dateFormatter,
                keyboardType: TextInputType.datetime,
                textInputAction: TextInputAction.next,

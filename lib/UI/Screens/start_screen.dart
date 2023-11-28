@@ -1,31 +1,33 @@
 import 'package:flutter/material.dart';
-import 'package:on_demand/Utilities/constants.dart';
-import 'package:on_demand/Core/routes.dart';
+
+import '../../Core/routes.dart';
+import '../../Utilities/constants.dart';
 
 class StartScreen extends StatelessWidget {
-  static const id = 'start_screen';
   const StartScreen({super.key});
+  static const id = 'account_option_screen';
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: kMobileBodyPadding,
-          child: Column(
-            children: [
-              Expanded(flex: 2, child: OnboardingPanel()),
-              Spacer(),
-              Expanded(child: CTAButtons()),
-            ],
-          ),
+    return Scaffold(
+    appBar: AppBar(),
+    body: const SafeArea(
+      child: Padding(
+        padding: kMobileBodyPadding,
+        child: Column(
+          children: [
+            Expanded(flex: 2, child: OnboardingPanel()),
+            SizedBox(
+              height: 48,
+            ),
+            Expanded(child: CTAButtons()),
+          ],
         ),
       ),
+    ),
     );
+  }
 }
-}
-
-//** Custom Widgets **//
 
 class OnboardingPanel extends StatelessWidget {
   const OnboardingPanel({super.key});
@@ -51,20 +53,24 @@ class CTAButtons extends StatelessWidget {
     String firstButtonLabel = 'Register';
     String secondButtonLabel = 'Login';
 
-    navigateTo(String route) {
-      Navigator.pushNamed(context,route);
+    navigateTo({required String route}) {
+      Navigator.pushNamed(context, route);
     }
+
     return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.stretch,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        ElevatedButton(onPressed: () => navigateTo(registerScreen), child: Text(firstButtonLabel)),
-        const SizedBox(height: 48),
-        OutlinedButton(onPressed: () => navigateTo(loginScreen), child: Text(secondButtonLabel)),
-        const SizedBox(height: 48),
+        ElevatedButton(
+            onPressed: () => navigateTo(route: registerScreen,),
+            child: Text(firstButtonLabel)),
+        const SizedBox(
+          height: 48,
+        ),
+        OutlinedButton(
+            onPressed: () => navigateTo(route: loginScreen,),
+            child: Text(secondButtonLabel))
       ],
     );
   }
 }
-
-

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:on_demand/Core/local_database.dart';
+import 'package:on_demand/Services/local_database.dart';
 import 'package:on_demand/Utilities/constants.dart';
 
 class SearchScreen extends StatefulWidget {
@@ -69,7 +69,13 @@ class _SearchScreenState extends State<SearchScreen> {
               onChanged: (value){
                 searchForOccupation(value);
               },
-
+              onEditingComplete: (){
+                // on input - done select first item in search result if not empty
+                if(searchController.text.length >1 && searchResults.isNotEmpty){
+                  selectedOccupation = searchResults.first;
+                  Navigator.pop(context,selectedOccupation);
+                }
+              },
             ),
             Expanded(
               child: ListView.separated(
@@ -77,7 +83,10 @@ class _SearchScreenState extends State<SearchScreen> {
                     return ListTile(
                     style: ListTileStyle.list,
                     title: Text(searchResults[index]),
-                    onTap: ()=> Navigator.pop(context,searchResults[index]), // pop screen and return search result
+                    onTap: () {
+                      selectedOccupation = searchResults[index];
+                      Navigator.pop(context,selectedOccupation);
+                    } // pop screen and return search result
                   );
                   },
                   separatorBuilder: (BuildContext _,int index) => const Divider(color: Colors.black87,height: 8,),

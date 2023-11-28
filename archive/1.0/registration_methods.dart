@@ -62,10 +62,7 @@ class HelperMethod {
  static void signupWithPhoneNumber(String phoneNumber, BuildContext context) async {
 
    Map<String,dynamic>? data;
-   final query =  await FirebaseFirestore.instance
-       .collection('user detail')
-       .where('phone_number', isEqualTo: phoneNumber)
-       .get();
+   final query =  await FirebaseFirestore.instance.collection('user detail').where('phone_number', isEqualTo: phoneNumber).get();
 
    if(query.docs.isEmpty==false){
      Fluttertoast.showToast(msg: "phone number is already registered.");
