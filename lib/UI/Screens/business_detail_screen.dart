@@ -30,7 +30,7 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
   void _saveDetails() async {
     if(formKey.currentState!.validate()){
           Provider.of<SignupProvider>(context,listen: false).addData(key: 'plan', value: planFieldValue!);
-          //Todo call code sent
+          //Todo: change route
           Navigator.pushNamed(context, otpVerificationScreen);
     }
   }

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class FirebaseDatabase {
+
  static Future<bool> userExists(String phoneNumber,String emailAddress) async{
     var email = await _doesEmailExist(emailAddress);
     var phone = await _doesNumberExist(phoneNumber);

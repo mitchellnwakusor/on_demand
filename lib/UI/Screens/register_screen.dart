@@ -35,6 +35,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         //save data
         if(context.mounted){
           Provider.of<SignupProvider>(context,listen: false).addMultipleData(firstName: fNameField.text, lastName: lNameField.text, email: emailField.text, phoneNumber: phoneField.text,);
+          //Todo: code sent
           Navigator.pushNamed(context, businessDetailScreen);
         }
       }
