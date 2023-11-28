@@ -5,7 +5,7 @@ import '../../Utilities/constants.dart';
 
 class StartScreen extends StatelessWidget {
   const StartScreen({super.key});
-  static const id = 'account_option_screen';
+  static const id = 'start_screen';
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +29,7 @@ class StartScreen extends StatelessWidget {
   }
 }
 
+//** Custom Widgets **//
 class OnboardingPanel extends StatelessWidget {
   const OnboardingPanel({super.key});
 

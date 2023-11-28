@@ -4,7 +4,7 @@ class StartScreenProvider {
   late UserType? _userType;
   get userType => _userType;
 
-  void selectUserType(UserType type) {
+  void saveUserType(UserType type) {
     _userType = type;
   }
 

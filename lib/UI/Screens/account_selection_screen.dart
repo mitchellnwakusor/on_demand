@@ -5,7 +5,7 @@ import 'package:on_demand/Core/routes.dart';
 import 'package:provider/provider.dart';
 
 class AccountSelectionScreen extends StatelessWidget {
-  static const id = 'start_screen';
+  static const id = 'account_selection_screen';
   const AccountSelectionScreen({super.key});
 
   @override
@@ -59,7 +59,7 @@ class CTAButtons extends StatelessWidget {
     String secondButtonHint = 'Find Service providers';
 
     navigateTo({required String route, Object? arguments}) {
-      Provider.of<StartScreenProvider>(context,listen: false).selectUserType(arguments as UserType);
+      Provider.of<StartScreenProvider>(context,listen: false).saveUserType(arguments as UserType);
       Navigator.pushNamed(context, route);
     }
 

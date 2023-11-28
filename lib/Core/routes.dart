@@ -9,6 +9,7 @@ import 'authentication_handler.dart';
 import '../UI/Screens/login_screen.dart';
 import '../UI/Screens/register_screen.dart';
 
+//Material navigator routes
 Route<dynamic>? generateRoute (RouteSettings settings) {
   switch(settings.name){
     case StartScreen.id:
@@ -30,6 +31,7 @@ Route<dynamic>? generateRoute (RouteSettings settings) {
   }
 }
 
+//String literal references to route
 String startScreen = StartScreen.id;
 String registerScreen = RegisterScreen.id;
 String loginScreen = LoginScreen.id;
