@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:on_demand/UI/Screens/reset_password.dart';
 import 'package:on_demand/UI/Screens/start_screen.dart';
 import 'package:on_demand/UI/Screens/business_detail_screen.dart';
 import 'package:on_demand/UI/Screens/document_upload_screen.dart';
@@ -16,6 +17,8 @@ Route<dynamic>? generateRoute (RouteSettings settings) {
       return MaterialPageRoute(builder: (_)=> const StartScreen(),settings: settings);
     case RegisterScreen.id:
       return MaterialPageRoute(builder: (_)=> const RegisterScreen(),settings: settings);
+    case ResetPasswordScreen.id:
+      return MaterialPageRoute(builder: (_)=> const ResetPasswordScreen(),settings: settings);
     case LoginScreen.id:
       return MaterialPageRoute(builder: (_)=> const LoginScreen(),settings: settings);
     case SearchScreen.id:
@@ -34,6 +37,7 @@ Route<dynamic>? generateRoute (RouteSettings settings) {
 //String literal references to route
 String startScreen = StartScreen.id;
 String registerScreen = RegisterScreen.id;
+String resetPasswordScreen = ResetPasswordScreen.id;
 String loginScreen = LoginScreen.id;
 String searchScreen = SearchScreen.id;
 String otpVerificationScreen = OTPVerificationScreen.id;

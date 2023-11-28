@@ -1,35 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:on_demand/Utilities/constants.dart';
-import 'package:on_demand/Core/routes.dart';
 import 'package:on_demand/UI/Components/text_field.dart';
 
-class LoginScreen extends StatefulWidget {
-  static const id = 'login_screen';
-  const LoginScreen({super.key});
+class ResetPasswordScreen extends StatefulWidget {
+  static const id = 'reset_password_screen';
+  const ResetPasswordScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<ResetPasswordScreen> createState() => _ResetPasswordScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  TextEditingController phoneField = TextEditingController();
   TextEditingController emailField = TextEditingController();
-  TextEditingController passwordField = TextEditingController();
-  bool isEmailPasswordSignIn = true;
-
-  void toggleSignInMethod () {
-    setState(() {
-      isEmailPasswordSignIn = !isEmailPasswordSignIn;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
+        automaticallyImplyLeading: true,
         elevation: 0,
         // title: const Text('Create an account'),
         bottom: PreferredSize(
@@ -38,21 +28,12 @@ class _LoginScreenState extends State<LoginScreen> {
                 padding: kMobileBodyPadding,
                 alignment: Alignment.topLeft,
                 child: const Text(
-                  'Welcome back, ',
+                  'Reset password',
                   textAlign: TextAlign.start,
                   style: TextStyle(
                     fontSize: 24,
                   ),
                 ))),
-        actions: [
-          TextButton(
-            onPressed: () =>
-                Navigator.pushReplacementNamed(context, registerScreen),
-            child: const Text(
-              'Register',
-            ),
-          ),
-        ],
       ),
       body: Padding(
         padding: kMobileBodyPadding,
@@ -62,16 +43,12 @@ class _LoginScreenState extends State<LoginScreen> {
             children: [
               Form(
                 key: formKey,
-                child: isEmailPasswordSignIn
-                    ? EmailPasswordSignIn(
-                        emailField: emailField, passwordField: passwordField,toggleSignInMethodCallback: toggleSignInMethod,)
-                    : PhoneSignIn(phoneField: phoneField,toggleSignInMethodCallback: toggleSignInMethod,),
+                child: CustomTextField(controller: emailField,label: 'Email address', type: TextFieldType.email,)
               ),
               const SizedBox(
                 height: 48,
               ),
-              ElevatedButton(onPressed: () {}, child: const Text('Continue')),
-              const ThirdPartyCredentials(),
+              ElevatedButton(onPressed: () {}, child: const Text('Continue')), //Todo: Reset password functionality
             ],
           ),
         ),
@@ -122,9 +99,7 @@ class EmailPasswordSignIn extends StatelessWidget {
           children: [
             TextButton(onPressed: toggleSignInMethodCallback, child: const Text('Use phone number')),
             TextButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, resetPasswordScreen);
-                }, child: const Text('Trouble logging in?')),
+                onPressed: () {}, child: const Text('Trouble logging in?')),
           ],
         )
       ],
@@ -166,60 +141,5 @@ class PhoneSignIn extends StatelessWidget {
 }
 
 //** Custom Widgets **//
-class ThirdPartyCredentials extends StatelessWidget {
-  const ThirdPartyCredentials({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        // const Column(
-        //   children: [
-        //     Divider(height: 48,indent: 16,endIndent: 16,thickness: 1,),
-        //     Text('OR',textAlign: TextAlign.center,),
-        //   ],
-        // ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            const SizedBox(
-              height: 24,
-            ),
-            Row(
-              children: [
-                Expanded(
-                    flex: 2,
-                    child: Container(
-                      height: 1,
-                      color: Colors.black45,
-                    )),
-                const Expanded(
-                    child: Text(
-                  'OR',
-                  textAlign: TextAlign.center,
-                )),
-                Expanded(
-                    flex: 2,
-                    child: Container(
-                      height: 1,
-                      color: Colors.black45,
-                    )),
-              ],
-            ),
-            const SizedBox(
-              height: 24,
-            ),
-            OutlinedButton(
-                onPressed: () {}, child: const Text('Continue with Google')),
-            const SizedBox(
-              height: 16,
-            ),
-            OutlinedButton(
-                onPressed: () {}, child: const Text('Continue with Facebook')),
-          ],
-        ),
-      ],
-    );
-  }
-}
 

@@ -30,17 +30,23 @@ class _RegisterScreenState extends State<RegisterScreen> {
   void _saveDetails() async {
     if(formKey.currentState!.validate()){
       //Todo internet connection check
-      bool doesUserExists = await FirebaseDatabase.userExists(phoneField.text, emailField.text);
-      if(!doesUserExists){
-        //save data
-        if(context.mounted){
-          Provider.of<SignupProvider>(context,listen: false).addMultipleData(firstName: fNameField.text, lastName: lNameField.text, email: emailField.text, phoneNumber: phoneField.text,);
-          //Todo: code sent
-          Navigator.pushNamed(context, businessDetailScreen);
+      try {
+        bool doesUserExists = await FirebaseDatabase.userExists(phoneField.text, emailField.text).timeout(const Duration(seconds: 5));
+        if(!doesUserExists){
+          //save data
+          if(context.mounted){
+            Provider.of<SignupProvider>(context,listen: false).addMultipleData(firstName: fNameField.text, lastName: lNameField.text, email: emailField.text, phoneNumber: phoneField.text,);
+            //Todo: code sent
+            Navigator.pushNamed(context, businessDetailScreen);
+          }
         }
-      }
-      else{
-        Fluttertoast.showToast(msg: "phone number or email address is already in use.");
+        else{
+          Fluttertoast.showToast(msg: "phone number or email address is already in use.");
+        }
+      } on Exception {
+        // TODO
+        Fluttertoast.showToast(msg: "No internet connection, please try again.");
+
       }
     }
   }
@@ -161,6 +167,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 }
 
+//** Custom Widgets **//
 class ThirdPartyCredentials extends StatelessWidget {
   const ThirdPartyCredentials({super.key});
 
