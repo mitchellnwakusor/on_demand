@@ -37,6 +37,11 @@ dependencies:
   cupertino_icons:
   firebase_core:
   firebase_auth:
+  firebase_ui_auth:
+  google_sign_in:
+  firebase_ui_oauth_google:
+  flutter_facebook_auth:
+  firebase_ui_oauth_facebook:
   cloud_firestore:
   provider:
   fluttertoast:

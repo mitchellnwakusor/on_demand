@@ -1,3 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_ui_auth/firebase_ui_auth.dart';
+import 'package:firebase_ui_oauth_facebook/firebase_ui_oauth_facebook.dart';
+import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:on_demand/Services/firebase_database.dart';
@@ -8,6 +12,9 @@ import 'package:on_demand/UI/Components/text_field.dart';
 import 'package:provider/provider.dart';
 
 import '../../Services/providers/signup_provider.dart';
+import '../Components/oauth_divider.dart';
+import '../Components/terms_conditions.dart';
+
 
 class RegisterScreen extends StatefulWidget {
   static const id = 'register_screen';
@@ -18,47 +25,6 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-
-  GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  TextEditingController fNameField = TextEditingController();
-  TextEditingController lNameField = TextEditingController();
-  TextEditingController emailField = TextEditingController();
-  TextEditingController phoneField = TextEditingController();
-  TextEditingController passwordField = TextEditingController();
-
-
-  void _saveDetails() async {
-    if(formKey.currentState!.validate()){
-      //Todo internet connection check
-      try {
-        bool doesUserExists = await FirebaseDatabase.userExists(phoneField.text, emailField.text).timeout(const Duration(seconds: 5));
-        if(!doesUserExists){
-          //save data
-          if(context.mounted){
-            Provider.of<SignupProvider>(context,listen: false).addMultipleData(firstName: fNameField.text, lastName: lNameField.text, email: emailField.text, phoneNumber: phoneField.text,);
-            //Todo: code sent
-            Navigator.pushNamed(context, businessDetailScreen);
-          }
-        }
-        else{
-          Fluttertoast.showToast(msg: "phone number or email address is already in use.");
-        }
-      } on Exception {
-        // TODO
-        Fluttertoast.showToast(msg: "No internet connection, please try again.");
-
-      }
-    }
-  }
-
-  @override
-  void dispose() {
-    fNameField.dispose();
-    lNameField.dispose();
-    emailField.dispose();
-    phoneField.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -87,119 +53,290 @@ class _RegisterScreenState extends State<RegisterScreen> {
           ),
         ],
       ),
-      body: Padding(
-        padding: kMobileBodyPadding,
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Form(
-                key: formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    CustomTextField(
-                      controller: fNameField,
-                      type: TextFieldType.name,
-                      label: 'First name',
-                    ),
-                    const SizedBox(
-                      height: 24,
-                    ),
-                    CustomTextField(
-                      controller: lNameField,
-                      type: TextFieldType.name,
-                      label: 'Last name',
-                    ),
-                    const SizedBox(
-                      height: 24,
-                    ),
-                    CustomTextField(
-                      controller: emailField,
-                      type: TextFieldType.email,
-                      label: 'Email',
-                    ),
-                    const SizedBox(
-                      height: 24,
-                    ),
-                    CustomTextField(
-                      controller: phoneField,
-                      type: TextFieldType.phone,
-                      label: 'Phone number',
-                    ),
-                    const SizedBox(
-                      height: 24,
-                    ),
-                    CustomTextField(
-                      controller: passwordField,
-                      type: TextFieldType.password,
-                      label: 'Password',
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 48,),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ElevatedButton(
-                    onPressed: _saveDetails, child: const Text('Continue'),),
-                  // const SizedBox(
-                  //   height: 24,
-                  // ),
-                  const ThirdPartyCredentials(),
-                ],
-              ),
-              const SizedBox(height: 48,),
-              RichText(selectionColor: Colors.purple,text: const TextSpan(children: [
-                TextSpan(text: 'By creating an account you agree to our ',style: TextStyle(color: Colors.black)),
-                TextSpan(text: 'Terms & Conditions ',style: TextStyle(decoration: TextDecoration.underline,color: Colors.purple)),
-                TextSpan(text: 'and our ',style: TextStyle(color: Colors.black)),
-                TextSpan(text: 'Privacy Policy. ',style: TextStyle(decoration: TextDecoration.underline,color: Colors.purple)),
-              ])),
+      body: const RegisterView(),
+      // Padding(
+      //   padding: kMobileBodyPadding,
+      //   child: SingleChildScrollView(
+      //     child: Column(
+      //       crossAxisAlignment: CrossAxisAlignment.stretch,
+      //       children: [
+      //         Form(
+      //           key: formKey,
+      //           child: Column(
+      //             crossAxisAlignment: CrossAxisAlignment.start,
+      //             children: [
+      //               CustomTextField(
+      //                 controller: fNameField,
+      //                 type: TextFieldType.name,
+      //                 label: 'First name',
+      //               ),
+      //               const SizedBox(
+      //                 height: 24,
+      //               ),
+      //               CustomTextField(
+      //                 controller: lNameField,
+      //                 type: TextFieldType.name,
+      //                 label: 'Last name',
+      //               ),
+      //               const SizedBox(
+      //                 height: 24,
+      //               ),
+      //               CustomTextField(
+      //                 controller: emailField,
+      //                 type: TextFieldType.email,
+      //                 label: 'Email',
+      //               ),
+      //               const SizedBox(
+      //                 height: 24,
+      //               ),
+      //               CustomTextField(
+      //                 controller: phoneField,
+      //                 type: TextFieldType.phone,
+      //                 label: 'Phone number',
+      //               ),
+      //               const SizedBox(
+      //                 height: 24,
+      //               ),
+      //               CustomTextField(
+      //                 controller: passwordField,
+      //                 type: TextFieldType.password,
+      //                 label: 'Password',
+      //               ),
+      //             ],
+      //           ),
+      //         ),
+      //         const SizedBox(height: 48,),
+      //         Column(
+      //           crossAxisAlignment: CrossAxisAlignment.stretch,
+      //           mainAxisAlignment: MainAxisAlignment.center,
+      //           children: [
+      //             ElevatedButton(
+      //               onPressed: _saveDetails, child: const Text('Continue'),),
+      //             // const SizedBox(
+      //             //   height: 24,
+      //             // ),
+      //             const ThirdPartyCredentials(),
+      //           ],
+      //         ),
+      //         const SizedBox(height: 48,),
+      //         RichText(selectionColor: Colors.purple,text: const TextSpan(children: [
+      //           TextSpan(text: 'By creating an account you agree to our ',style: TextStyle(color: Colors.black)),
+      //           TextSpan(text: 'Terms & Conditions ',style: TextStyle(decoration: TextDecoration.underline,color: Colors.purple)),
+      //           TextSpan(text: 'and our ',style: TextStyle(color: Colors.black)),
+      //           TextSpan(text: 'Privacy Policy. ',style: TextStyle(decoration: TextDecoration.underline,color: Colors.purple)),
+      //         ])),
+      //
+      //       ],
+      //     ),
+      //   ),
+      // ),
+      
 
-            ],
-          ),
-        ),
-      ),
+      // const MyCustomWidget(),
+
     );
   }
 }
 
 //** Custom Widgets **//
-class ThirdPartyCredentials extends StatelessWidget {
-  const ThirdPartyCredentials({super.key});
+class RegisterScreenForm extends StatefulWidget {
+  const RegisterScreenForm({super.key,required this.ctrl});
+  final PhoneAuthController ctrl;
+  @override
+  State<RegisterScreenForm> createState() => _RegisterScreenFormState();
+}
+
+class _RegisterScreenFormState extends State<RegisterScreenForm> {
+
+  GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  TextEditingController fNameField = TextEditingController();
+  TextEditingController lNameField = TextEditingController();
+  TextEditingController emailField = TextEditingController();
+  TextEditingController phoneField = TextEditingController();
+  TextEditingController passwordField = TextEditingController();
+
+
+  void _saveDetails() async {
+    if(formKey.currentState!.validate()){
+      //Todo internet connection check
+      try {
+        bool doesUserExists = await FirebaseDatabase.userExists(phoneField.text, emailField.text).timeout(const Duration(seconds: 5));
+        if(!doesUserExists){
+          //save data
+          if(context.mounted){
+            Provider.of<SignupProvider>(context,listen: false).addMultipleData(firstName: fNameField.text, lastName: lNameField.text, email: emailField.text, phoneNumber: phoneField.text,password: passwordField.text);
+          }
+        }
+        else{
+          Fluttertoast.showToast(msg: "phone number or email address is already in use.");
+        }
+      } on Exception {
+        // TODO
+        Fluttertoast.showToast(msg: "No internet connection, please try again.");
+
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    fNameField.dispose();
+    lNameField.dispose();
+    emailField.dispose();
+    phoneField.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        // const Column(
-        //   children: [
-        //     Divider(height: 48,indent: 16,endIndent: 16,thickness: 1,),
-        //     Text('OR',textAlign: TextAlign.center,),
-        //   ],
-        // ),
+        Form(
+          key: formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              CustomTextField(
+                controller: fNameField,
+                type: TextFieldType.name,
+                label: 'First name',
+              ),
+              const SizedBox(
+                height: 24,
+              ),
+              CustomTextField(
+                controller: lNameField,
+                type: TextFieldType.name,
+                label: 'Last name',
+              ),
+              const SizedBox(
+                height: 24,
+              ),
+              CustomTextField(
+                controller: emailField,
+                type: TextFieldType.email,
+                label: 'Email',
+              ),
+              const SizedBox(
+                height: 24,
+              ),
+              CustomTextField(
+                controller: phoneField,
+                type: TextFieldType.phone,
+                label: 'Phone number',
+              ),
+              const SizedBox(
+                height: 24,
+              ),
+              CustomTextField(
+                controller: passwordField,
+                type: TextFieldType.password,
+                label: 'Password',
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 48,),
         Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const SizedBox(height: 24,),
-            Row(
-              children: [
-                Expanded(flex: 2,child: Container(height: 1,color: Colors.black45,)),
-                const Expanded(child: Text('OR',textAlign: TextAlign.center,)),
-                Expanded(flex: 2,child: Container(height: 1,color: Colors.black45,)),
-              ],
-            ),
-            const SizedBox(height: 24,),
-            OutlinedButton(onPressed: (){}, child: const Text('Continue with Google')),
-            const SizedBox(height: 16,),
-            OutlinedButton(onPressed: (){}, child: const Text('Continue with Facebook')),
+            ElevatedButton(
+              onPressed: (){
+                _saveDetails();
+                widget.ctrl.acceptPhoneNumber(phoneField.text);
+              }, child: const Text('Continue'),),
+            // const SizedBox(
+            //   height: 24,
+            // ),
           ],
         ),
+
+
       ],
     );
   }
 }
 
+class CustomRegisterView extends StatelessWidget {
+  const CustomRegisterView({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+
+    String? email = Provider.of<SignupProvider>(context).signupPersonalData['email'];
+    String? password = Provider.of<SignupProvider>(context).signupPersonalData['password'];
+
+    void linkUserEmailPassword(PhoneAuthController controller) async{
+      UserCredential userCredential = await controller.auth.createUserWithEmailAndPassword(email: email!, password: password!);
+      if(userCredential.user!=null){
+        controller.auth.currentUser?.linkWithCredential(userCredential.credential!);
+      }
+    }
+
+    return AuthFlowBuilder<PhoneAuthController>(
+      listener: (oldState, newState, controller) {
+        if (newState is PhoneVerified) {
+          linkUserEmailPassword(controller);
+          //Todo push to extra info page
+          Navigator.of(context).pushReplacementNamed('/profile');
+        }
+      },
+      builder: (context, state, ctrl, child) {
+        if (state is AwaitingPhoneNumber || state is SMSCodeRequested) {
+          //Custom form
+          return RegisterScreenForm(ctrl: ctrl,);
+
+        } else if (state is SMSCodeSent) {
+          return SMSCodeInput(onSubmit: (smsCode) {
+            ctrl.verifySMSCode(
+              smsCode,
+              verificationId: state.verificationId,
+              confirmationResult: state.confirmationResult,
+            );
+          });
+        } else if (state is SigningIn) {
+          return const CircularProgressIndicator();
+        } else if (state is AuthFailed) {
+          return ErrorText(exception: state.exception);
+        } else {
+          return Text('Unknown state $state');
+        }
+      },
+    );
+  }
+}
+
+class RegisterView extends StatelessWidget {
+  const RegisterView({super.key});
+  final clientID = "255036669928-5b9foj1hssbr0gpjrsuptrn5s6rl2asu.apps.googleusercontent.com";
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: Padding(
+        padding: kMobileBodyPadding,
+        child: Column(
+          children: [
+            const CustomRegisterView(),
+            const SizedBox(height: 48,),
+            const OauthDivider(),
+            const SizedBox(height: 24,),
+            LoginView(
+              action: AuthAction.signUp,
+              showTitle: false,
+              showAuthActionSwitch: false,
+              providers: [
+                GoogleProvider(clientId: clientID),
+                FacebookProvider(clientId: clientID),
+              ],
+            ),
+            const SizedBox(height: 24,),
+            const TermsAndConditions(),
+          ],
+        ),
+      ),
+    );
+  }
+}

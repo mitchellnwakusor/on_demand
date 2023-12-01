@@ -1,3 +1,6 @@
+import 'package:firebase_ui_auth/firebase_ui_auth.dart';
+import 'package:firebase_ui_oauth_facebook/firebase_ui_oauth_facebook.dart';
+import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:on_demand/Utilities/constants.dart';
@@ -54,26 +57,27 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         ],
       ),
-      body: Padding(
+      body: const Padding(
         padding: kMobileBodyPadding,
         child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Form(
-                key: formKey,
-                child: isEmailPasswordSignIn
-                    ? EmailPasswordSignIn(
-                        emailField: emailField, passwordField: passwordField,toggleSignInMethodCallback: toggleSignInMethod,)
-                    : PhoneSignIn(phoneField: phoneField,toggleSignInMethodCallback: toggleSignInMethod,),
-              ),
-              const SizedBox(
-                height: 48,
-              ),
-              ElevatedButton(onPressed: () {}, child: const Text('Continue')),
-              const ThirdPartyCredentials(),
-            ],
-          ),
+          child: CustomLoginView()
+          // Column(
+          //   crossAxisAlignment: CrossAxisAlignment.stretch,
+          //   children: [
+          //     Form(
+          //       key: formKey,
+          //       child: isEmailPasswordSignIn
+          //           ? EmailPasswordSignIn(
+          //               emailField: emailField, passwordField: passwordField,toggleSignInMethodCallback: toggleSignInMethod,)
+          //           : PhoneSignIn(phoneField: phoneField,toggleSignInMethodCallback: toggleSignInMethod,),
+          //     ),
+          //     const SizedBox(
+          //       height: 48,
+          //     ),
+          //     ElevatedButton(onPressed: () {}, child: const Text('Continue')),
+          //     const ThirdPartyCredentials(),
+          //   ],
+          // ),
         ),
       ),
     );
@@ -223,3 +227,25 @@ class ThirdPartyCredentials extends StatelessWidget {
   }
 }
 
+class CustomLoginView extends StatelessWidget {
+  const CustomLoginView({super.key});
+  final clientID = "255036669928-5b9foj1hssbr0gpjrsuptrn5s6rl2asu.apps.googleusercontent.com";
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+        padding: kMobileBodyPadding,
+        child: LoginView(
+          showAuthActionSwitch: false,
+          showTitle: false,
+          action: AuthAction.signIn,
+          providers: [
+            EmailAuthProvider(),
+            PhoneAuthProvider(),
+            GoogleProvider(clientId: clientID),
+            FacebookProvider(clientId: clientID),
+          ],
+        ),
+    );
+  }
+}
