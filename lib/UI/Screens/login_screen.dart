@@ -7,6 +7,11 @@ import 'package:on_demand/Utilities/constants.dart';
 import 'package:on_demand/Core/routes.dart';
 import 'package:on_demand/UI/Components/text_field.dart';
 
+import '../../Core/ids.dart';
+import '../../Services/firebase_database.dart';
+import '../Components/oauth_divider.dart';
+import '../Components/terms_conditions.dart';
+
 class LoginScreen extends StatefulWidget {
   static const id = 'login_screen';
   const LoginScreen({super.key});
@@ -16,18 +21,6 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  TextEditingController phoneField = TextEditingController();
-  TextEditingController emailField = TextEditingController();
-  TextEditingController passwordField = TextEditingController();
-  bool isEmailPasswordSignIn = true;
-
-  void toggleSignInMethod () {
-    setState(() {
-      isEmailPasswordSignIn = !isEmailPasswordSignIn;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,37 +53,21 @@ class _LoginScreenState extends State<LoginScreen> {
       body: const Padding(
         padding: kMobileBodyPadding,
         child: SingleChildScrollView(
-          child: CustomLoginView()
-          // Column(
-          //   crossAxisAlignment: CrossAxisAlignment.stretch,
-          //   children: [
-          //     Form(
-          //       key: formKey,
-          //       child: isEmailPasswordSignIn
-          //           ? EmailPasswordSignIn(
-          //               emailField: emailField, passwordField: passwordField,toggleSignInMethodCallback: toggleSignInMethod,)
-          //           : PhoneSignIn(phoneField: phoneField,toggleSignInMethodCallback: toggleSignInMethod,),
-          //     ),
-          //     const SizedBox(
-          //       height: 48,
-          //     ),
-          //     ElevatedButton(onPressed: () {}, child: const Text('Continue')),
-          //     const ThirdPartyCredentials(),
-          //   ],
-          // ),
+          child: CustomLoginScreen(),
         ),
       ),
     );
   }
 }
 
+
+//** Custom Widgets **//
 class EmailPasswordSignIn extends StatelessWidget {
-  const EmailPasswordSignIn({
-    super.key,
-    required this.emailField,
-    required this.passwordField,
-    required this.toggleSignInMethodCallback
-  });
+  const EmailPasswordSignIn(
+      {super.key,
+        required this.emailField,
+        required this.passwordField,
+        required this.toggleSignInMethodCallback});
 
   final TextEditingController emailField;
   final TextEditingController passwordField;
@@ -124,11 +101,14 @@ class EmailPasswordSignIn extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            TextButton(onPressed: toggleSignInMethodCallback, child: const Text('Use phone number')),
+            TextButton(
+                onPressed: toggleSignInMethodCallback,
+                child: const Text('Use phone number')),
             TextButton(
                 onPressed: () {
                   Navigator.pushNamed(context, resetPasswordScreen);
-                }, child: const Text('Trouble logging in?')),
+                },
+                child: const Text('Trouble logging in?')),
           ],
         )
       ],
@@ -137,7 +117,10 @@ class EmailPasswordSignIn extends StatelessWidget {
 }
 
 class PhoneSignIn extends StatelessWidget {
-  const PhoneSignIn({super.key, required this.phoneField,required this.toggleSignInMethodCallback});
+  const PhoneSignIn(
+      {super.key,
+        required this.phoneField,
+        required this.toggleSignInMethodCallback});
   final TextEditingController phoneField;
   final void Function()? toggleSignInMethodCallback;
 
@@ -157,11 +140,16 @@ class PhoneSignIn extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            TextButton(onPressed: toggleSignInMethodCallback, child: const Text('Use password')),
+            TextButton(
+                onPressed: toggleSignInMethodCallback,
+                child: const Text('Use password')),
             TextButton(
                 onPressed: () {
-                  Fluttertoast.showToast(msg: "Send an email to support@ondemand.com",toastLength: Toast.LENGTH_LONG);
-                }, child: const Text('Trouble logging in?')),
+                  Fluttertoast.showToast(
+                      msg: "Send an email to support@ondemand.com",
+                      toastLength: Toast.LENGTH_LONG);
+                },
+                child: const Text('Trouble logging in?')),
           ],
         )
       ],
@@ -169,7 +157,6 @@ class PhoneSignIn extends StatelessWidget {
   }
 }
 
-//** Custom Widgets **//
 class ThirdPartyCredentials extends StatelessWidget {
   const ThirdPartyCredentials({super.key});
 
@@ -183,6 +170,7 @@ class ThirdPartyCredentials extends StatelessWidget {
         //     Text('OR',textAlign: TextAlign.center,),
         //   ],
         // ),
+
         Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -227,25 +215,185 @@ class ThirdPartyCredentials extends StatelessWidget {
   }
 }
 
-class CustomLoginView extends StatelessWidget {
-  const CustomLoginView({super.key});
-  final clientID = "255036669928-5b9foj1hssbr0gpjrsuptrn5s6rl2asu.apps.googleusercontent.com";
+// class CustomLoginView extends StatelessWidget {
+//   const CustomLoginView({super.key});
+//   final clientID =
+//       "255036669928-5b9foj1hssbr0gpjrsuptrn5s6rl2asu.apps.googleusercontent.com";
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Padding(
+//       padding: kMobileBodyPadding,
+//       child: LoginView(
+//         showAuthActionSwitch: false,
+//         subtitleBuilder: (context, action) {
+//           return TextButton(
+//               onPressed: () {},
+//               child: const Text(
+//                 'Sign in with phone number',
+//                 style: TextStyle(color: Colors.red),
+//               ));
+//         },
+//         showTitle: true,
+//         action: AuthAction.signIn,
+//         providers: [
+//           EmailAuthProvider(),
+//           GoogleProvider(clientId: clientID),
+//           FacebookProvider(clientId: clientID),
+//         ],
+//       ),
+//     );
+//   }
+// }
+
+
+class LoginScreenForm extends StatefulWidget {
+  const LoginScreenForm({super.key, required this.ctrl});
+  final PhoneAuthController ctrl;
+
+  @override
+  State<LoginScreenForm> createState() => _LoginScreenFormState();
+}
+
+class _LoginScreenFormState extends State<LoginScreenForm> {
+  GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  TextEditingController phoneField = TextEditingController();
+  TextEditingController emailField = TextEditingController();
+  TextEditingController passwordField = TextEditingController();
+  bool isEmailPasswordSignIn = false;
+
+  void toggleSignInMethod() {
+    setState(() {
+      isEmailPasswordSignIn = !isEmailPasswordSignIn;
+    });
+  }
+
+  void emailSignIn() async {
+    await widget.ctrl.auth.signInWithEmailAndPassword(
+        email: emailField.text, password: passwordField.text);
+  }
+
+  void _signIn() async {
+    if (formKey.currentState!.validate()) {
+      try {
+        bool doesUserExists =
+            await FirebaseDatabase.userExists(phoneField.text, emailField.text)
+                .timeout(const Duration(seconds: 5));
+        if (doesUserExists) {
+          //sign in
+          if (context.mounted) {
+            switch (isEmailPasswordSignIn) {
+              case true:
+                emailSignIn();
+                break;
+              case false:
+                widget.ctrl.acceptPhoneNumber(phoneField.text);
+                break;
+            }
+          }
+        } else {
+          Fluttertoast.showToast(
+              msg:
+                  "There is no phone number or email address registered with an account.");
+        }
+      } on Exception {
+        Fluttertoast.showToast(
+            msg: "No internet connection, please try again.");
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-        padding: kMobileBodyPadding,
-        child: LoginView(
-          showAuthActionSwitch: false,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Form(
+          key: formKey,
+          child: isEmailPasswordSignIn
+              ? EmailPasswordSignIn(
+                  emailField: emailField,
+                  passwordField: passwordField,
+                  toggleSignInMethodCallback: toggleSignInMethod,
+                )
+              : PhoneSignIn(
+                  phoneField: phoneField,
+                  toggleSignInMethodCallback: toggleSignInMethod,
+                ),
+        ),
+        const SizedBox(
+          height: 48,
+        ),
+        ElevatedButton(onPressed: _signIn, child: const Text('Continue')),
+      ],
+    );
+  }
+}
+
+class CustomLoginScreen extends StatelessWidget {
+  const CustomLoginScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        const CustomLoginView(),
+        const SizedBox(height: 48,),
+        const OauthDivider(),
+        const SizedBox(height: 24,),
+        LoginView(
+          action: AuthAction.signUp,
           showTitle: false,
-          action: AuthAction.signIn,
+          showAuthActionSwitch: false,
           providers: [
-            EmailAuthProvider(),
-            PhoneAuthProvider(),
             GoogleProvider(clientId: clientID),
             FacebookProvider(clientId: clientID),
           ],
         ),
+        const SizedBox(height: 24,),
+        const TermsAndConditions(),
+      ],
     );
+
+  }
+}
+
+class CustomLoginView extends StatelessWidget {
+  const CustomLoginView({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return AuthFlowBuilder<PhoneAuthController>(
+      listener: (oldState, newState, controller) {
+        if (newState is PhoneVerified) {
+          // linkUserEmailPassword(controller);
+          //Todo push/pop to authHandler (homeScreen)
+          // Navigator.of(context).pushReplacementNamed(homeScreen);
+        }
+      },
+      builder: (context, state, ctrl, child) {
+        if (state is AwaitingPhoneNumber || state is SMSCodeRequested) {
+          //Custom form
+          return LoginScreenForm(
+            ctrl: ctrl,
+          );
+        } else if (state is SMSCodeSent) {
+          return SMSCodeInput(onSubmit: (smsCode) {
+            ctrl.verifySMSCode(
+              smsCode,
+              verificationId: state.verificationId,
+              confirmationResult: state.confirmationResult,
+            );
+          });
+        } else if (state is SigningIn) {
+          return const CircularProgressIndicator();
+        } else if (state is AuthFailed) {
+          return ErrorText(exception: state.exception);
+        } else {
+          return Text('Unknown state $state');
+        }
+      },
+    );
+
   }
 }

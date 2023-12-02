@@ -4,6 +4,7 @@ import 'package:firebase_ui_oauth_facebook/firebase_ui_oauth_facebook.dart';
 import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:on_demand/Core/ids.dart';
 import 'package:on_demand/Services/firebase_database.dart';
 import 'package:on_demand/Utilities/constants.dart';
 import 'package:on_demand/UI/Components/page_indicator.dart';
@@ -165,6 +166,7 @@ class _RegisterScreenFormState extends State<RegisterScreenForm> {
           //save data
           if(context.mounted){
             Provider.of<SignupProvider>(context,listen: false).addMultipleData(firstName: fNameField.text, lastName: lNameField.text, email: emailField.text, phoneNumber: phoneField.text,password: passwordField.text);
+            widget.ctrl.acceptPhoneNumber(phoneField.text);
           }
         }
         else{
@@ -245,7 +247,7 @@ class _RegisterScreenFormState extends State<RegisterScreenForm> {
             ElevatedButton(
               onPressed: (){
                 _saveDetails();
-                widget.ctrl.acceptPhoneNumber(phoneField.text);
+                // widget.ctrl.acceptPhoneNumber(phoneField.text);
               }, child: const Text('Continue'),),
             // const SizedBox(
             //   height: 24,
@@ -280,7 +282,7 @@ class CustomRegisterView extends StatelessWidget {
         if (newState is PhoneVerified) {
           linkUserEmailPassword(controller);
           //Todo push to extra info page
-          Navigator.of(context).pushReplacementNamed('/profile');
+          Navigator.of(context).pushReplacementNamed(homeScreen);
         }
       },
       builder: (context, state, ctrl, child) {
@@ -310,7 +312,6 @@ class CustomRegisterView extends StatelessWidget {
 
 class RegisterView extends StatelessWidget {
   const RegisterView({super.key});
-  final clientID = "255036669928-5b9foj1hssbr0gpjrsuptrn5s6rl2asu.apps.googleusercontent.com";
 
   @override
   Widget build(BuildContext context) {

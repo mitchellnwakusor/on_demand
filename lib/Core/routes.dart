@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:on_demand/UI/Screens/home_screen.dart';
 import 'package:on_demand/UI/Screens/reset_password.dart';
 import 'package:on_demand/UI/Screens/start_screen.dart';
 import 'package:on_demand/UI/Screens/business_detail_screen.dart';
@@ -13,6 +14,8 @@ import '../UI/Screens/register_screen.dart';
 //Material navigator routes
 Route<dynamic>? generateRoute (RouteSettings settings) {
   switch(settings.name){
+    case HomeScreen.id:
+      return MaterialPageRoute(builder: (_)=> const HomeScreen(),settings: settings);
     case StartScreen.id:
       return MaterialPageRoute(builder: (_)=> const StartScreen(),settings: settings);
     case RegisterScreen.id:
@@ -35,6 +38,7 @@ Route<dynamic>? generateRoute (RouteSettings settings) {
 }
 
 //String literal references to route
+String homeScreen = HomeScreen.id;
 String startScreen = StartScreen.id;
 String registerScreen = RegisterScreen.id;
 String resetPasswordScreen = ResetPasswordScreen.id;
