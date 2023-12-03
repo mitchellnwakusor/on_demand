@@ -3,6 +3,7 @@ import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart';
 import 'package:on_demand/Services/providers/signup_provider.dart';
 import 'package:on_demand/Services/providers/start_screen_provider.dart';
+import 'Core/ids.dart';
 import 'Services/firebase_options.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -10,7 +11,7 @@ import 'Core/app.dart';
 
 void main() async {
 
-  const clientID = "255036669928-5b9foj1hssbr0gpjrsuptrn5s6rl2asu.apps.googleusercontent.com";
+  // const clientID = "255036669928-5b9foj1hssbr0gpjrsuptrn5s6rl2asu.apps.googleusercontent.com";
 
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(

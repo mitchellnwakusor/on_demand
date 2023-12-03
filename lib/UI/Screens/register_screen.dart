@@ -280,9 +280,10 @@ class CustomRegisterView extends StatelessWidget {
     return AuthFlowBuilder<PhoneAuthController>(
       listener: (oldState, newState, controller) {
         if (newState is PhoneVerified) {
+          controller.auth.signInWithCredential(newState.credential);
           linkUserEmailPassword(controller);
-          //Todo push to extra info page
-          Navigator.of(context).pushReplacementNamed(homeScreen);
+          //Todo push to authHandler (extra info screen)
+          // Navigator.of(context).pushReplacementNamed(homeScreen);
         }
       },
       builder: (context, state, ctrl, child) {
