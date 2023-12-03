@@ -4,7 +4,7 @@ class FirebaseDatabase {
   static Future<bool> userExists(String phoneNumber,String emailAddress) async{
     var email = await _doesEmailExist(emailAddress);
     var phone = await _doesNumberExist(phoneNumber);
-    if(email && phone){
+    if(email || phone){
       return true;
     }
     else{

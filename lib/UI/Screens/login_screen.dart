@@ -3,6 +3,7 @@ import 'package:firebase_ui_oauth_facebook/firebase_ui_oauth_facebook.dart';
 import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:on_demand/Core/authentication_handler.dart';
 import 'package:on_demand/Utilities/constants.dart';
 import 'package:on_demand/Core/routes.dart';
 import 'package:on_demand/UI/Components/text_field.dart';
@@ -277,7 +278,8 @@ class _LoginScreenFormState extends State<LoginScreenForm> {
     if (formKey.currentState!.validate()) {
       try {
         bool doesUserExists =
-            await FirebaseDatabase.userExists(phoneField.text, emailField.text)
+            await FirebaseDatabase.userExists(
+                "+234${phoneField.text}", emailField.text)
                 .timeout(const Duration(seconds: 5));
         if (doesUserExists) {
           //sign in
@@ -287,7 +289,7 @@ class _LoginScreenFormState extends State<LoginScreenForm> {
                 emailSignIn();
                 break;
               case false:
-                widget.ctrl.acceptPhoneNumber(phoneField.text);
+                widget.ctrl.acceptPhoneNumber("+234${phoneField.text}");
                 break;
             }
           }
@@ -364,10 +366,12 @@ class CustomLoginView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AuthFlowBuilder<PhoneAuthController>(
+      //Todo replace each return with the registerScreenForm and also navigate to the appropriate widget
       listener: (oldState, newState, controller) {
         if (newState is PhoneVerified) {
           // controller.auth.signInWithCredential(newState.credential);
           //Todo push/pop to authHandler (homeScreen)
+          Navigator.pop(context);
           // Navigator.of(context).pushReplacementNamed(homeScreen);
         }
       },
@@ -378,6 +382,7 @@ class CustomLoginView extends StatelessWidget {
             ctrl: ctrl,
           );
         } else if (state is SMSCodeSent) {
+          //Navigate to smscodeinput instead
           return SMSCodeInput(onSubmit: (smsCode) {
             ctrl.verifySMSCode(
               smsCode,
@@ -387,7 +392,12 @@ class CustomLoginView extends StatelessWidget {
           });
         } else if (state is SigningIn) {
           return const CircularProgressIndicator();
-        } else if (state is AuthFailed) {
+        }
+        // added state
+        else if (state is SignedIn) {
+            return const AuthenticationHandler();
+        }
+         else if (state is AuthFailed) {
           return ErrorText(exception: state.exception);
         } else {
           return Text('Unknown state $state');

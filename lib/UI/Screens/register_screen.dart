@@ -4,6 +4,7 @@ import 'package:firebase_ui_oauth_facebook/firebase_ui_oauth_facebook.dart';
 import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:on_demand/Core/authentication_handler.dart';
 import 'package:on_demand/Core/ids.dart';
 import 'package:on_demand/Services/firebase_database.dart';
 import 'package:on_demand/Utilities/constants.dart';
@@ -166,7 +167,7 @@ class _RegisterScreenFormState extends State<RegisterScreenForm> {
           //save data
           if(context.mounted){
             Provider.of<SignupProvider>(context,listen: false).addMultipleData(firstName: fNameField.text, lastName: lNameField.text, email: emailField.text, phoneNumber: phoneField.text,password: passwordField.text);
-            widget.ctrl.acceptPhoneNumber(phoneField.text);
+            widget.ctrl.acceptPhoneNumber("+234${phoneField.text}");
           }
         }
         else{
@@ -278,20 +279,24 @@ class CustomRegisterView extends StatelessWidget {
     }
 
     return AuthFlowBuilder<PhoneAuthController>(
+      //Todo replace each return with the registerScreenForm and also navigate to the appropriate widget
       listener: (oldState, newState, controller) {
         if (newState is PhoneVerified) {
-          // controller.auth.signInWithCredential(newState.credential);
-          linkUserEmailPassword(controller);
-          //Todo push to authHandler (extra info screen)
-          // Navigator.of(context).pushReplacementNamed(homeScreen);
+          // linkUserEmailPassword(controller);
         }
       },
       builder: (context, state, ctrl, child) {
         if (state is AwaitingPhoneNumber || state is SMSCodeRequested) {
           //Custom form
           return RegisterScreenForm(ctrl: ctrl,);
-
-        } else if (state is SMSCodeSent) {
+        }
+        //Added state
+        else if (state is UserCreated){
+          linkUserEmailPassword(ctrl);
+          return const AuthenticationHandler();
+        }
+        else if (state is SMSCodeSent) {
+          //Navigate to smscodeinput instead
           return SMSCodeInput(onSubmit: (smsCode) {
             ctrl.verifySMSCode(
               smsCode,
