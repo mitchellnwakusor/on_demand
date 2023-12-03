@@ -366,7 +366,7 @@ class CustomLoginView extends StatelessWidget {
     return AuthFlowBuilder<PhoneAuthController>(
       listener: (oldState, newState, controller) {
         if (newState is PhoneVerified) {
-          controller.auth.signInWithCredential(newState.credential);
+          // controller.auth.signInWithCredential(newState.credential);
           //Todo push/pop to authHandler (homeScreen)
           // Navigator.of(context).pushReplacementNamed(homeScreen);
         }
