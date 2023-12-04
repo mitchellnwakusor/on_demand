@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 
 class FirebaseDatabase {
   static Future<bool> userExists(String phoneNumber,String emailAddress) async{
@@ -11,7 +12,7 @@ class FirebaseDatabase {
       return false;
     }
   }
-  static Future<bool> businessDetailExist(String uid) async {
+  static Future<bool> businessDetailExist({required String uid}) async {
     String collection = 'business detail';
     var doc = await FirebaseFirestore.instance.collection(collection).doc(uid).get();
     if(doc.exists){
@@ -22,7 +23,8 @@ class FirebaseDatabase {
 
     }
   }
-  static Future<bool> verificationDetailExist(String uid) async {
+
+  static Future<bool> verificationDetailExist({required String uid}) async {
     String collection = 'verification detail';
     var doc = await FirebaseFirestore.instance.collection(collection).doc(uid).get();
     if(doc.exists){

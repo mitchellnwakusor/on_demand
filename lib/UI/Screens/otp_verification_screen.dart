@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:on_demand/Core/routes.dart';
+import 'package:on_demand/Services/authentication.dart';
 import 'package:on_demand/Services/providers/signup_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -17,6 +17,23 @@ class OTPVerificationScreen extends StatefulWidget {
 
 class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
   String phoneNumber = '8112345678';
+  TextEditingController smsField = TextEditingController();
+  GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
+  void _continueCallback() {
+    if(formKey.currentState!.validate()){
+      Authentication.instance.phoneSignIn(smsField.text);
+    }
+  }
+
+  void _resendCodeCallback() {
+    Authentication.instance.resendOTPCode(context, phoneNumber);
+  }
+  @override
+  void dispose() {
+    smsField.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     phoneNumber = Provider.of<SignupProvider>(context,listen: false).signupPersonalData['phone_number'];
@@ -44,40 +61,52 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Expanded(
-              child: Column(
-                children: [
-                  Text(
-                    'Enter the one-time verification code sent to +234$phoneNumber',
-                    style: const TextStyle(
-                      fontSize: 18,
-                      letterSpacing: 0.5,
-                      height: 1.4
+              child: Form(
+                key: formKey,
+                child: Column(
+                  children: [
+                    Text(
+                      'Enter the one-time verification code sent to +234$phoneNumber',
+                      style: const TextStyle(
+                        fontSize: 18,
+                        letterSpacing: 0.5,
+                        height: 1.4
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 24,),
-                  TextFormField(
-                    decoration: const InputDecoration(
-                      hintText: '______',
-                      hintStyle: TextStyle(
+                    const SizedBox(height: 24,),
+                    TextFormField(
+                      decoration: const InputDecoration(
+                        hintText: '______',
+                        hintStyle: TextStyle(
+                          letterSpacing: 8
+                        ),
+                        filled: true,
+                      ),
+                      controller: smsField,
+                      validator: (value){
+                        if(value==null){
+                          return 'OTP Code is required.';
+                        }
+                        return null;
+                      },
+                      textAlign: TextAlign.center,
+                      keyboardType: TextInputType.number,
+                      style: const TextStyle(
+                        fontSize: 24,
                         letterSpacing: 8
                       ),
-                      filled: true,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        LengthLimitingTextInputFormatter(6,maxLengthEnforcement: MaxLengthEnforcement.enforced)
+                      ],
                     ),
-                    textAlign: TextAlign.center,
-                    keyboardType: TextInputType.number,
-                    style: const TextStyle(
-                      fontSize: 24,
-                      letterSpacing: 8
-                    ),
-                    inputFormatters: [
-                      FilteringTextInputFormatter.digitsOnly,
-                      LengthLimitingTextInputFormatter(6,maxLengthEnforcement: MaxLengthEnforcement.enforced)
-                    ],
-                  ),
-                ],
+                    const SizedBox(height: 24,),
+                    TextButton(onPressed: _resendCodeCallback, child: const Text('Resend code?'))
+                  ],
+                ),
               ),
             ),
-            ElevatedButton(onPressed: ()=>Navigator.pushNamed(context, documentUploadScreen), child: const Text('Continue'))
+            ElevatedButton(onPressed: _continueCallback, child: const Text('Continue'))
           ],
         ),
       ),

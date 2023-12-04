@@ -27,7 +27,6 @@ class _PhoneTextScreenState extends State<PhoneTextScreen> {
         automaticallyImplyLeading: false,
         elevation: 0,
         // title: const Text('Create an account'),
-
         actions: [
           TextButton(
             onPressed: () =>
@@ -40,7 +39,6 @@ class _PhoneTextScreenState extends State<PhoneTextScreen> {
       ),
       body: AuthFlowBuilder<PhoneAuthController>(
         listener: (oldState, newState, controller) {
-
           if (newState is PhoneVerified) {
             Navigator.of(context).pushReplacementNamed('/profile');
           }
@@ -50,15 +48,12 @@ class _PhoneTextScreenState extends State<PhoneTextScreen> {
             return PhoneInput(
               initialCountryCode: 'NG',
               onSubmit: (phoneNumber) async {
-
                 final query =  await FirebaseFirestore.instance.collection
                   ('user detail').where('phone_number', isEqualTo: phoneNumber).get();
-
                 if(query.docs.isEmpty==false){
                   Fluttertoast.showToast(msg: "phone number is already registered.");
                 }
               else{ctrl.acceptPhoneNumber(phoneNumber);}
-
               },
             );
           } else if (state is SMSCodeSent) {
@@ -75,8 +70,8 @@ class _PhoneTextScreenState extends State<PhoneTextScreen> {
           } else if (state is AuthFailed) {
             return Blurry.error(
                 title:  'Timed out',
-                description: 'The Authentication Took too long',
-                confirmButtonText:  'Retry',
+                description: '${state.exception}',
+                confirmButtonText: 'Retry',
                 onConfirmButtonPressed: () {
                   Navigator.pushReplacementNamed(context, phoneTextScreen);
                 });
