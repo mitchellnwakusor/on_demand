@@ -37,7 +37,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void emailSignIn() async {
-    Authentication.instance.emailSignIn(emailField.text, passwordField.text);
+    Authentication.instance.emailSignIn(context,emailField.text, passwordField.text);
   }
 
   void phoneSignIn() async {

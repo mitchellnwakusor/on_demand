@@ -22,7 +22,7 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
 
   void _continueCallback() {
     if(formKey.currentState!.validate()){
-      Authentication.instance.phoneSignIn(smsField.text);
+      Authentication.instance.phoneSignIn(context,smsField.text);
     }
   }
 

@@ -49,18 +49,25 @@ class Authentication {
   );
  }
 
- void emailSignIn(String email,String password) async{
+ void emailSignIn(BuildContext context, String email,String password) async{
    try {
      await _authInstance.signInWithEmailAndPassword(email: email, password: password);
+     if(context.mounted){
+       Navigator.popUntil(context, ModalRoute.withName('/'));
+     }
    } on FirebaseAuthException catch (exception) {
      Fluttertoast.showToast(msg: '${exception.message}');
    }
  }
 
- void phoneSignIn(String smsCode) async{
+ void phoneSignIn(BuildContext context,String smsCode) async{
    try {
      PhoneAuthCredential credential = PhoneAuthProvider.credential(verificationId: _verificationID!, smsCode: smsCode);
      await _authInstance.signInWithCredential(credential);
+     //close previous pages
+     if(context.mounted){
+       Navigator.popUntil(context, (route) => false);
+     }
    } on FirebaseAuthException catch (exception) {
      Fluttertoast.showToast(msg: '${exception.message}');
    }
