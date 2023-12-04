@@ -339,10 +339,20 @@ class CustomLoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const CustomLoginView(),
+
+        const SizedBox(height: 24,),
+        LoginView(
+          action: AuthAction.signUp,
+          showTitle: false,
+          showAuthActionSwitch: false,
+          providers: [
+            EmailAuthProvider(),
+          ],
+        ),
+        //const CustomLoginView(),
         const SizedBox(height: 48,),
         const OauthDivider(),
-        const SizedBox(height: 24,),
+        const SizedBox(height: 48,),
         LoginView(
           action: AuthAction.signUp,
           showTitle: false,
@@ -351,6 +361,13 @@ class CustomLoginScreen extends StatelessWidget {
             GoogleProvider(clientId: clientID),
             FacebookProvider(clientId: clientID),
           ],
+        ),
+        TextButton(
+          onPressed: () =>
+              Navigator.pushReplacementNamed(context, phoneTextScreen),
+          child: const Text(
+            'Singin With Phone',
+          ),
         ),
         const SizedBox(height: 24,),
         const TermsAndConditions(),

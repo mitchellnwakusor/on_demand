@@ -41,6 +41,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.11.0"
+  blurry:
+    dependency: "direct main"
+    description:
+      name: blurry
+      sha256: "796733e1bfc37f63a0b71b5c2bee402fcf4784ee7d4407ad21ddeeed540725fe"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.4.2"
   boolean_selector:
     dependency: transitive
     description:
