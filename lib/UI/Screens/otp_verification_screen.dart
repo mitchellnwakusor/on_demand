@@ -42,7 +42,7 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
       appBar: AppBar(
         elevation: 0,
         leadingWidth: MediaQuery.of(context).size.width/2.75,
-        leading: const PageIndicator(activeScreenIndex: 2,steps: 4,),
+        leading: const PageIndicator(activeScreenIndex: 1,steps: 4,),
         automaticallyImplyLeading: false,
         bottom: PreferredSize(
             preferredSize: const Size.fromHeight(48),
