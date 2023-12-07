@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:on_demand/Services/authentication.dart';
 import 'package:on_demand/Services/firebase_database.dart';
 import 'package:on_demand/Utilities/constants.dart';
+import 'package:path/path.dart';
 
 import '../Components/page_indicator.dart';
 
@@ -94,7 +95,7 @@ class _DocumentUploadScreenState extends State<DocumentUploadScreen> {
             ),
             ElevatedButton(onPressed: (){
               if(contentFile!=null){
-                FirebaseDatabase.uploadDocument(contentFile!,Authentication.instance.currentUser!.uid);
+                FirebaseDatabase.uploadDocument(context,contentFile!,Authentication.instance.currentUser!.uid);
               }
             }, child: const Text('Done')),
           ],

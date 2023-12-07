@@ -7,15 +7,16 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:on_demand/Core/authentication_handler.dart';
 import 'package:on_demand/Core/ids.dart';
 import 'package:on_demand/Services/firebase_database.dart';
+import 'package:on_demand/Services/providers/signup_provider.dart';
+import 'package:on_demand/UI/Components/oauth_divider.dart';
+import 'package:on_demand/UI/Components/terms_conditions.dart';
 import 'package:on_demand/Utilities/constants.dart';
 import 'package:on_demand/UI/Components/page_indicator.dart';
 import 'package:on_demand/Core/routes.dart';
 import 'package:on_demand/UI/Components/text_field.dart';
 import 'package:provider/provider.dart';
 
-import '../../Services/providers/signup_provider.dart';
-import '../Components/oauth_divider.dart';
-import '../Components/terms_conditions.dart';
+
 
 
 class RegisterScreen extends StatefulWidget {
@@ -166,7 +167,7 @@ class _RegisterScreenFormState extends State<RegisterScreenForm> {
         if(!doesUserExists){
           //save data
           if(context.mounted){
-            Provider.of<SignupProvider>(context,listen: false).addMultipleData(firstName: fNameField.text, lastName: lNameField.text, email: emailField.text, phoneNumber: phoneField.text,password: passwordField.text);
+           // Provider.of<SignupProvider>(context,listen: false).addMultipleData(firstName: fNameField.text, lastName: lNameField.text, email: emailField.text, phoneNumber: phoneField.text,password: passwordField.text);
             widget.ctrl.acceptPhoneNumber("+234${phoneField.text}");
           }
         }

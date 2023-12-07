@@ -32,7 +32,7 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
   void _saveDetails() async {
     if(formKey.currentState!.validate()){
           Provider.of<SignupProvider>(context,listen: false).addDataBusiness(key: 'business_type', value: planFieldValue!);
-          Map<String, dynamic> data = Provider.of<SignupProvider>(context).signupBusinessData;
+          Map<String, dynamic> data = Provider.of<SignupProvider>(context, listen: false).signupBusinessData;
           FirebaseDatabase.saveBusinessDetails(data: data, uid: Authentication.instance.currentUser!.uid);
           //Todo: change route
           Navigator.pushReplacementNamed(context, authHandlerScreen);

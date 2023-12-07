@@ -1,7 +1,10 @@
+
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:on_demand/Core/routes.dart';
 
 class FirebaseDatabase {
   static Future<bool> userExists(String phoneNumber,String emailAddress) async{
@@ -78,12 +81,13 @@ class FirebaseDatabase {
     }
   }
 
-  static void uploadDocument(File file,String uid) {
+  static void uploadDocument(BuildContext context, File file,String uid) {
      FirebaseStorage.instance.ref("artisan").child("$uid/verification documents/file.jpg").putFile(file).snapshotEvents.listen((taskSnapShot) {
       if(taskSnapShot.state==TaskState.success){
         var path = FirebaseStorage.instance.ref("artisan").child("uid/verification documents/file.jpg").fullPath;
         Map<String,dynamic> data = {'document_path': path};
         saveVerificationDocuments(data: data, uid: uid);
+        Navigator.pushReplacementNamed(context, authHandlerScreen);
       }
     });
 

@@ -3,7 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import '../../Core/routes.dart';
+import 'package:on_demand/Core/routes.dart';
+
 
 
 class PhoneTextScreen extends StatefulWidget {
@@ -73,7 +74,7 @@ class _PhoneTextScreenState extends State<PhoneTextScreen> {
                 description: '${state.exception}',
                 confirmButtonText: 'Retry',
                 onConfirmButtonPressed: () {
-                  Navigator.pushReplacementNamed(context, phoneTextScreen);
+                  // Navigator.pushReplacementNamed(context, phoneTextScreen);
                 });
           } else {
             return Text('Unknown state $state');

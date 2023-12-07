@@ -4,14 +4,15 @@ import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:on_demand/Core/authentication_handler.dart';
+import 'package:on_demand/Core/ids.dart';
+import 'package:on_demand/Services/firebase_database.dart';
+import 'package:on_demand/UI/Components/oauth_divider.dart';
+import 'package:on_demand/UI/Components/terms_conditions.dart';
 import 'package:on_demand/Utilities/constants.dart';
 import 'package:on_demand/Core/routes.dart';
 import 'package:on_demand/UI/Components/text_field.dart';
 
-import '../../Core/ids.dart';
-import '../../Services/firebase_database.dart';
-import '../Components/oauth_divider.dart';
-import '../Components/terms_conditions.dart';
+
 
 class LoginScreen extends StatefulWidget {
   static const id = 'login_screen';
@@ -335,6 +336,8 @@ class _LoginScreenFormState extends State<LoginScreenForm> {
 class CustomLoginScreen extends StatelessWidget {
   const CustomLoginScreen({super.key});
 
+  String? get phoneTextScreen => null;
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -364,7 +367,7 @@ class CustomLoginScreen extends StatelessWidget {
         ),
         TextButton(
           onPressed: () =>
-              Navigator.pushReplacementNamed(context, phoneTextScreen),
+              Navigator.pushReplacementNamed(context, phoneTextScreen!),
           child: const Text(
             'Singin With Phone',
           ),

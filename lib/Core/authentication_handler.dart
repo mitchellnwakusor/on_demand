@@ -47,6 +47,7 @@ class _AuthenticationHandlerState extends State<AuthenticationHandler> {
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     if (snapshot.data == false) {
+                      print(snapshot.data);
                       tempScreen = const BusinessDetailScreen();
                     } else if (snapshot.data == true) {
                       tempScreen = FutureBuilder(
