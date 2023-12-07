@@ -21,6 +21,7 @@ class _DocumentUploadScreenState extends State<DocumentUploadScreen> {
     //get files
     FilePickerResult? filePickerResult = await FilePicker.platform.pickFiles(dialogTitle: 'Add document',allowedExtensions: ['jpeg','png','pdf'],allowMultiple: false,type: FileType.custom,withReadStream: true);
     if(filePickerResult!=null){
+
       setState(() {
         PlatformFile result = filePickerResult.files.first;
         if(result.path!=null){
@@ -72,6 +73,7 @@ class _DocumentUploadScreenState extends State<DocumentUploadScreen> {
                   Container(
                     height: 256,
                     color: Colors.grey,
+                    child: contentFile!=null ? Image.file(contentFile!) : null,
                   ),
                   const SizedBox(height: 24,),
                   const Text(
@@ -83,9 +85,7 @@ class _DocumentUploadScreenState extends State<DocumentUploadScreen> {
                     ),
                   ),
                   const SizedBox(height: 24,),
-                  ElevatedButton(onPressed: (){
-
-                  }, child: const Text('Choose document')),
+                  ElevatedButton(onPressed: getContentFile, child: const Text('Choose document')),
                 ],
               ),
             ),
