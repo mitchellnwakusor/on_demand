@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:on_demand/Services/authentication.dart';
+import 'package:on_demand/Services/firebase_database.dart';
 import 'package:provider/provider.dart';
 
 import '../../Core/routes.dart';
@@ -30,6 +32,8 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
   void _saveDetails() async {
     if(formKey.currentState!.validate()){
           Provider.of<SignupProvider>(context,listen: false).addDataBusiness(key: 'business_type', value: planFieldValue!);
+          Map<String, dynamic> data = Provider.of<SignupProvider>(context).signupBusinessData;
+          FirebaseDatabase.saveBusinessDetails(data: data, uid: Authentication.instance.currentUser!.uid);
           //Todo: change route
           Navigator.pushReplacementNamed(context, authHandlerScreen);
     }

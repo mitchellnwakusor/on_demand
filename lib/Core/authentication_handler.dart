@@ -29,6 +29,7 @@ class _AuthenticationHandlerState extends State<AuthenticationHandler> {
         //- if user is logged out
         late Widget screen;
         late Widget tempScreen;
+        late Widget secondScreen;
         switch (user.hasData) {
           case true:
             //links email+password credential to currentUser if email is empty
@@ -40,7 +41,6 @@ class _AuthenticationHandlerState extends State<AuthenticationHandler> {
               Authentication.instance.linkEmailCredential(email, password);
             }
 
-            print('start check');
             screen = FutureBuilder(
                 future:
                     FirebaseDatabase.businessDetailExist(uid: user.data!.uid),
@@ -56,10 +56,10 @@ class _AuthenticationHandlerState extends State<AuthenticationHandler> {
                             if (snapshot.hasData) {
                               if (snapshot.data == false) {
                                 //
-                                return const DocumentUploadScreen();
+                                secondScreen = const DocumentUploadScreen();
                               } else if (snapshot.data == true) {
                                 if (!user.data!.emailVerified) {
-                                  return const EmailVerificationScreen();
+                                  secondScreen = const EmailVerificationScreen();
                                 } else {
                                   return Center(
                                     child: ElevatedButton(
@@ -72,7 +72,7 @@ class _AuthenticationHandlerState extends State<AuthenticationHandler> {
                                 }
                               }
                             }
-                            return tempScreen;
+                            return secondScreen;
                           });
                     }
                   }
@@ -129,7 +129,7 @@ class _AuthenticationHandlerState extends State<AuthenticationHandler> {
 
             return screen;
           case false:
-            screen = const DocumentUploadScreen();
+            screen = const AccountSelectionScreen();
             return screen;
         }
       },
