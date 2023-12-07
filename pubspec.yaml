@@ -43,6 +43,7 @@ dependencies:
   flutter_facebook_auth:
   firebase_ui_oauth_facebook:
   cloud_firestore:
+  firebase_storage:
   provider:
   fluttertoast:
   sqflite:

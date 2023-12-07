@@ -29,9 +29,9 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
 
   void _saveDetails() async {
     if(formKey.currentState!.validate()){
-          Provider.of<SignupProvider>(context,listen: false).addData(key: 'plan', value: planFieldValue!);
+          Provider.of<SignupProvider>(context,listen: false).addDataBusiness(key: 'business_type', value: planFieldValue!);
           //Todo: change route
-          Navigator.pushNamed(context, otpVerificationScreen);
+          Navigator.pushReplacementNamed(context, authHandlerScreen);
     }
   }
 
@@ -73,14 +73,10 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
                 key: formKey,
                 child: Column(
                   children: [
-                    const OccupationSearchField(),
-                    const SizedBox(
-                      height: 24,
-                    ),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text('Plan'),
+                        const Text('Business type'),
                         const SizedBox(
                           height: 8,
                         ),
@@ -88,11 +84,11 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
                           validator: _requiredValidator,
                           autovalidateMode: AutovalidateMode.onUserInteraction,
                           value: planFieldValue,
-                          hint: const Text('Account plan'),
+                          hint: const Text('Individual or Agency'),
                           decoration: const InputDecoration(filled: true,border: OutlineInputBorder()),
                           items: const [
                             DropdownMenuItem(value: 'individual',child: Text('Individual')),
-                            DropdownMenuItem(value: 'agent',child: Text('Agent')),
+                            DropdownMenuItem(value: 'agency',child: Text('Agency')),
                           ],
                           onChanged: (value){
                             planFieldValue = value;
@@ -101,6 +97,10 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
                         ),
                       ],
                     ),
+                    const SizedBox(
+                      height: 24,
+                    ),
+                    const OccupationSearchField(),
                     const SizedBox(
                       height: 24,
                     ),

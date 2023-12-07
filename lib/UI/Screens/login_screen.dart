@@ -55,7 +55,7 @@ class _LoginScreenState extends State<LoginScreen> {
           //sign in
           if (context.mounted) {
             //save phone number in provider, specifically for use by otp screen
-            Provider.of<SignupProvider>(context,listen: false).addData(key: 'phone_number', value: phoneField.text);
+            Provider.of<SignupProvider>(context,listen: false).addDataSignup(key: 'phone_number', value: phoneField.text);
             switch (isEmailPasswordSignIn) {
               case true:
                 emailSignIn();

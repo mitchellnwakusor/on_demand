@@ -1,11 +1,37 @@
+import 'dart:io';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:on_demand/Utilities/constants.dart';
 
 import '../Components/page_indicator.dart';
 
-class DocumentUploadScreen extends StatelessWidget {
+class DocumentUploadScreen extends StatefulWidget {
   const DocumentUploadScreen({super.key});
   static const id = 'document_upload_screen';
+
+  @override
+  State<DocumentUploadScreen> createState() => _DocumentUploadScreenState();
+}
+
+class _DocumentUploadScreenState extends State<DocumentUploadScreen> {
+  File? contentFile;
+  //select content files
+  void getContentFile() async {
+    //get files
+    FilePickerResult? filePickerResult = await FilePicker.platform.pickFiles(dialogTitle: 'Add document',allowedExtensions: ['jpeg','png','pdf'],allowMultiple: false,type: FileType.custom,withReadStream: true);
+    if(filePickerResult!=null){
+      setState(() {
+        PlatformFile result = filePickerResult.files.first;
+        if(result.path!=null){
+          File file = File(result.path!);
+          contentFile = file;
+        }
+        //expose state
+        // Provider.of<AddBookComponent>(context,listen: false).setContentFiles(filePickerResult.files);
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,14 +51,14 @@ class DocumentUploadScreen extends StatelessWidget {
                   textAlign: TextAlign.start,
                   style: TextStyle(fontSize: 24, color: Colors.white),
                 ))),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text(
-              'Skip',
-              style: TextStyle(color: Colors.white),
-            ),
-          ),
+        actions: const [
+          // TextButton(
+          //   onPressed: () => Navigator.pop(context),
+          //   child: const Text(
+          //     'Skip',
+          //     style: TextStyle(color: Colors.white),
+          //   ),
+          // ),
         ],
       ),
       body: Padding(
@@ -57,7 +83,9 @@ class DocumentUploadScreen extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 24,),
-                  ElevatedButton(onPressed: (){}, child: const Text('Choose document')),
+                  ElevatedButton(onPressed: (){
+
+                  }, child: const Text('Choose document')),
                 ],
               ),
             ),

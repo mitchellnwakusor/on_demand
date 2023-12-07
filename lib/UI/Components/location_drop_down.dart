@@ -92,7 +92,7 @@ class _LocationDropDownState extends State<LocationDropDown> {
           items: locationItems(locations),
           onChanged: (value){
             selectedLocation = value;
-            Provider.of<SignupProvider>(context,listen: false).addData(key: 'location', value: value);
+            Provider.of<SignupProvider>(context,listen: false).addDataBusiness(key: 'location', value: value);
           },
         ),
       ],

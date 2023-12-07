@@ -11,6 +11,7 @@ class Authentication {
  final FirebaseAuth _authInstance = FirebaseAuth.instance;
 
  Stream<User?> get authChanges => _authInstance.userChanges();
+ User? get currentUser => _authInstance.currentUser;
 
  String? _verificationID;
  int? _forceResendingToken;
@@ -66,7 +67,7 @@ class Authentication {
      await _authInstance.signInWithCredential(credential);
      //close previous pages
      if(context.mounted){
-       Navigator.popUntil(context, (route) => false);
+       Navigator.popUntil(context, ModalRoute.withName('/'));
      }
    } on FirebaseAuthException catch (exception) {
      Fluttertoast.showToast(msg: '${exception.message}');

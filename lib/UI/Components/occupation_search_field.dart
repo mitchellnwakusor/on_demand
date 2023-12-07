@@ -74,7 +74,7 @@ class _OccupationSearchFieldState extends State<OccupationSearchField> {
               occupationValue = value as String;
               occupationFieldController.text = occupationValue!;
               if(context.mounted){
-                Provider.of<SignupProvider>(context,listen: false).addData(key: 'occupation', value: occupationValue!);
+                Provider.of<SignupProvider>(context,listen: false).addDataBusiness(key: 'occupation', value: occupationValue!);
               }
             }
           },

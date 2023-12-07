@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class FirebaseDatabase {
   static Future<bool> userExists(String phoneNumber,String emailAddress) async{
@@ -10,6 +13,21 @@ class FirebaseDatabase {
     else{
       return false;
     }
+  }
+
+  static Future<void> saveSignUpDetails({required Map<String, dynamic> data,required String uid}) async{
+    String collectionPath = 'user detail';
+    await FirebaseFirestore.instance.collection(collectionPath).doc(uid).set(data);
+  }
+
+  static Future<void> saveBusinessDetails({required Map<String, dynamic> data,required String uid}) async{
+    String collectionPath = 'business detail';
+    await FirebaseFirestore.instance.collection(collectionPath).doc(uid).set(data);
+  }
+
+  static Future<void> saveVerificationDocuments({required Map<String, dynamic> data,required String uid}) async{
+    String collectionPath = 'user detail';
+    await FirebaseFirestore.instance.collection(collectionPath).doc(uid).set(data,SetOptions(merge: true));
   }
 
   static Future<bool> businessDetailExist({required String uid}) async {
@@ -59,5 +77,17 @@ class FirebaseDatabase {
       return true;
     }
   }
+
+  void uploadDocument(File file) {
+     FirebaseStorage.instance.ref("artisan").child("uid/verification documents/file.jpg").putFile(file).snapshotEvents.listen((taskSnapShot) {
+      if(taskSnapShot.state==TaskState.success){
+        var path = FirebaseStorage.instance.ref("artisan").child("uid/verification documents/file.jpg").fullPath;
+        Map<String,dynamic> data = {'document_path': path};
+        saveVerificationDocuments(data: data, uid: 'uid');
+      }
+    });
+
+  }
+
 }
 

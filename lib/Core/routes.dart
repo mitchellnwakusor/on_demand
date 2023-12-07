@@ -13,6 +13,8 @@ import '../UI/Screens/register_screen.dart';
 //Material navigator routes
 Route<dynamic>? generateRoute (RouteSettings settings) {
   switch(settings.name){
+    case AuthenticationHandler.id:
+      return MaterialPageRoute(builder: (_)=> const AuthenticationHandler(),settings: settings);
     case HomeScreen.id:
       return MaterialPageRoute(builder: (_)=> const HomeScreen(),settings: settings);
     case StartScreen.id:
@@ -39,6 +41,7 @@ Route<dynamic>? generateRoute (RouteSettings settings) {
 }
 
 //String literal references to route
+String authHandlerScreen = AuthenticationHandler.id;
 String homeScreen = HomeScreen.id;
 String startScreen = StartScreen.id;
 String registerScreen = RegisterScreen.id;
