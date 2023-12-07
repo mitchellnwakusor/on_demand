@@ -78,12 +78,12 @@ class FirebaseDatabase {
     }
   }
 
-  void uploadDocument(File file) {
-     FirebaseStorage.instance.ref("artisan").child("uid/verification documents/file.jpg").putFile(file).snapshotEvents.listen((taskSnapShot) {
+  static void uploadDocument(File file,String uid) {
+     FirebaseStorage.instance.ref("artisan").child("$uid/verification documents/file.jpg").putFile(file).snapshotEvents.listen((taskSnapShot) {
       if(taskSnapShot.state==TaskState.success){
         var path = FirebaseStorage.instance.ref("artisan").child("uid/verification documents/file.jpg").fullPath;
         Map<String,dynamic> data = {'document_path': path};
-        saveVerificationDocuments(data: data, uid: 'uid');
+        saveVerificationDocuments(data: data, uid: uid);
       }
     });
 

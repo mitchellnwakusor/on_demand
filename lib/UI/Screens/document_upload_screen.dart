@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:on_demand/Services/authentication.dart';
+import 'package:on_demand/Services/firebase_database.dart';
 import 'package:on_demand/Utilities/constants.dart';
 
 import '../Components/page_indicator.dart';
@@ -36,6 +38,7 @@ class _DocumentUploadScreenState extends State<DocumentUploadScreen> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -89,7 +92,11 @@ class _DocumentUploadScreenState extends State<DocumentUploadScreen> {
                 ],
               ),
             ),
-            ElevatedButton(onPressed: (){}, child: const Text('Done')),
+            ElevatedButton(onPressed: (){
+              if(contentFile!=null){
+                FirebaseDatabase.uploadDocument(contentFile!,Authentication.instance.currentUser!.uid);
+              }
+            }, child: const Text('Done')),
           ],
         ),
       ),
