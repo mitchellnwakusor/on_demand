@@ -43,7 +43,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
     if(isVerified){
       //save details
       Map<String,dynamic> data = Provider.of<SignupProvider>(context,listen: false).signupPersonalData;
-      print(data);
+      data.remove('password');
       FirebaseDatabase.saveSignUpDetails(data: data, uid: user.uid);
       checkVerificationTimer.cancel();
       Navigator.pushReplacementNamed(context,authHandlerScreen);
