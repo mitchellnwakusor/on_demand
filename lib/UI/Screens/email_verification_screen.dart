@@ -3,10 +3,7 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:on_demand/Services/authentication.dart';
-import 'package:on_demand/Services/firebase_database.dart';
-import 'package:on_demand/Services/providers/signup_provider.dart';
 import 'package:on_demand/Utilities/constants.dart';
-import 'package:provider/provider.dart';
 
 import '../../Core/routes.dart';
 
@@ -42,9 +39,6 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
     });
     if(isVerified){
       //save details
-      Map<String,dynamic> data = Provider.of<SignupProvider>(context,listen: false).signupPersonalData;
-      data.remove('password');
-      FirebaseDatabase.saveSignUpDetails(data: data, uid: user.uid);
       checkVerificationTimer.cancel();
       Navigator.pushReplacementNamed(context,authHandlerScreen);
     }

@@ -37,6 +37,10 @@ class _AuthenticationHandlerState extends State<AuthenticationHandler> {
               var password = Provider.of<SignupProvider>(context)
                   .signupPersonalData['password'];
               Authentication.instance.linkEmailCredential(email, password);
+              // save user details
+              Map<String,dynamic> data = Provider.of<SignupProvider>(context,listen: false).signupPersonalData;
+              data.remove('password');
+              FirebaseDatabase.saveSignUpDetails(data: data, uid: user.data!.uid);
             }
 
             screen = FutureBuilder(
@@ -84,9 +88,6 @@ class _AuthenticationHandlerState extends State<AuthenticationHandler> {
                   }
                   return tempScreen ?? const Center(child: CircularProgressIndicator(),);
                 });
-
-
-
             return screen;
           case false:
             screen = const AccountSelectionScreen();
