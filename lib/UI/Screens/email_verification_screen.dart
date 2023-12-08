@@ -8,6 +8,8 @@ import 'package:on_demand/Services/providers/signup_provider.dart';
 import 'package:on_demand/Utilities/constants.dart';
 import 'package:provider/provider.dart';
 
+import '../../Core/routes.dart';
+
 class EmailVerificationScreen extends StatefulWidget {
   const EmailVerificationScreen({super.key});
 
@@ -23,23 +25,33 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
   late Timer checkVerificationTimer;
 
   void initVerification() {
-    checkVerificationTimer =
-        Timer.periodic(const Duration(seconds: 10), (timer) {
-          checkVerification(user!);
-        });
+    isVerified = Authentication.instance.currentUser!.emailVerified;
+    if(!isVerified){
+      Authentication.instance.currentUser!.sendEmailVerification();
+      checkVerificationTimer =
+          Timer.periodic(const Duration(seconds: 5), (timer) {
+            checkVerification(user!);
+          });
+    }
   }
+
   void checkVerification(User user,) {
     user.reload();
-    if(user.emailVerified){
+    setState(() {
+      isVerified = Authentication.instance.currentUser!.emailVerified;
+    });
+    if(isVerified){
       //save details
-      Map<String,dynamic> data = Provider.of<SignupProvider>(context).signupPersonalData;
+      Map<String,dynamic> data = Provider.of<SignupProvider>(context,listen: false).signupPersonalData;
+      print(data);
       FirebaseDatabase.saveSignUpDetails(data: data, uid: user.uid);
       checkVerificationTimer.cancel();
+      Navigator.pushReplacementNamed(context,authHandlerScreen);
     }
   }
   @override
   void initState() {
-    // initVerification();
+    initVerification();
     super.initState();
   }
 
@@ -50,6 +62,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
   }
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(),
       body: Padding(
@@ -61,7 +74,9 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
             const SizedBox(height:48),
             const Text('A verification link was sent to your address, .Check your inbox or spam folder and confirm your account by tapping the link. '),
             const SizedBox(height:48),
-            Center(child: TextButton(onPressed: (){}, child: const Text('resend verification link')))
+            Center(child: TextButton(onPressed: (){
+              Authentication.instance.currentUser!.sendEmailVerification();
+            }, child: const Text('resend verification link')))
           ],
         ),
       ),

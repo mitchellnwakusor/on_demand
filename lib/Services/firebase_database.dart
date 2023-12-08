@@ -29,7 +29,7 @@ class FirebaseDatabase {
   }
 
   static Future<void> saveVerificationDocuments({required Map<String, dynamic> data,required String uid}) async{
-    String collectionPath = 'user detail';
+    String collectionPath = 'verification detail';
     await FirebaseFirestore.instance.collection(collectionPath).doc(uid).set(data,SetOptions(merge: true));
   }
 
@@ -84,7 +84,7 @@ class FirebaseDatabase {
   static void uploadDocument(BuildContext context, File file,String uid) {
      FirebaseStorage.instance.ref("artisan").child("$uid/verification documents/file.jpg").putFile(file).snapshotEvents.listen((taskSnapShot) {
       if(taskSnapShot.state==TaskState.success){
-        var path = FirebaseStorage.instance.ref("artisan").child("uid/verification documents/file.jpg").fullPath;
+        var path = FirebaseStorage.instance.ref("artisan").child("$uid/verification documents/file.jpg").fullPath;
         Map<String,dynamic> data = {'document_path': path};
         saveVerificationDocuments(data: data, uid: uid);
         Navigator.pushReplacementNamed(context, authHandlerScreen);

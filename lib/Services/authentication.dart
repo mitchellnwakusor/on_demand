@@ -10,7 +10,7 @@ class Authentication {
 
  final FirebaseAuth _authInstance = FirebaseAuth.instance;
 
- Stream<User?> get authChanges => _authInstance.userChanges();
+ Stream<User?> get authChanges => _authInstance.authStateChanges();
  User? get currentUser => _authInstance.currentUser;
 
  String? _verificationID;

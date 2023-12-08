@@ -28,8 +28,6 @@ class _AuthenticationHandlerState extends State<AuthenticationHandler> {
         //- if user is logged in
         //- if user is logged out
         late Widget screen;
-        late Widget tempScreen;
-        late Widget secondScreen;
         switch (user.hasData) {
           case true:
             //links email+password credential to currentUser if email is empty
@@ -45,24 +43,29 @@ class _AuthenticationHandlerState extends State<AuthenticationHandler> {
                 future:
                     FirebaseDatabase.businessDetailExist(uid: user.data!.uid),
                 builder: (context, snapshot) {
+                  Widget? tempScreen;
                   if (snapshot.hasData) {
                     if (snapshot.data == false) {
-                      print(snapshot.data);
+                      print('business detail ${snapshot.data}');
                       tempScreen = const BusinessDetailScreen();
                     } else if (snapshot.data == true) {
+                      print('business detail ${snapshot.data}');
                       tempScreen = FutureBuilder(
                           future: FirebaseDatabase.verificationDetailExist(
                               uid: user.data!.uid),
                           builder: (context, snapshot) {
+                            Widget? secondScreen;
                             if (snapshot.hasData) {
+                              print('${snapshot.data}');
                               if (snapshot.data == false) {
-                                //
+                                print('verification detail ${snapshot.data}');
                                 secondScreen = const DocumentUploadScreen();
-                              } else if (snapshot.data == true) {
-                                if (!user.data!.emailVerified) {
+                              } else {
+                                print('verification detail ${snapshot.data}');
+                                if (!user.data!.emailVerified ) {
                                   secondScreen = const EmailVerificationScreen();
                                 } else {
-                                  return Center(
+                                  secondScreen = Center(
                                     child: ElevatedButton(
                                       onPressed: () {
                                         FirebaseAuth.instance.signOut();
@@ -71,62 +74,18 @@ class _AuthenticationHandlerState extends State<AuthenticationHandler> {
                                     ),
                                   );
                                 }
+
+                                //check if user detail has been stored instead
                               }
                             }
-                            return secondScreen;
+                            return secondScreen ?? const Center(child: CircularProgressIndicator(),);
                           });
                     }
                   }
-                  return tempScreen;
+                  return tempScreen ?? const Center(child: CircularProgressIndicator(),);
                 });
 
-            // screen = FutureBuilder(future: FirebaseDatabase.verificationDetailExist(uid: user.data!.uid), builder: (context,snapshot){
-            //   if(snapshot.hasData){
-            //     if(snapshot.data==false){
-            //       tempScreen = const DocumentUploadScreen();
-            //     }
-            //   }
-            //   return tempScreen;
-            // });
-            // // FirebaseDatabase.businessDetailExist(uid: user.data!.uid).then((exists) {
-            // //   print('future started 01');
-            // //   if(!exists){
-            // //     screen = const BusinessDetailScreen();
-            // //     return screen;
-            // //   }
-            // // });
-            // // print('start verification check');
-            // //
-            // // FirebaseDatabase.verificationDetailExist(uid: user.data!.uid).then((exists) {
-            // //   print('future started 02');
-            // //   if(exists){
-            // //     screen = const DocumentUploadScreen();
-            // //     return screen;
-            // //   }
-            // // });
-            // if(!user.data!.emailVerified){
-            //   screen = const EmailVerificationScreen();
-            // }
-            // else{
-            //   screen = Center(child: ElevatedButton(onPressed: (){FirebaseAuth.instance.signOut();},child: const Text('Log out'),),);
-            // }
 
-            // or
-            // check if user has business details
-            // void check() async{
-            //   if(!await FirebaseDatabase.businessDetailExist(uid: user.data!.uid)){
-            //     screen = const BusinessDetailScreen();
-            //   }
-            //   else if(!await FirebaseDatabase.verificationDetailExist(uid: user.data!.uid)){
-            //     screen = const DocumentUploadScreen();
-            //   }
-            //   else {
-            //     screen = Center(child: ElevatedButton(onPressed: (){FirebaseAuth.instance.signOut();},child: const Text('Log out'),),);
-            //   }
-            // }
-            // check();
-            // TODO: Home screen
-            // screen = Center(child: ElevatedButton(onPressed: (){FirebaseAuth.instance.signOut();},child: const Text('Log out'),),);
 
             return screen;
           case false:
