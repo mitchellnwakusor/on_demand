@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:on_demand/UI/Components/progress_dialog.dart';
 
 import '../../Core/routes.dart';
 import '../../Utilities/constants.dart';
@@ -51,6 +52,7 @@ class CTAButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     String firstButtonLabel = 'Register';
     String secondButtonLabel = 'Login';
 
@@ -69,9 +71,14 @@ class CTAButtons extends StatelessWidget {
           height: 48,
         ),
         OutlinedButton(
-            onPressed: () => navigateTo(route: loginScreen,),
+            onPressed: () {
+
+              navigateTo(route: loginScreen);
+
+              },
             child: Text(secondButtonLabel))
       ],
     );
   }
 }
+

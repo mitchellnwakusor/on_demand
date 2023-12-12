@@ -4,7 +4,9 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:on_demand/Core/routes.dart';
+import 'package:on_demand/Services/internet_checker.dart';
 
 class FirebaseDatabase {
   static Future<bool> userExists(String phoneNumber,String emailAddress) async{
@@ -23,9 +25,17 @@ class FirebaseDatabase {
     await FirebaseFirestore.instance.collection(collectionPath).doc(uid).set(data);
   }
 
-  static Future<void> saveBusinessDetails({required Map<String, dynamic> data,required String uid}) async{
+  static Future<void> saveBusinessDetails(BuildContext context,{required Map<String, dynamic> data,required String uid}) async{
     String collectionPath = 'business detail';
-    await FirebaseFirestore.instance.collection(collectionPath).doc(uid).set(data);
+    if (await InternetChecker.checkInternet() == true) {
+      await FirebaseFirestore.instance.collection(collectionPath).doc(uid).set(
+          data);
+    }else {
+      if (!context.mounted) return;
+      Navigator.pop(context);
+      // TODO
+      Fluttertoast.showToast(msg: "No internet connection, please try again.");
+    }
   }
 
   static Future<void> saveVerificationDocuments({required Map<String, dynamic> data,required String uid}) async{
@@ -81,16 +91,30 @@ class FirebaseDatabase {
     }
   }
 
-  static void uploadDocument(BuildContext context, File file,String uid) {
-     FirebaseStorage.instance.ref("artisan").child("$uid/verification documents/file.jpg").putFile(file).snapshotEvents.listen((taskSnapShot) {
-      if(taskSnapShot.state==TaskState.success){
-        var path = FirebaseStorage.instance.ref("artisan").child("$uid/verification documents/file.jpg").fullPath;
-        Map<String,dynamic> data = {'document_path': path};
-        saveVerificationDocuments(data: data, uid: uid);
-        Navigator.pushReplacementNamed(context, authHandlerScreen);
-      }
-    });
-
+  static void uploadDocument(BuildContext context, File file,String uid) async{
+    if (await InternetChecker.checkInternet() == true) {
+      FirebaseStorage.instance
+          .ref("artisan")
+          .child("$uid/verification documents/file.jpg")
+          .putFile(file)
+          .snapshotEvents
+          .listen((taskSnapShot) {
+        if (taskSnapShot.state == TaskState.success) {
+          var path = FirebaseStorage.instance
+              .ref("artisan")
+              .child("$uid/verification documents/file.jpg")
+              .fullPath;
+          Map<String, dynamic> data = {'document_path': path};
+          saveVerificationDocuments(data: data, uid: uid);
+          Navigator.pushReplacementNamed(context, authHandlerScreen);
+        }
+      });
+    }else {
+      if (!context.mounted) return;
+      Navigator.pop(context);
+      // TODO
+      Fluttertoast.showToast(msg: "No internet connection, please try again.");
+    }
   }
 
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:on_demand/Services/authentication.dart';
 import 'package:on_demand/Services/providers/signup_provider.dart';
+import 'package:on_demand/UI/Components/progress_dialog.dart';
 import 'package:provider/provider.dart';
 
 import '../../Utilities/constants.dart';
@@ -19,14 +20,30 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
   String phoneNumber = '8112345678';
   TextEditingController smsField = TextEditingController();
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  late BuildContext dialogContext;
+
+  void progressView() async
+  {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        dialogContext = context;
+        return ProgressDialog(message: "Processing, Please wait...",);
+      },
+    );
+
+  }
 
   void _continueCallback() {
     if(formKey.currentState!.validate()){
+      progressView();
       Authentication.instance.phoneSignIn(context,smsField.text);
     }
   }
 
   void _resendCodeCallback() {
+    progressView();
     Authentication.instance.resendOTPCode(context, phoneNumber);
   }
   @override

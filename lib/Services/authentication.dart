@@ -57,6 +57,8 @@ class Authentication {
        Navigator.popUntil(context, ModalRoute.withName('/'));
      }
    } on FirebaseAuthException catch (exception) {
+     if (!context.mounted) return;
+     Navigator.pop(context);
      Fluttertoast.showToast(msg: '${exception.message}');
    }
  }
@@ -70,6 +72,8 @@ class Authentication {
        Navigator.popUntil(context, ModalRoute.withName('/'));
      }
    } on FirebaseAuthException catch (exception) {
+     if (!context.mounted) return;
+     Navigator.pop(context);
      Fluttertoast.showToast(msg: '${exception.message}');
    }
  }

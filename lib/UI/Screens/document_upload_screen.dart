@@ -1,9 +1,12 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:on_demand/Services/authentication.dart';
 import 'package:on_demand/Services/firebase_database.dart';
+import 'package:on_demand/UI/Components/progress_dialog.dart';
 import 'package:on_demand/Utilities/constants.dart';
 import 'package:path/path.dart';
 
@@ -18,6 +21,7 @@ class DocumentUploadScreen extends StatefulWidget {
 }
 
 class _DocumentUploadScreenState extends State<DocumentUploadScreen> {
+  late BuildContext dialogContext;
   File? contentFile;
   //select content files
   void getContentFile() async {
@@ -39,6 +43,21 @@ class _DocumentUploadScreenState extends State<DocumentUploadScreen> {
 
   @override
   Widget build(BuildContext context) {
+
+
+    void progressView() async
+    {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          dialogContext = context;
+          return ProgressDialog(message: "Processing, Please wait...",);
+        },
+      );
+
+    }
+
 
     return Scaffold(
       appBar: AppBar(
@@ -94,8 +113,18 @@ class _DocumentUploadScreenState extends State<DocumentUploadScreen> {
               ),
             ),
             ElevatedButton(onPressed: (){
+              progressView();
               if(contentFile!=null){
-                FirebaseDatabase.uploadDocument(context,contentFile!,Authentication.instance.currentUser!.uid);
+                try {
+                  FirebaseDatabase.uploadDocument(context,contentFile!,Authentication.instance.currentUser!.uid);
+                } on FirebaseException catch (e) {
+                  // Caught an exception from Firebase.
+                  if (!context.mounted) return;
+                  Navigator.pop(dialogContext);
+                  Fluttertoast.showToast(msg: "Failed with error '${e.code}': ${e.message}.");
+
+                }
+
               }
             }, child: const Text('Done')),
           ],

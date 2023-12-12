@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:on_demand/Services/authentication.dart';
 import 'package:on_demand/UI/Components/oauth_divider.dart';
+import 'package:on_demand/UI/Components/progress_dialog.dart';
 import 'package:on_demand/Utilities/constants.dart';
 import 'package:provider/provider.dart';
 
@@ -35,9 +36,23 @@ class _LoginScreenState extends State<LoginScreen> {
       isEmailPasswordSignIn = !isEmailPasswordSignIn;
     });
   }
+  late BuildContext dialogContext;
+  void progressView() async
+  {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        dialogContext = context;
+        return ProgressDialog(message: "Processing, Please wait...",);
+      },
+    );
+
+  }
 
   void emailSignIn() async {
     Authentication.instance.emailSignIn(context,emailField.text, passwordField.text);
+
   }
 
   void phoneSignIn() async {
@@ -45,7 +60,9 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _signIn() async {
+
     if (formKey.currentState!.validate()) {
+      progressView();
       try {
         bool doesUserExists =
         await FirebaseDatabase.userExists(
@@ -53,6 +70,7 @@ class _LoginScreenState extends State<LoginScreen> {
             .timeout(const Duration(seconds: 5));
         if (doesUserExists) {
           //sign in
+
           if (context.mounted) {
             //save phone number in provider, specifically for use by otp screen
             Provider.of<SignupProvider>(context,listen: false).addDataSignup(key: 'phone_number', value: phoneField.text);
@@ -66,11 +84,18 @@ class _LoginScreenState extends State<LoginScreen> {
             }
           }
         } else {
+          if (!mounted) return;
+          Navigator.pop(dialogContext);
+
           Fluttertoast.showToast(
               msg:
-              "There is no phone number or email address registered with an account.");
+              "There is no phone number or email address registered with an account."
+          );
+
         }
       } on Exception {
+        if (!mounted) return;
+        Navigator.pop(dialogContext);
         Fluttertoast.showToast(
             msg: "No internet connection, please try again.");
       }
@@ -127,7 +152,12 @@ class _LoginScreenState extends State<LoginScreen> {
               const SizedBox(
                 height: 48,
               ),
-              ElevatedButton(onPressed: _signIn, child: const Text('Continue')),
+              ElevatedButton(onPressed:(){
+                _signIn();
+                },
+                child: const Text('Continue'),
+
+              ),
               const SizedBox(
                 height: 48,
               ),

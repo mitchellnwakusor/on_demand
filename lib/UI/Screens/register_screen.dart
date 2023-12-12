@@ -6,6 +6,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:on_demand/Core/ids.dart';
 import 'package:on_demand/Services/authentication.dart';
 import 'package:on_demand/UI/Components/oauth_divider.dart';
+import 'package:on_demand/UI/Components/progress_dialog.dart';
 import 'package:provider/provider.dart';
 
 import '../../Core/routes.dart';
@@ -32,9 +33,24 @@ class _RegisterScreenState extends State<RegisterScreen> {
   TextEditingController phoneField = TextEditingController();
   TextEditingController passwordField = TextEditingController();
 
+  late BuildContext dialogContext;
+
+  void progressView() async
+  {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        dialogContext = context;
+        return ProgressDialog(message: "Processing, Please wait...",);
+      },
+    );
+
+  }
 
   void _continueCallback() async {
     if(formKey.currentState!.validate()){
+      progressView();
       //Todo internet connection check
       try {
         bool doesUserExists = await FirebaseDatabase.userExists(phoneField.text, emailField.text).timeout(const Duration(seconds: 5));
@@ -47,9 +63,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
           }
         }
         else{
+          if (!mounted) return;
+          Navigator.pop(dialogContext);
           Fluttertoast.showToast(msg: "phone number or email address is already in use.");
         }
       } on Exception {
+        if (!mounted) return;
+        Navigator.pop(dialogContext);
         // TODO
         Fluttertoast.showToast(msg: "No internet connection, please try again.");
 

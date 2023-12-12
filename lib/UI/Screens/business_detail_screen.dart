@@ -1,6 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:on_demand/Services/authentication.dart';
 import 'package:on_demand/Services/firebase_database.dart';
+import 'package:on_demand/UI/Components/progress_dialog.dart';
 import 'package:provider/provider.dart';
 
 import '../../Core/routes.dart';
@@ -20,6 +23,21 @@ class BusinessDetailScreen extends StatefulWidget {
 
 class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
 
+  late BuildContext dialogContext;
+
+  void progressView() async
+  {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        dialogContext = context;
+        return ProgressDialog(message: "Processing, Please wait...",);
+      },
+    );
+
+  }
+
   String? _requiredValidator(String? value) {
     if (value == null) {
       return 'This field is required';
@@ -31,9 +49,10 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
 
   void _saveDetails() async {
     if(formKey.currentState!.validate()){
+      progressView();
           Provider.of<SignupProvider>(context,listen: false).addDataBusiness(key: 'business_type', value: planFieldValue!);
           Map<String, dynamic> data = Provider.of<SignupProvider>(context, listen: false).signupBusinessData;
-          FirebaseDatabase.saveBusinessDetails(data: data, uid: Authentication.instance.currentUser!.uid);
+      FirebaseDatabase.saveBusinessDetails(context,data: data, uid: Authentication.instance.currentUser!.uid);
           //Todo: change route
           Navigator.pushReplacementNamed(context, authHandlerScreen);
     }
