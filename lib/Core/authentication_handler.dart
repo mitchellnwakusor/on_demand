@@ -130,9 +130,11 @@ class _AuthenticationHandlerState extends State<AuthenticationHandler> {
     );
   }
 
-  showDialogBox() => showCupertinoDialog<String>(
+  showDialogBox() {
+    showCupertinoDialog<String>(
     context: context,
-    builder: (BuildContext context) => CupertinoAlertDialog(
+    builder: (BuildContext context) =>
+      CupertinoAlertDialog(
       title: const Text('No Connection'),
       content: const Text('Please check your internet connection and try again'),
       actions: <Widget>[
@@ -152,5 +154,6 @@ class _AuthenticationHandlerState extends State<AuthenticationHandler> {
       ],
     ),
   );
+  }
 
 }
