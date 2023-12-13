@@ -13,6 +13,7 @@ import 'package:on_demand/UI/Screens/email_verification_screen.dart';
 import 'package:provider/provider.dart';
 import '../UI/Screens/account_selection_screen.dart';
 import '../Services/authentication.dart';
+import '../Utilities/constants.dart';
 
 class AuthenticationHandler extends StatefulWidget {
   const AuthenticationHandler({super.key});
@@ -76,51 +77,99 @@ class _AuthenticationHandlerState extends State<AuthenticationHandler> {
               FirebaseDatabase.saveSignUpDetails(data: data, uid: user.data!.uid);
             }
 
+            //if internet connection
             screen = FutureBuilder(
-                future:
-                    FirebaseDatabase.businessDetailExist(uid: user.data!.uid),
-                builder: (context, snapshot) {
-                  Widget? tempScreen;
-                  if (snapshot.hasData) {
-                    if (snapshot.data == false) {
-                      print('business detail ${snapshot.data}');
-                      tempScreen = const BusinessDetailScreen();
-                    } else if (snapshot.data == true) {
-                      print('business detail ${snapshot.data}');
-                      tempScreen = FutureBuilder(
-                          future: FirebaseDatabase.verificationDetailExist(
-                              uid: user.data!.uid),
-                          builder: (context, snapshot) {
-                            Widget? secondScreen;
-                            if (snapshot.hasData) {
-                              print('${snapshot.data}');
-                              if (snapshot.data == false) {
-                                print('verification detail ${snapshot.data}');
-                                secondScreen = const DocumentUploadScreen();
-                              } else {
-                                print('verification detail ${snapshot.data}');
-                                if (!user.data!.emailVerified ) {
-                                  secondScreen = const EmailVerificationScreen();
-                                } else {
-                                  secondScreen = Center(
-                                    child: ElevatedButton(
-                                      onPressed: () {
-                                        FirebaseAuth.instance.signOut();
-                                      },
-                                      child: const Text('Log out'),
-                                    ),
-                                  );
-                                }
+              future: FirebaseDatabase.getCurrentUserType(user.data!.uid),
+              builder: (context, snapshot) {
+                Widget? placeHolder;
+                if (snapshot.hasData) {
+                  if (snapshot.data == UserType.artisan.name) {
+                    placeHolder = FutureBuilder(
+                        future: FirebaseDatabase.businessDetailExist(
+                            uid: user.data!.uid),
+                        builder: (context, snapshot) {
+                          Widget? tempScreen;
+                          if (snapshot.hasData) {
+                            if (snapshot.data == false) {
+                              tempScreen = const BusinessDetailScreen();
+                            } else if (snapshot.data == true) {
+                              tempScreen = FutureBuilder(
+                                  future:
+                                  FirebaseDatabase.verificationDetailExist(
+                                      uid: user.data!.uid),
+                                  builder: (context, snapshot) {
+                                    Widget? secondScreen;
+                                    if (snapshot.hasData) {
+                                      if (snapshot.data == false) {
+                                        secondScreen =
+                                        const DocumentUploadScreen();
+                                      } else {
+                                        if (!user.data!.emailVerified) {
+                                          secondScreen =
+                                          const EmailVerificationScreen();
+                                        } else {
+                                          secondScreen = Center(
+                                            child: ElevatedButton(
+                                              onPressed: () {
+                                                FirebaseAuth.instance.signOut();
+                                              },
+                                              child:
+                                              const Text('Artisan Log out'),
+                                            ),
+                                          );
+                                        }
 
-                                //check if user detail has been stored instead
-                              }
+                                        //check if user detail has been stored instead
+                                      }
+                                    }
+                                    return secondScreen ??
+                                        const Center(
+                                          child: CircularProgressIndicator(),
+                                        );
+                                  });
                             }
-                            return secondScreen ?? const Center(child: CircularProgressIndicator(),);
-                          });
-                    }
+                          }
+                          return tempScreen ??
+                              const Center(
+                                child: CircularProgressIndicator(),
+                              );
+                        });
+                  } else if (snapshot.data == UserType.client.name) {
+                    placeHolder = FutureBuilder(
+                        future: FirebaseDatabase.verificationDetailExist(uid: user.data!.uid),
+                        builder: (context, snapshot) {
+                          Widget? secondScreen;
+                          if (snapshot.hasData) {
+                            if (snapshot.data == false) {
+                              secondScreen = const DocumentUploadScreen();
+                            } else {
+                              if (!user.data!.emailVerified) {
+                                secondScreen = const EmailVerificationScreen();
+                              } else {
+                                secondScreen = Center(
+                                  child: ElevatedButton(
+                                    onPressed: () {
+                                      FirebaseAuth.instance.signOut();
+                                    },
+                                    child: const Text('Client Log out'),
+                                  ),
+                                );
+                              }
+
+                              //check if user detail has been stored instead
+                            }
+                          }
+                          return secondScreen ??
+                              const Center(
+                                child: CircularProgressIndicator(),
+                              );
+                        });
                   }
-                  return tempScreen ?? const Center(child: CircularProgressIndicator(),);
-                });
+                }
+
+                return placeHolder ?? const Center(child: CircularProgressIndicator(),);
+              },
+            );
             return screen;
           case false:
             screen = const AccountSelectionScreen();

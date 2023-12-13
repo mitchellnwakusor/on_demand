@@ -6,6 +6,7 @@ class SignupProvider {
     'email': null,
     'phone_number': null,
     'password': null,
+    'user_type': null,
     // 'location': null,
     // 'occupation': null,
     // 'plan': null,
@@ -24,12 +25,13 @@ class SignupProvider {
   get signupBusinessData => _signupBusinessData;
   get signupDocumentData => _signupDocumentData;
 
-  void addMultipleDataSignup({required String firstName, required String lastName, required String email,required String phoneNumber,required String password}){
+  void addMultipleDataSignup({required String firstName, required String lastName, required String email,required String phoneNumber,required String password,required userType}){
       _signupPersonalData['first_name'] = firstName;
       _signupPersonalData['last_name'] = lastName;
       _signupPersonalData['email'] = email;
       _signupPersonalData['phone_number'] = phoneNumber;
       _signupPersonalData['password'] = password;
+      _signupPersonalData['user_type'] = userType;
   }
 
   void addDataSignup({required String key, required String value}){

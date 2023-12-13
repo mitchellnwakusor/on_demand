@@ -12,13 +12,14 @@ import 'package:provider/provider.dart';
 import '../../Core/routes.dart';
 import '../../Services/firebase_database.dart';
 import '../../Services/providers/signup_provider.dart';
+import '../../Services/providers/start_screen_provider.dart';
 import '../../Utilities/constants.dart';
 import '../Components/page_indicator.dart';
 import '../Components/text_field.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
-  static const id = 'login_screen';
+  static const id = 'register_screen';
 
   @override
   State<RegisterScreen> createState() => _RegisterScreenState();
@@ -53,11 +54,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
       progressView();
       //Todo internet connection check
       try {
+        UserType userType = Provider.of<StartScreenProvider>(context,listen: false).userType;
         bool doesUserExists = await FirebaseDatabase.userExists(phoneField.text, emailField.text).timeout(const Duration(seconds: 5));
         if(!doesUserExists){
           if(context.mounted){
             //save data in provider for later use
-            Provider.of<SignupProvider>(context,listen: false).addMultipleDataSignup(firstName: fNameField.text, lastName: lNameField.text, email: emailField.text, phoneNumber: phoneField.text,password: passwordField.text);
+            Provider.of<SignupProvider>(context,listen: false).addMultipleDataSignup(firstName: fNameField.text, lastName: lNameField.text, email: emailField.text, phoneNumber: phoneField.text,password: passwordField.text,userType: userType.name);
             //start phone authentication process
             Authentication.instance.sendOTPCode(context, phoneField.text);
           }

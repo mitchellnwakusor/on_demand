@@ -122,7 +122,6 @@ class _DocumentUploadScreenState extends State<DocumentUploadScreen> {
                   if (!context.mounted) return;
                   Navigator.pop(dialogContext);
                   Fluttertoast.showToast(msg: "Failed with error '${e.code}': ${e.message}.");
-
                 }
 
               }

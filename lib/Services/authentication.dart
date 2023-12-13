@@ -79,8 +79,12 @@ class Authentication {
  }
 
  void linkEmailCredential(String email,String password) async{
-   AuthCredential credential = EmailAuthProvider.credential(email: email, password: password);
-   _authInstance.currentUser!.linkWithCredential(credential);
+   try {
+     AuthCredential credential = EmailAuthProvider.credential(email: email, password: password);
+     _authInstance.currentUser!.linkWithCredential(credential);
+   } on FirebaseAuthException catch (exception) {
+     Fluttertoast.showToast(msg: '${exception.message}');
+   }
  }
 
 }

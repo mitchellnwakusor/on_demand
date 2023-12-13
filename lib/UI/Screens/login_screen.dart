@@ -13,11 +13,12 @@ import '../../Core/ids.dart';
 import '../../Core/routes.dart';
 import '../../Services/firebase_database.dart';
 import '../../Services/providers/signup_provider.dart';
+import '../../Services/providers/start_screen_provider.dart';
 import '../Components/text_field.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
-  static const id = 'register_screen';
+  static const id = 'login_screen';
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -64,11 +65,10 @@ class _LoginScreenState extends State<LoginScreen> {
     if (formKey.currentState!.validate()) {
       progressView();
       try {
-        bool doesUserExists =
-        await FirebaseDatabase.userExists(
-            "+234${phoneField.text}", emailField.text)
-            .timeout(const Duration(seconds: 5));
-        if (doesUserExists) {
+        UserType userType = Provider.of<StartScreenProvider>(context,listen: false).userType;
+        bool doesUserTypeExists =
+        await FirebaseDatabase.userTypeExists(phoneField.text, emailField.text, userType.name).timeout(const Duration(seconds: 5));
+        if (doesUserTypeExists) {
           //sign in
 
           if (context.mounted) {
