@@ -10,6 +10,7 @@ import 'package:on_demand/Services/providers/signup_provider.dart';
 import 'package:on_demand/UI/Screens/business_detail_screen.dart';
 import 'package:on_demand/UI/Screens/document_upload_screen.dart';
 import 'package:on_demand/UI/Screens/email_verification_screen.dart';
+import 'package:on_demand/UI/Screens/home_screen.dart';
 import 'package:provider/provider.dart';
 import '../UI/Screens/account_selection_screen.dart';
 import '../Services/authentication.dart';
@@ -108,14 +109,15 @@ class _AuthenticationHandlerState extends State<AuthenticationHandler> {
                                           secondScreen =
                                           const EmailVerificationScreen();
                                         } else {
-                                          secondScreen = Center(
-                                            child: ElevatedButton(
-                                              onPressed: () {
-                                                FirebaseAuth.instance.signOut();
-                                              },
-                                              child:
-                                              const Text('Artisan Log out'),
-                                            ),
+                                          secondScreen = const Center(
+                                            child: ArtisanHomeScreen(),
+                                            // ElevatedButton(
+                                            //   onPressed: () {
+                                            //     FirebaseAuth.instance.signOut();
+                                            //   },
+                                            //   child:
+                                            //   const Text('Artisan Log out'),
+                                            // ),
                                           );
                                         }
 
