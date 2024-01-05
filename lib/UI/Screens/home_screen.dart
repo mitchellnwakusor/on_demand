@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:on_demand/Core/routes.dart';
 import 'package:on_demand/Services/providers/user_details_provider.dart';
 
 
@@ -26,12 +27,6 @@ class _ArtisanHomeScreenState extends State<ArtisanHomeScreen> {
   final GlobalKey<ScaffoldState> _key = GlobalKey<ScaffoldState>();
   int navItem = 0;
   bool isPending = true;
-  //requests
-
-  //on init get data from cloud db
-  void initUserDetailsData() {
-    // userDetails.createObject();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,23 +34,23 @@ class _ArtisanHomeScreenState extends State<ArtisanHomeScreen> {
         future: UserDetailsProvider.getData(),
         builder: (context,snapshot){
           if(snapshot.hasData){
+            //provider store
             map = snapshot.data!;
             return Scaffold(
               key: _key,
               appBar: AppBar(
                 automaticallyImplyLeading: false,
-                title: isPending ? GestureDetector(
+                title: GestureDetector(
                   onTap: ()=>_key.currentState?.openDrawer(),
                   child: Stack(
                     clipBehavior: Clip.hardEdge,
                     alignment: Alignment.topRight,
                     children: [
                       const CircleAvatar(radius: 24,backgroundImage: null,),
-                      Positioned(right: 4,child: Container(height: 16, width:16, decoration: const BoxDecoration(color: Colors.red,shape: BoxShape.circle),)),
-
+                      Visibility(visible: isPending,child: Positioned(right: 4,child: Container(height: 16, width:16, decoration: const BoxDecoration(color: Colors.red,shape: BoxShape.circle),))),
                     ],
                   ),
-                ) : GestureDetector(onTap: ()=>_key.currentState?.openDrawer(),child: const CircleAvatar(radius: 24,backgroundImage: null,)),
+                )
               ),
               drawer: Drawer(
                 width: 360,
@@ -70,7 +65,7 @@ class _ArtisanHomeScreenState extends State<ArtisanHomeScreen> {
                     ListTile(
                       leading: const Icon(Icons.person_outline),
                       title: const Text('Profile'),
-                      onTap: (){},
+                      onTap: ()=>Navigator.pushNamed(context, profileScreen),
                     ),
                     ListTile(
                       leading: const Icon(Icons.settings_outlined),
@@ -99,166 +94,7 @@ class _ArtisanHomeScreenState extends State<ArtisanHomeScreen> {
                   ],
                 ),
               ),
-              body: SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Text('Welcome back, ${map['first_name']}',style: const TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 24
-                      ),),
-                      const SizedBox(height: 32,),
-                      const Text('Current jobs',style: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          fontSize: 18
-                      ),),
-                      FutureBuilder(future: null, builder: (context,snapshot){
-                        if(snapshot.hasData){
-                          return const Placeholder();
-                        }
-                        return Container(
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                              color: const Color(0xfff2f2f2),
-                              borderRadius: BorderRadius.circular(10)
-                          ),
-                          height: 80,
-                          margin: const EdgeInsets.symmetric(vertical: 16),
-                          child: const Text('No active job requests yet',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 18
-                            ),),
-                        );
-                      }), // request widget
-                      Container(
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                            color: const Color(0xfff2f2f2),
-                            borderRadius: BorderRadius.circular(10)
-                        ),
-                        height: 136,
-                        margin: const EdgeInsets.symmetric(vertical: 16),
-                        padding: const EdgeInsets.all(16),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Column(
-                              children: [
-                                Container(
-                                  height: 72,
-                                  width: 72,
-                                  alignment: Alignment.center,
-                                  decoration: BoxDecoration(
-                                      color: const Color(0xff83A6FF),
-                                      borderRadius: BorderRadius.circular(10)
-                                  ),
-                                  child: const Icon(Icons.people_outline,color: Color(0xff00247F),),
-                                ),
-                                const SizedBox(height: 8,),
-                                const Text('Refer a friend',style: TextStyle(fontSize: 16),),
-                              ],
-                            ),
-                            Column(
-                              children: [
-                                Container(
-                                  height: 72,
-                                  width: 72,
-                                  alignment: Alignment.center,
-                                  decoration: BoxDecoration(
-                                      color: const Color(0xff83A6FF),
-                                      borderRadius: BorderRadius.circular(10)
-                                  ),
-                                  child: const Icon(Icons.reviews_outlined,color: Color(0xff00247F),),
-                                ),
-                                const SizedBox(height: 8,),
-                                const Text('Reviews',style: TextStyle(fontSize: 16),),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                      Card(
-                        margin: const EdgeInsets.symmetric(vertical: 32),
-                        elevation: 4,
-                        color: const Color(0xff477BFF),
-                        child: Padding(
-                          padding: const EdgeInsets.only(left:16.0,top: 16,bottom: 16),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Flexible(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                                  children: [
-                                    const Text('Having difficulties getting jobs? ',style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 18,
-                                      color: Colors.white,
-                                    ),),
-                                    const SizedBox(height: 8,),
-                                    const Text('Here are 5 sure ways you can improve your reach and get more jobs.',
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        color: Colors.white,
-                                      ),
-                                      softWrap: true,
-                                    ),
-                                    const SizedBox(height: 24,),
-                                    ElevatedButton(onPressed: (){}, child: const Text('Read'))
-
-                                  ],
-                                ),
-                              ),
-                              Image.asset(
-                                'assets/images/picture.png',
-                                scale: 1.1,
-                                fit: BoxFit.scaleDown,
-                                alignment: Alignment.bottomRight,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      // Stack(
-                      //   children: [
-                      //     Padding(
-                      //       padding: const EdgeInsets.all(8.0),
-                      //       child: Column(
-                      //         crossAxisAlignment: CrossAxisAlignment.start,
-                      //         children: [
-                      //           const Text('5 ways to get more clients',style: TextStyle(
-                      //             fontWeight: FontWeight.bold,
-                      //             fontSize: 18,
-                      //             color: Colors.white,
-                      //           ),),
-                      //           const SizedBox(height: 8,),
-                      //           const Text('Having difficulties getting jobs? Here are 5 sure ways you can improve your reach and get more jobs.',
-                      //             style: TextStyle(
-                      //               fontSize: 16,
-                      //               color: Colors.white,
-                      //             ),),
-                      //           const SizedBox(height: 16,),
-                      //           ElevatedButton(onPressed: (){}, child: const Text('Read'))
-                      //
-                      //         ],
-                      //       ),
-                      //     ),
-                      //     Positioned(
-                      //       right: 0,
-                      //       child: Image.asset(
-                      //         'assets/images/picture.png',
-                      //         scale: 0.7,
-                      //       ),
-                      //     )
-                      //   ],
-                      // )
-                    ],
-                  ),
-                ),
-              ),
+              body: ArtisanHomeWidget(map: map),
               bottomNavigationBar: NavigationBar(
                 selectedIndex: navItem,
                 onDestinationSelected: (selected){
@@ -513,4 +349,173 @@ class _ArtisanHomeScreenState extends State<ArtisanHomeScreen> {
     );
   }
 }
+
+class ArtisanHomeWidget extends StatelessWidget {
+  const ArtisanHomeWidget({super.key,required this.map});
+  final Map<String, dynamic>? map;
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text('Welcome back, ${map?['first_name']}',style: const TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: 24
+            ),),
+            const SizedBox(height: 32,),
+            const Text('Current jobs',style: TextStyle(
+                fontWeight: FontWeight.w400,
+                fontSize: 18
+            ),),
+            FutureBuilder(future: null, builder: (context,snapshot){
+              if(snapshot.hasData){
+                return const Placeholder();
+              }
+              return Container(
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                    color: const Color(0xfff2f2f2),
+                    borderRadius: BorderRadius.circular(10)
+                ),
+                height: 80,
+                margin: const EdgeInsets.symmetric(vertical: 16),
+                child: const Text('No active job requests yet',
+                  style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 18
+                  ),),
+              );
+            }), // request widget
+            Container(
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                  color: const Color(0xfff2f2f2),
+                  borderRadius: BorderRadius.circular(10)
+              ),
+              height: 136,
+              margin: const EdgeInsets.symmetric(vertical: 16),
+              padding: const EdgeInsets.all(16),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Column(
+                    children: [
+                      Container(
+                        height: 72,
+                        width: 72,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                            color: const Color(0xff83A6FF),
+                            borderRadius: BorderRadius.circular(10)
+                        ),
+                        child: const Icon(Icons.people_outline,color: Color(0xff00247F),),
+                      ),
+                      const SizedBox(height: 8,),
+                      const Text('Refer a friend',style: TextStyle(fontSize: 16),),
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      Container(
+                        height: 72,
+                        width: 72,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                            color: const Color(0xff83A6FF),
+                            borderRadius: BorderRadius.circular(10)
+                        ),
+                        child: const Icon(Icons.reviews_outlined,color: Color(0xff00247F),),
+                      ),
+                      const SizedBox(height: 8,),
+                      const Text('Reviews',style: TextStyle(fontSize: 16),),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            Card(
+              margin: const EdgeInsets.symmetric(vertical: 32),
+              elevation: 4,
+              color: const Color(0xff477BFF),
+              child: Padding(
+                padding: const EdgeInsets.only(left:16.0,top: 16,bottom: 16),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Flexible(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          const Text('Having difficulties getting jobs? ',style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                            color: Colors.white,
+                          ),),
+                          const SizedBox(height: 8,),
+                          const Text('Here are 5 sure ways you can improve your reach and get more jobs.',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.white,
+                            ),
+                            softWrap: true,
+                          ),
+                          const SizedBox(height: 24,),
+                          ElevatedButton(onPressed: (){}, child: const Text('Read'))
+
+                        ],
+                      ),
+                    ),
+                    Image.asset(
+                      'assets/images/picture.png',
+                      scale: 1.1,
+                      fit: BoxFit.scaleDown,
+                      alignment: Alignment.bottomRight,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            // Stack(
+            //   children: [
+            //     Padding(
+            //       padding: const EdgeInsets.all(8.0),
+            //       child: Column(
+            //         crossAxisAlignment: CrossAxisAlignment.start,
+            //         children: [
+            //           const Text('5 ways to get more clients',style: TextStyle(
+            //             fontWeight: FontWeight.bold,
+            //             fontSize: 18,
+            //             color: Colors.white,
+            //           ),),
+            //           const SizedBox(height: 8,),
+            //           const Text('Having difficulties getting jobs? Here are 5 sure ways you can improve your reach and get more jobs.',
+            //             style: TextStyle(
+            //               fontSize: 16,
+            //               color: Colors.white,
+            //             ),),
+            //           const SizedBox(height: 16,),
+            //           ElevatedButton(onPressed: (){}, child: const Text('Read'))
+            //
+            //         ],
+            //       ),
+            //     ),
+            //     Positioned(
+            //       right: 0,
+            //       child: Image.asset(
+            //         'assets/images/picture.png',
+            //         scale: 0.7,
+            //       ),
+            //     )
+            //   ],
+            // )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 

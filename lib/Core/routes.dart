@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:on_demand/UI/Screens/home_screen.dart';
+import 'package:on_demand/UI/Screens/profile_screen.dart';
 import 'package:on_demand/UI/Screens/reset_password.dart';
 import 'package:on_demand/UI/Screens/start_screen.dart';
 import 'package:on_demand/UI/Screens/business_detail_screen.dart';
@@ -31,8 +32,8 @@ Route<dynamic>? generateRoute (RouteSettings settings) {
       return MaterialPageRoute(builder: (_)=> const OTPVerificationScreen(),settings: settings);
     case BusinessDetailScreen.id:
       return MaterialPageRoute(builder: (_)=> const BusinessDetailScreen(),settings: settings);
-    // case PhoneTextScreen.id:
-    //   return MaterialPageRoute(builder: (_)=> const PhoneTextScreen(),settings: settings);
+    case ProfileScreen.id:
+      return MaterialPageRoute(builder: (_)=> const ProfileScreen(),settings: settings);
     case DocumentUploadScreen.id:
       return MaterialPageRoute(builder: (_)=> const DocumentUploadScreen(),settings: settings);
     default:
@@ -51,6 +52,7 @@ String searchScreen = SearchScreen.id;
 String otpVerificationScreen = OTPVerificationScreen.id;
 String documentUploadScreen = DocumentUploadScreen.id;
 String businessDetailScreen = BusinessDetailScreen.id;
+String profileScreen = ProfileScreen.id;
 // String phoneTextScreen = PhoneTextScreen.id;
 
 
