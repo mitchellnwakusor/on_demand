@@ -87,4 +87,19 @@ class Authentication {
    }
  }
 
+ void forgotPassword(BuildContext context,String email) async{
+  try {
+    await _authInstance.sendPasswordResetEmail(email: email).then((value) {
+      if (!context.mounted) return;
+      Navigator.pop(context);
+      Fluttertoast.showToast(
+          msg: 'A password reset link has been sent to your email address');
+    });
+  } on FirebaseAuthException catch (exception) {
+    if (!context.mounted) return;
+    Navigator.pop(context);
+    Fluttertoast.showToast(msg: '${exception.message}');
+  }
+ }
+ 
 }

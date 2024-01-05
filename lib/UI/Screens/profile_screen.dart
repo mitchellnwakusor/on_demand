@@ -11,6 +11,7 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen>{
+  GlobalKey tabKey = GlobalKey();
   
   bool isVerified = false;
   String name = 'blank blank';
@@ -22,11 +23,13 @@ class _ProfileScreenState extends State<ProfileScreen>{
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
+      key: tabKey,
       length: 2,
       child: Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: true,
           title: const Text('Profile'),
+          actions: [IconButton(onPressed: (){}, icon: const Icon(Icons.add))],
         ),
         body: Padding(
           padding: const EdgeInsets.all(16.0),

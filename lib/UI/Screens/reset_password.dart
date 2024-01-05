@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:on_demand/Services/authentication.dart';
 import 'package:on_demand/Utilities/constants.dart';
 import 'package:on_demand/UI/Components/text_field.dart';
+
+import '../Components/progress_dialog.dart';
 
 class ResetPasswordScreen extends StatefulWidget {
   static const id = 'reset_password_screen';
@@ -15,6 +18,19 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   TextEditingController emailField = TextEditingController();
 
+  late BuildContext dialogContext;
+  void progressView() async
+  {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        dialogContext = context;
+        return ProgressDialog(message: "Processing, Please wait...",);
+      },
+    );
+
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,7 +64,12 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
               const SizedBox(
                 height: 48,
               ),
-              ElevatedButton(onPressed: () {}, child: const Text('Continue')), //Todo: Reset password functionality
+              ElevatedButton(onPressed: () {
+                if(formKey.currentState!.validate()){
+                  progressView();
+                  Authentication.instance.forgotPassword(context, emailField.text);
+                }
+              }, child: const Text('Continue')), //Todo: Reset password functionality
             ],
           ),
         ),
