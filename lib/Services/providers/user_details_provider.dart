@@ -38,6 +38,7 @@ class UserDetailsProvider{
                 docMap.addAll(userValue.data()!);
                 docMap.addAll(businessValue.data()!);
                 docMap.addAll(verificationValue.data()!);
+                print(docMap);
                 return docMap;
                }
              });
@@ -54,11 +55,21 @@ class UserDetailsProvider{
   String? _lastName;
   String? _email;
   String? _phoneNumber;
+  String? _userType;
+  String? _occupation;
+  String? _businessType;
+  String? _location;
+  String? _documentPath;
 
   get firstName => _firstName;
   get lastName => _lastName;
   get email => _email;
   get phoneNumber => _phoneNumber;
+  get userType => _userType;
+  get occupation => _occupation;
+  get businessType => _businessType;
+  get location => _location;
+  get documentPath => _documentPath;
 
   void initProperties( Map<String, dynamic>? value) async{
       if(value!=null){
@@ -66,6 +77,11 @@ class UserDetailsProvider{
         _lastName = value['last_name'];
         _email = value['email'];
         _phoneNumber = value['phone_number'];
+        _documentPath = value['document_path'];
+        _location = value['location'];
+        _businessType = value['business_type'];
+        _occupation = value['occupation'];
+        _userType = value['user_type'];
       }
     }
 }
