@@ -32,7 +32,7 @@ class _ArtisanHomeScreenState extends State<ArtisanHomeScreen> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: UserDetailsProvider.getData(),
+        future: UserDetailsProvider.getAllData(),
         builder: (context,snapshot){
           if(snapshot.hasData){
             //provider store

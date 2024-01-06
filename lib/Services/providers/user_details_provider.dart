@@ -20,6 +20,35 @@ class UserDetailsProvider{
     return docMap;
   }
 
+
+  static Future<Map<String, dynamic>?> getAllData() async{
+    String userCollectionPath = 'user detail';
+    String businessCollectionPath = 'business detail';
+    String verificationCollectionPath = 'verification detail';
+    Map<String,dynamic> docMap = {};
+    User? user = FirebaseAuth.instance.currentUser;
+    
+    if(user!=null){
+       firestore.collection(userCollectionPath).doc(user.uid).get().then((userValue){
+       if(userValue.exists){
+          firestore.collection(businessCollectionPath).doc(user.uid).get().then((businessValue){
+           if(businessValue.exists){
+             firestore.collection(verificationCollectionPath).doc(user.uid).get().then((verificationValue) {
+               if(verificationValue.exists){
+                docMap.addAll(userValue.data()!);
+                docMap.addAll(businessValue.data()!);
+                docMap.addAll(verificationValue.data()!);
+                return docMap;
+               }
+             });
+           }
+         });
+       }
+      });
+    }
+    return docMap;
+    
+  }
   //convert map data to object data
   String? _firstName;
   String? _lastName;
