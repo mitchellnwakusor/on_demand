@@ -102,7 +102,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 padding: kMobileBodyPadding,
                 alignment: Alignment.topLeft,
                 child: const Text(
-                  'Create an Artisan account',
+                  'Create an account',
                   textAlign: TextAlign.start,
                   style: TextStyle(fontSize: 24,),
                 ))),
