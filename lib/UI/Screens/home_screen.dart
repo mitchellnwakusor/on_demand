@@ -178,7 +178,7 @@ class _ArtisanHomeScreenState extends State<ArtisanHomeScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      const Text('Welcome back,',style: TextStyle(
+                      const Text('Welcome back, ',style: TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 24
                       ),),

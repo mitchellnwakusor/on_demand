@@ -25,30 +25,45 @@ class UserDetailsProvider{
     String userCollectionPath = 'user detail';
     String businessCollectionPath = 'business detail';
     String verificationCollectionPath = 'verification detail';
-    Map<String,dynamic> docMap = {};
+    Map<String,dynamic>? docMap;
     User? user = FirebaseAuth.instance.currentUser;
     
     if(user!=null){
-       firestore.collection(userCollectionPath).doc(user.uid).get().then((userValue){
-       if(userValue.exists){
-          firestore.collection(businessCollectionPath).doc(user.uid).get().then((businessValue){
-           if(businessValue.exists){
-             firestore.collection(verificationCollectionPath).doc(user.uid).get().then((verificationValue) {
-               if(verificationValue.exists){
-                docMap.addAll(userValue.data()!);
-                docMap.addAll(businessValue.data()!);
-                docMap.addAll(verificationValue.data()!);
-                print(docMap);
-                return docMap;
-               }
-             });
-           }
-         });
-       }
-      });
+      Map<String,dynamic> tempMap = {};
+      var userDetails = await firestore.collection(userCollectionPath).doc(user.uid).get();
+      if(userDetails.exists){
+        tempMap.addAll(userDetails.data()!);
+        var businessDetails = await firestore.collection(businessCollectionPath).doc(user.uid).get();
+        if(businessDetails.exists){
+          tempMap.addAll(businessDetails.data()!);
+          var verificationDetails = await firestore.collection(verificationCollectionPath).doc(user.uid).get();
+          if(verificationDetails.exists){
+            tempMap.addAll(verificationDetails.data()!);
+            docMap = tempMap;
+            return docMap;
+          }
+        }
+      }
+      //  firestore.collection(userCollectionPath).doc(user.uid).get().then((userValue){
+      //  if(userValue.exists){
+      //     firestore.collection(businessCollectionPath).doc(user.uid).get().then((businessValue){
+      //      if(businessValue.exists){
+      //        firestore.collection(verificationCollectionPath).doc(user.uid).get().then((verificationValue) {
+      //          if(verificationValue.exists){
+      //           tempMap.addAll(userValue.data()!);
+      //           tempMap.addAll(businessValue.data()!);
+      //           tempMap.addAll(verificationValue.data()!);
+      //           docMap = tempMap;
+      //           return docMap;
+      //          }
+      //        });
+      //      }
+      //    });
+      //  }
+      // });
     }
     return docMap;
-    
+
   }
   //convert map data to object data
   String? _firstName;
