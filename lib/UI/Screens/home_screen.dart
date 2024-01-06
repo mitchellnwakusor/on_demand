@@ -442,7 +442,8 @@ class ArtisanHomeWidget extends StatelessWidget {
               margin: const EdgeInsets.symmetric(vertical: 32),
               elevation: 4,
               color: const Color(0xff477BFF),
-              child: Padding(
+              child: Container(
+                height: 240,
                 padding: const EdgeInsets.only(left:16.0,top: 16,bottom: 16),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -464,7 +465,7 @@ class ArtisanHomeWidget extends StatelessWidget {
                             ),
                             softWrap: true,
                           ),
-                          const SizedBox(height: 24,),
+                          const Spacer(),
                           ElevatedButton(onPressed: (){}, child: const Text('Read'))
 
                         ],
