@@ -15,7 +15,7 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProviderStateMixin{
   late TabController tabController;
 
-  late bool isPortfolio;
+  bool isPortfolio = false;
   bool isVerified = false;
   String name = 'blank';
   String occupation = 'blank';
