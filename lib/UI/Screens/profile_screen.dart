@@ -79,6 +79,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                               ],
                             ),
                           ),
+                          const SizedBox(width: 8,),
                           Expanded(
                             flex: 2,
                             child: Column(
