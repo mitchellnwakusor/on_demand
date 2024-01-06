@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:on_demand/Core/routes.dart';
 import 'package:on_demand/Services/providers/user_details_provider.dart';
+import 'package:provider/provider.dart';
 
 
 class HomeScreen extends StatelessWidget {
@@ -36,6 +37,7 @@ class _ArtisanHomeScreenState extends State<ArtisanHomeScreen> {
           if(snapshot.hasData){
             //provider store
             map = snapshot.data!;
+            context.read<UserDetailsProvider>().initProperties(map);
             return Scaffold(
               key: _key,
               appBar: AppBar(
@@ -94,7 +96,7 @@ class _ArtisanHomeScreenState extends State<ArtisanHomeScreen> {
                   ],
                 ),
               ),
-              body: ArtisanHomeWidget(map: map),
+              body: const ArtisanHomeWidget(),
               bottomNavigationBar: NavigationBar(
                 selectedIndex: navItem,
                 onDestinationSelected: (selected){
@@ -351,8 +353,8 @@ class _ArtisanHomeScreenState extends State<ArtisanHomeScreen> {
 }
 
 class ArtisanHomeWidget extends StatelessWidget {
-  const ArtisanHomeWidget({super.key,required this.map});
-  final Map<String, dynamic>? map;
+  const ArtisanHomeWidget({super.key});
+  // final Map<String, dynamic>? map;
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -361,7 +363,7 @@ class ArtisanHomeWidget extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text('Welcome back, ${map?['first_name']}',style: const TextStyle(
+            Text('Welcome back, ${context.watch<UserDetailsProvider>().firstName}',style: const TextStyle(
                 fontWeight: FontWeight.w600,
                 fontSize: 24
             ),),

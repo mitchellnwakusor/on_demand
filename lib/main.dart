@@ -3,6 +3,7 @@ import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart';
 import 'package:on_demand/Services/providers/signup_provider.dart';
 import 'package:on_demand/Services/providers/start_screen_provider.dart';
+import 'package:on_demand/Services/providers/user_details_provider.dart';
 import 'Core/ids.dart';
 import 'Services/firebase_options.dart';
 import 'package:flutter/material.dart';
@@ -31,6 +32,7 @@ void main() async {
         providers: [
           Provider(create: (_) => StartScreenProvider()),
           Provider(create: (_) => SignupProvider()),
+          Provider(create: (_) => UserDetailsProvider()),
         ],
         child: const MainApp(),
       )
