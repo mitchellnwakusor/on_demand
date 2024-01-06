@@ -15,6 +15,7 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProviderStateMixin{
   late TabController tabController;
 
+  late bool isPortfolio;
   bool isVerified = false;
   String name = 'blank';
   String occupation = 'blank';
@@ -31,16 +32,33 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
     location = Provider.of<UserDetailsProvider>(context,listen: false).location;
 
     tabController = TabController(length: 2, vsync: this);
+    tabController.addListener(() {
+      if(tabController.index==1 || (tabController.indexIsChanging && tabController.index==1)){
+        setState(() {
+          isPortfolio = true;
+        });
+      }
+      else{
+        setState(() {
+          isPortfolio = false;
+        });
+      }
+    });
     super.initState();
   }
 
+  @override
+  void dispose() {
+      tabController.dispose();
+      super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: true,
         title: const Text('Profile'),
-        actions: [IconButton(onPressed: (){}, icon: const Icon(Icons.add))],
+        actions: [Visibility(visible: isPortfolio,child: IconButton(onPressed: (){}, icon: const Icon(Icons.add)))],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
