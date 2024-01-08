@@ -6,13 +6,15 @@ import 'package:provider/provider.dart';
 import '../../Services/providers/signup_provider.dart';
 
 class LocationDropDown extends StatefulWidget {
-  const LocationDropDown({super.key});
+   LocationDropDown({super.key, required this.currentLocation});
+   String? currentLocation;
 
   @override
   State<LocationDropDown> createState() => _LocationDropDownState();
 }
 
 class _LocationDropDownState extends State<LocationDropDown> {
+
 
   List locations = [
     'Abia',
@@ -56,6 +58,8 @@ class _LocationDropDownState extends State<LocationDropDown> {
   ];
   String? selectedLocation;
 
+  get currentLocation => widget.currentLocation;
+  
   List<DropdownMenuItem> locationItems(List list) {
     List<DropdownMenuItem> temp = [];
     for(var item in list){
@@ -87,7 +91,7 @@ class _LocationDropDownState extends State<LocationDropDown> {
           validator: _requiredValidator,
           autovalidateMode: AutovalidateMode.onUserInteraction,
           value: selectedLocation,
-          hint: const Text('Current location'),
+          hint:  Text('$currentLocation'),
           decoration: const InputDecoration(filled: true,border: OutlineInputBorder()),
           items: locationItems(locations),
           onChanged: (value){

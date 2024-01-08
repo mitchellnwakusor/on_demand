@@ -127,7 +127,7 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
                     const SizedBox(
                       height: 24,
                     ),
-                    const LocationDropDown(),
+                     LocationDropDown(currentLocation:  'Current Location'),
                   ],
                 ),
               ),
