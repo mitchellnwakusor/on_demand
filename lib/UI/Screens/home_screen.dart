@@ -72,7 +72,9 @@ class _ArtisanHomeScreenState extends State<ArtisanHomeScreen> {
                     ListTile(
                       leading: const Icon(Icons.settings_outlined),
                       title: const Text('Settings'),
-                      onTap: (){},
+                      onTap: (){
+                        Navigator.pushNamed(context, appSettingsScreen);
+                      },
                     ),
                     ListTile(
                       leading: const Icon(Icons.exit_to_app_outlined),
@@ -178,7 +180,7 @@ class _ArtisanHomeScreenState extends State<ArtisanHomeScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      const Text('Welcome back, ',style: TextStyle(
+                      const Text('Welcome, ',style: TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 24
                       ),),
@@ -345,7 +347,7 @@ class _ArtisanHomeScreenState extends State<ArtisanHomeScreen> {
                   NavigationDestination(icon: navItem==2 ? const Icon(Icons.payment) : const Icon(Icons.payment_outlined) , label: 'Pay'),
                   NavigationDestination(icon: navItem==3 ? const Icon(Icons.notifications) : const Icon(Icons.notifications_outlined), label: 'Alerts'),
                 ],),
-            );
+            ); //loading or blank widgets
           }
         }
     );
@@ -363,7 +365,7 @@ class ArtisanHomeWidget extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text('Welcome back, ${context.watch<UserDetailsProvider>().firstName}',style: const TextStyle(
+            Text('Welcome, ${context.watch<UserDetailsProvider>().firstName}',style: const TextStyle(
                 fontWeight: FontWeight.w600,
                 fontSize: 24
             ),),
