@@ -3,6 +3,7 @@ import 'package:on_demand/UI/Screens/edit_profile_screen.dart';
 import 'package:on_demand/UI/Screens/home_screen.dart';
 import 'package:on_demand/UI/Screens/profile_screen.dart';
 import 'package:on_demand/UI/Screens/reset_password.dart';
+import 'package:on_demand/UI/Screens/settings_screen.dart';
 import 'package:on_demand/UI/Screens/start_screen.dart';
 import 'package:on_demand/UI/Screens/business_detail_screen.dart';
 import 'package:on_demand/UI/Screens/document_upload_screen.dart';
@@ -37,6 +38,8 @@ Route<dynamic>? generateRoute (RouteSettings settings) {
       return MaterialPageRoute(builder: (_)=> const ProfileScreen(),settings: settings);
     case EditProfileScreen.id:
       return MaterialPageRoute(builder: (_)=> const EditProfileScreen(),settings: settings);
+    case AppSettingsScreen.id:
+      return MaterialPageRoute(builder: (_)=> const AppSettingsScreen(),settings: settings);
     case DocumentUploadScreen.id:
       return MaterialPageRoute(builder: (_)=> const DocumentUploadScreen(),settings: settings);
     default:
@@ -57,6 +60,7 @@ String documentUploadScreen = DocumentUploadScreen.id;
 String businessDetailScreen = BusinessDetailScreen.id;
 String profileScreen = ProfileScreen.id;
 String editProfileScreen = EditProfileScreen.id;
+String appSettingsScreen = AppSettingsScreen.id;
 // String phoneTextScreen = PhoneTextScreen.id;
 
 
