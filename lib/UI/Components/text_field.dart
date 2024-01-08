@@ -106,6 +106,7 @@ class CustomTextField extends StatefulWidget {
       required this.controller,
       required this.type,
       this.label,
+      this.helperText,
       this.hint});
 
   //config options
@@ -113,6 +114,7 @@ class CustomTextField extends StatefulWidget {
   final TextFieldType type;
   final String? label;
   final String? hint;
+  final String? helperText;
 
   @override
   State<CustomTextField> createState() => _CustomTextFieldState();
@@ -297,6 +299,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
                  // labelText: widget.label,
                  errorMaxLines: 2,
                  hintText: widget.hint,
+                 helperText: widget.helperText,
                  contentPadding: const EdgeInsets.all(16),
                  filled: true,
                  border: const OutlineInputBorder(),
@@ -323,6 +326,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
                  prefixText: '+234',
                  // labelText: widget.label,
                  hintText: widget.hint,
+                 helperText: widget.helperText,
                  contentPadding: const EdgeInsets.all(16),
                  filled: true,
                  border: const OutlineInputBorder(),
