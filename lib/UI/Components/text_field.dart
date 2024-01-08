@@ -7,7 +7,8 @@ enum TextFieldType {
   phone,
   number,
   date,
-  password
+  password,
+  rate
 }
 
 //validators
@@ -81,6 +82,7 @@ String? _emailValidator(String? value) {
   }
   return null;
 }
+
 
 //input formatter
 final List<TextInputFormatter> _nameFormatter = [
@@ -231,6 +233,36 @@ class _CustomTextFieldState extends State<CustomTextField> {
              border: const OutlineInputBorder(),
            ),
          );
+       case TextFieldType.rate:
+         return Column(
+           crossAxisAlignment: CrossAxisAlignment.start,
+           children: [
+             Text(widget.label!),
+             const SizedBox(height: 8,),
+             TextFormField(
+               controller: widget.controller,
+               validator: _requiredValidator,
+               autovalidateMode: AutovalidateMode.onUserInteraction,
+               inputFormatters: [
+                 NumericTextFormatter(),
+                 LengthLimitingTextInputFormatter(20),
+                ],
+               keyboardType: TextInputType.number,
+               textCapitalization: TextCapitalization.none,
+               textInputAction: TextInputAction.next,
+               decoration: InputDecoration(
+                 prefixText: '₦',
+                 // labelText: widget.label,
+                 hintText: widget.hint,
+                 helperText: widget.helperText,
+                 contentPadding: const EdgeInsets.all(16),
+                 filled: true,
+                 border: const OutlineInputBorder(),
+               ),
+             ),
+           ],
+         );
+
      //date
        case TextFieldType.date:
          return TextFormField(
@@ -410,8 +442,62 @@ class _CustomTextFieldState extends State<CustomTextField> {
              ),
            ],
          );
+
+       case TextFieldType.rate:
+         return Column(
+           crossAxisAlignment: CrossAxisAlignment.start,
+           children: [
+             Text(widget.label!),
+             const SizedBox(height: 8,),
+             TextFormField(
+               controller: widget.controller,
+               validator: _requiredValidator,
+               autovalidateMode: AutovalidateMode.onUserInteraction,
+               inputFormatters:[
+                 NumericTextFormatter(),
+                 LengthLimitingTextInputFormatter(20),
+               ],
+               keyboardType: TextInputType.number,
+               textCapitalization: TextCapitalization.none,
+               textInputAction: TextInputAction.next,
+               decoration: InputDecoration(
+                 prefixText: '₦',
+                 // labelText: widget.label,
+                 hintText: widget.hint,
+                 helperText: widget.helperText,
+                 contentPadding: const EdgeInsets.all(16),
+                 filled: true,
+                 border: const OutlineInputBorder(),
+               ),
+             ),
+           ],
+         );
      }
    }
   }
 }
+
+class NumericTextFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(TextEditingValue oldValue,
+      TextEditingValue newValue) {
+    if (newValue.text.isEmpty) {
+      return newValue.copyWith(text: '');
+    } else if (newValue.text.compareTo(oldValue.text) != 0) {
+      final int selectionIndexFromTheRight = newValue.text.length -newValue.selection.end;
+
+      var value = newValue.text;
+      if (newValue.text.length > 2) {
+        value = value.replaceAll(RegExp(r'\D'), '');
+        value = value.replaceAll(RegExp(r'\B(?=(\d{3})+(?!\d))'), ', ');
+        print("Value ---- $value");
+      }
+      return TextEditingValue(
+        text: value,
+        selection: TextSelection.collapsed(offset: value.length  -selectionIndexFromTheRight),);
+    } else {
+      return newValue;
+    }
+  }}
+
 
