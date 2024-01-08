@@ -1,20 +1,33 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:on_demand/Core/routes.dart';
-import 'package:on_demand/Services/providers/user_details_provider.dart';
 import 'package:provider/provider.dart';
 
+import '../../Services/providers/user_details_provider.dart';
+import '../Components/text_field.dart';
 
-class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({super.key});
-  static const id = 'profile_screen';
+
+
+class EditProfileScreen extends StatefulWidget {
+  const EditProfileScreen({super.key});
+  static const id = 'edit_profile_screen';
 
   @override
-  State<ProfileScreen> createState() => _ProfileScreenState();
+  State<EditProfileScreen> createState() => _EditProfileScreenState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProviderStateMixin{
+class _EditProfileScreenState extends State<EditProfileScreen>  {
+
   late TabController tabController;
+
+  GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  TextEditingController fNameField = TextEditingController();
+  TextEditingController lNameField = TextEditingController();
+  TextEditingController emailField = TextEditingController();
+  TextEditingController phoneField = TextEditingController();
+  TextEditingController passwordField = TextEditingController();
+
 
   bool isPortfolio = false;
   bool isVerified = false;
@@ -23,36 +36,23 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
   String location = 'blank';
   String priceRate = '0000';
   double rating = 4;
+  String? Uemail ;
 
   @override
   void initState() {
     var fName = Provider.of<UserDetailsProvider>(context,listen: false).firstName;
     var lName = Provider.of<UserDetailsProvider>(context,listen: false).lastName;
+    var email = Provider.of<UserDetailsProvider>(context,listen: false).email;
+    Uemail ='$email';
     name = '$fName $lName';
     occupation = Provider.of<UserDetailsProvider>(context,listen: false).occupation;
     location = Provider.of<UserDetailsProvider>(context,listen: false).location;
 
-    tabController = TabController(length: 2, vsync: this);
-    tabController.addListener(() {
-      if(tabController.index==1 || (tabController.indexIsChanging && tabController.index==1)){
-        setState(() {
-          isPortfolio = true;
-        });
-      }
-      else{
-        setState(() {
-          isPortfolio = false;
-        });
-      }
-    });
     super.initState();
   }
 
-  @override
-  void dispose() {
-      tabController.dispose();
-      super.dispose();
-  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -126,94 +126,70 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                               ],
                             ),
                           ),
-                          Flexible(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text("₦$priceRate.00",style: const TextStyle(letterSpacing: 0,fontWeight: FontWeight.w600,fontSize: 18),),
-                                const SizedBox(height: 48,),
-                                ElevatedButton(onPressed: () => Navigator.pushNamed(context, editProfileScreen), child: const Text('Edit')),
-                              ],
-                            ),
-                          )
+
                         ],
                       ),
                     ),
                     const SizedBox(height: 8,),
-                    TabBar(
-                        controller: tabController,
-                        tabs: const [
-                          Tab(text: 'Recent jobs',),
-                          Tab(text: 'Portfolio',),
-                        ]),
-                    Expanded(
-                      child: TabBarView(
-                          controller: tabController,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 16),
-                              child: Column(
-                                children: [
-                                  Container(
-                                    alignment: Alignment.center,
-                                    decoration: BoxDecoration(
-                                        color: const Color(0xfff2f2f2),
-                                        borderRadius: BorderRadius.circular(10)
-                                    ),
-                                    height: 80,
-                                    margin: const EdgeInsets.symmetric(vertical: 16),
-                                    child: const Text('No job requests yet',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 18
-                                      ),),
-                                  ),
-                                ],),
-                            ),
-                            SingleChildScrollView(
-                              child: Padding(
-                                padding: const EdgeInsets.only(top: 16),
-                                child: Wrap(
-                                  alignment: WrapAlignment.spaceBetween,
-                                  runSpacing: 16,
-                                  children: [
-                                    Container(
-                                      height: 176,
-                                      width: 176,
-                                      decoration: BoxDecoration(
-                                          color: const Color(0xffD9D9D9),
-                                          borderRadius: BorderRadius.circular(16),
-                                          image: null
-                                      ),
-                                    ),
-                                    Container(
-                                      height: 176,
-                                      width: 176,
-                                      decoration: BoxDecoration(
-                                          color: const Color(0xffD9D9D9),
-                                          borderRadius: BorderRadius.circular(16),
-                                          image: null
-                                      ),
-                                    ),
-                                    Container(
-                                      height: 176,
-                                      width: 176,
-                                      decoration: BoxDecoration(
-                                          color: const Color(0xffD9D9D9),
-                                          borderRadius: BorderRadius.circular(16),
-                                          image: null
-                                      ),
-                                    ),
 
-                                  ],
-                                ),
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            Form(
+                              key: formKey,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  CustomTextField(
+                                    controller: emailField,
+                                    type: TextFieldType.email,
+                                    label: 'Email',
+                                    hint: Uemail,
+                                    helperText: Text('You will be required to sign in and then verify your new email address.',)
+                                  ),
+                                  const SizedBox(
+                                    height: 24,
+                                  ),
+                                  CustomTextField(
+                                    controller: phoneField,
+                                    type: TextFieldType.phone,
+                                    label: 'Phone number',
+                                  ),
+                                  const SizedBox(
+                                    height: 24,
+                                  ),
+                                  CustomTextField(
+                                    controller: passwordField,
+                                    type: TextFieldType.password,
+                                    label: 'Password',
+                                  ),
+                                ],
                               ),
                             ),
+                            const SizedBox(height: 48,),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                ElevatedButton(
+                                  onPressed: () {}, child: const Text('Continue'),
+                                ),
+                                const SizedBox(height: 24,),
 
-
-                          ]),
-                    )
+                                const SizedBox(height: 24,),
+                                // const SizedBox(
+                                //   height: 24,
+                                // ),
+                                // const ThirdPartyCredentials(),
+                              ],
+                            ),
+                            const SizedBox(height: 48,),
+                          ],
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
