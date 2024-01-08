@@ -61,7 +61,7 @@ class _ArtisanHomeScreenState extends State<ArtisanHomeScreen> {
                     DrawerHeader(
                       padding: const EdgeInsets.only(left: 16,bottom: 16),
                       decoration: BoxDecoration(
-                          color: Colors.grey[400]
+                          // color: Colors.grey[400]
                       ),
                       child: Align(alignment: Alignment.centerLeft,child: GestureDetector(onTap: ()=>_key.currentState?.closeDrawer(),child: const CircleAvatar(radius: 24,backgroundImage: null,)),),),
                     ListTile(
@@ -381,7 +381,7 @@ class ArtisanHomeWidget extends StatelessWidget {
               return Container(
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
-                    color: const Color(0xfff2f2f2),
+                    // color: const Color(0xfff2f2f2),
                     borderRadius: BorderRadius.circular(10)
                 ),
                 height: 80,
@@ -396,7 +396,7 @@ class ArtisanHomeWidget extends StatelessWidget {
             Container(
               alignment: Alignment.center,
               decoration: BoxDecoration(
-                  color: const Color(0xfff2f2f2),
+                  // color: const Color(0xfff2f2f2),
                   borderRadius: BorderRadius.circular(10)
               ),
               height: 136,
