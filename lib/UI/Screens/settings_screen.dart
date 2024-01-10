@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:on_demand/UI/Components/text_field.dart';
-
-import '../../Utilities/constants.dart';
-import '../Components/page_indicator.dart';
+import 'package:provider/provider.dart';
+import '../../Services/providers/app_theme_provider.dart';
 
 class AppSettingsScreen extends StatefulWidget {
   const AppSettingsScreen({super.key});
@@ -15,25 +13,18 @@ class AppSettingsScreen extends StatefulWidget {
 
 class _AppSettingsScreenState extends State<AppSettingsScreen> {
 
-
-  bool tempIsDarkMode = false;
+  late AppTheme appTheme;
   bool tempIsNotificationEnabled = true;
+
   @override
   Widget build(BuildContext context) {
+    appTheme = Provider.of<AppTheme>(context);
+
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        // leadingWidth: MediaQuery.of(context).size.width/2.75,
         automaticallyImplyLeading: true,
         title: const Text('Settings'),
-        // actions: [
-        //   TextButton(
-        //     onPressed: () => Navigator.pushReplacementNamed(context, loginScreen),
-        //     child: const Text(
-        //       'Login',
-        //     ),
-        //   ),
-        // ],
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -41,9 +32,9 @@ class _AppSettingsScreenState extends State<AppSettingsScreen> {
           ListTile(
             title: const Text('Enable dark mode'),
             subtitle: const Text('Turn dark mode on or off'),
-            trailing: Switch(value: tempIsDarkMode, onChanged: (value){setState(() {
-              tempIsDarkMode = value;
-            });}),
+            trailing: Switch(value: appTheme.isDarkMode, onChanged: (value){
+              appTheme.toggleDarkMode(value);
+            }),
           ),
           ListTile(
             title: const Text('Enable push notifications'),
