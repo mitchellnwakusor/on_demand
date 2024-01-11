@@ -56,6 +56,7 @@ dependencies:
   blurry: ^1.4.2
   internet_connection_checker: ^0.0.1+4
   connectivity_plus: ^2.3.5
+  image_picker: ^1.0.7
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -49,7 +49,19 @@ class _ArtisanHomeScreenState extends State<ArtisanHomeScreen> {
                     alignment: Alignment.topRight,
                     children: [
                       const CircleAvatar(radius: 24,backgroundImage: null,),
-                      Visibility(visible: isPending,child: Positioned(right: 4,child: Container(height: 16, width:16, decoration: const BoxDecoration(color: Colors.red,shape: BoxShape.circle),))),
+                      Visibility(
+                          visible: isPending,
+                          child: Positioned(
+                              right: 4,
+                              child: Container(
+                                height: 16,
+                                width:16,
+                                decoration: const BoxDecoration(
+                                    color: Colors.red,
+                                    shape: BoxShape.circle),
+                              )
+                          )
+                      ),
                     ],
                   ),
                 )

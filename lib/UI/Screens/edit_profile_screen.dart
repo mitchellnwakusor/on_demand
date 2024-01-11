@@ -1,6 +1,8 @@
-import 'package:flutter/cupertino.dart';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 import '../../Services/providers/user_details_provider.dart';
@@ -13,13 +15,14 @@ class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});
   static const id = 'edit_profile_screen';
 
+
   @override
   State<EditProfileScreen> createState() => _EditProfileScreenState();
 }
 
 class _EditProfileScreenState extends State<EditProfileScreen>  {
-
   late TabController tabController;
+
 
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   TextEditingController fNameField = TextEditingController();
@@ -30,7 +33,7 @@ class _EditProfileScreenState extends State<EditProfileScreen>  {
   TextEditingController rateField = TextEditingController();
 
 
-  bool isPortfolio = false;
+
   bool isVerified = false;
   String name = 'blank';
   String occupation = 'blank';
@@ -54,15 +57,15 @@ class _EditProfileScreenState extends State<EditProfileScreen>  {
     super.initState();
   }
 
-
+   File? _selectedImagePath;
+  ImageProvider? _selectedImage;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: true,
-        title: const Text('Profile'),
-        actions: [Visibility(visible: isPortfolio,child: IconButton(onPressed: (){}, icon: const Icon(Icons.add)))],
+        title: const Text('Edit Profile'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -89,7 +92,34 @@ class _EditProfileScreenState extends State<EditProfileScreen>  {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                const CircleAvatar(radius: 40,backgroundImage: null,),
+                                Stack(
+                                  children: [
+                                     CircleAvatar(radius: 40,backgroundImage: _selectedImage == null ? const AssetImage("assets/default-image.jpg") : _selectedImage),
+                                    // _imageFile == null
+                                    //     ? AssetImage("assets/profile.jpeg")
+                                    //     : FileImage(File(_imageFile.path)),
+
+                                    Positioned(
+                                      right: -5,
+                                      top: -2,
+                                      child: InkWell(
+                                        onTap: () async{
+
+                                          showUploadOptions(context);
+
+                                        },
+                                        child: const Icon(
+                                          Icons.edit_outlined,
+                                          color: Colors.teal,
+                                          size: 28.0,
+                                        ),
+                                      ),
+                                    ),
+
+                                    const SizedBox(height: 8,),
+
+                                  ],
+                                ),
                                 const SizedBox(height: 8,),
                                 Column(
                                   children: [
@@ -220,4 +250,45 @@ class _EditProfileScreenState extends State<EditProfileScreen>  {
       ),
     );
   }
+
+
+  Future _picImageInGallery(ImageSource source) async {
+    final returnedImage = await ImagePicker().pickImage(source: source);
+
+    if (returnedImage == null) return;
+     setState(() {
+       _selectedImagePath = File(returnedImage.path) ;
+       _selectedImage = FileImage(File(_selectedImagePath!.path));
+     });
+  }
+
+
+
+   Future <void> showUploadOptions (BuildContext context) async {
+    return await showDialog(context: context, builder: (context){
+      return AlertDialog(
+        actionsPadding: const EdgeInsets.all(16),
+        actions: <Widget>[
+          ElevatedButton.icon(
+            icon: const Icon(Icons.camera),
+            onPressed: () {
+              _picImageInGallery(ImageSource.camera);
+              Navigator.of(context).pop();
+            },
+            label: const Text("Camera"),
+          ),
+          ElevatedButton.icon(
+            icon: const Icon(Icons.image),
+            onPressed: () {
+              _picImageInGallery(ImageSource.gallery);
+              Navigator.of(context).pop();
+            },
+            label: const Text("Gallery"),
+          ),
+        ],
+      );
+    }
+    );
+  }
+
 }
