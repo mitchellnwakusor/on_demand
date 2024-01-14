@@ -40,6 +40,7 @@ class _AuthenticationHandlerState extends State<AuthenticationHandler> {
       subscription = Connectivity().onConnectivityChanged.listen(
             (ConnectivityResult result) async {
           isDeviceConnected = await InternetConnectionChecker().hasConnection;
+          //Todo inverse isDeviceConnected
           if (!isDeviceConnected && isAlertSet == false) {
             showDialogBox();
             setState(() => isAlertSet = true);

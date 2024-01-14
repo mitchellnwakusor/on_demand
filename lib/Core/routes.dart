@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:on_demand/UI/Screens/edit_profile_screen.dart';
 import 'package:on_demand/UI/Screens/home_screen.dart';
+import 'package:on_demand/UI/Screens/login_screen_reauthenticate.dart';
 import 'package:on_demand/UI/Screens/profile_screen.dart';
 import 'package:on_demand/UI/Screens/reset_password.dart';
 import 'package:on_demand/UI/Screens/settings_screen.dart';
@@ -28,6 +29,8 @@ Route<dynamic>? generateRoute (RouteSettings settings) {
       return MaterialPageRoute(builder: (_)=> const ResetPasswordScreen(),settings: settings);
     case LoginScreen.id:
       return MaterialPageRoute(builder: (_)=> const LoginScreen(),settings: settings);
+    case LoginScreenReauthenticate.id:
+      return MaterialPageRoute(builder: (_)=> const LoginScreenReauthenticate(),settings: settings);
     case SearchScreen.id:
       return MaterialPageRoute(builder: (_)=> const SearchScreen(),settings: settings);
     case OTPVerificationScreen.id:
@@ -54,6 +57,7 @@ String startScreen = StartScreen.id;
 String registerScreen = RegisterScreen.id;
 String resetPasswordScreen = ResetPasswordScreen.id;
 String loginScreen = LoginScreen.id;
+String loginScreenReauthenticate = LoginScreenReauthenticate.id;
 String searchScreen = SearchScreen.id;
 String otpVerificationScreen = OTPVerificationScreen.id;
 String documentUploadScreen = DocumentUploadScreen.id;

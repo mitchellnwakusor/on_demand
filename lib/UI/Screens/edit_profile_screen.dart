@@ -1,10 +1,13 @@
 import 'dart:io';
 
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:on_demand/Services/authentication.dart';
 import 'package:provider/provider.dart';
 
+import '../../Services/providers/signup_provider.dart';
 import '../../Services/providers/user_details_provider.dart';
 import '../Components/location_drop_down.dart';
 import '../Components/text_field.dart';
@@ -25,6 +28,8 @@ class _EditProfileScreenState extends State<EditProfileScreen>  {
 
 
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  GlobalKey<FormState> updateEmailFormKey = GlobalKey<FormState>();
+  GlobalKey<FormState> updatePhoneFormKey = GlobalKey<FormState>();
   TextEditingController fNameField = TextEditingController();
   TextEditingController lNameField = TextEditingController();
   TextEditingController emailField = TextEditingController();
@@ -94,7 +99,7 @@ class _EditProfileScreenState extends State<EditProfileScreen>  {
                               children: [
                                 Stack(
                                   children: [
-                                     CircleAvatar(radius: 40,backgroundImage: _selectedImage == null ? const AssetImage("assets/default-image.jpg") : _selectedImage),
+                                     CircleAvatar(radius: 40,backgroundImage: _selectedImage ?? const AssetImage("assets/default-image.jpg")),
                                     // _imageFile == null
                                     //     ? AssetImage("assets/profile.jpeg")
                                     //     : FileImage(File(_imageFile.path)),
@@ -187,7 +192,7 @@ class _EditProfileScreenState extends State<EditProfileScreen>  {
                                   CustomTextField(
                                     controller: rateField,
                                     type: TextFieldType.rate,
-                                    label: 'Base Rate',
+                                    label: 'Base rate',
 
                                   ),
 
@@ -196,26 +201,84 @@ class _EditProfileScreenState extends State<EditProfileScreen>  {
                                   ),
 
 
-                                  CustomTextField(
-                                    controller: emailField,
-                                    type: TextFieldType.email,
-                                    label: 'Update Email Address',
-                                    hint: email,
-                                    helperText: 'You will be required to sign in and then verify your new email address.',
+                                  Form(
+                                    key: updateEmailFormKey,
+                                    child: CustomTextField(
+                                      controller: emailField,
+                                      type: TextFieldType.email,
+                                      label: 'Update email Address',
+                                      hint: email,
+                                      onEditingComplete: () {
+                                        if(emailField.text.isNotEmpty){
+                                          if(updateEmailFormKey.currentState!.validate()) {
+                                            //dismiss keyboard
+                                            FocusScopeNode currentFocus = FocusScope.of(context);
+                                            if (!currentFocus.hasPrimaryFocus) {
+                                              currentFocus.unfocus();
+                                            }
+                                            AwesomeDialog(
+                                              context: context,
+                                              dialogType: DialogType.question,
+                                              title: 'Change email address',
+                                              desc: 'Are you sure you want to change your email address?',
+                                              btnCancelOnPress: (){
+
+                                                // Navigator.pop(context);
+                                              },
+                                              btnOkOnPress: (){
+                                                //call update function
+                                                Authentication.instance.updateEmail(emailField,context);
+                                              },
+                                            ).show();
+                                          }
+                                        }
+                                      },
+                                      helperText: 'You will be required to sign in and then verify your new email address.',
+                                    ),
                                   ),
                                   const SizedBox(
                                     height: 24,
                                   ),
-                                  CustomTextField(
-                                    controller: phoneField,
-                                    type: TextFieldType.phone,
-                                    label: 'Change Phone number',
-                                    hint: phone,
-                                    helperText: 'You will be required to sign in and then verify your new phone number address.',
+                                  Form(
+                                    key: updatePhoneFormKey,
+                                    child: CustomTextField(
+                                      controller: phoneField,
+                                      type: TextFieldType.phone,
+                                      label: 'Change phone number',
+                                      hint: phone,
+                                      onEditingComplete: () {
+                                        if(phoneField.text.isNotEmpty){
+                                          if(updatePhoneFormKey.currentState!.validate()) {
+                                            //dismiss keyboard
+                                            FocusScopeNode currentFocus = FocusScope.of(context);
+                                            if (!currentFocus.hasPrimaryFocus) {
+                                              currentFocus.unfocus();
+                                            }
+                                            AwesomeDialog(
+                                              context: context,
+                                              dialogType: DialogType.question,
+                                              title: 'Change phone number',
+                                              desc: 'Are you sure you want to change your phone number?',
+                                              btnCancelOnPress: (){
+
+                                                // Navigator.pop(context);
+                                              },
+                                              btnOkOnPress: (){
+                                                //save new number in provider for otp screen and database
+                                                Provider.of<SignupProvider>(context,listen: false).addDataSignup(key: 'new_number', value: phoneField.text);
+                                                //call update function
+                                                Authentication.instance.updatePhoneNumber(phoneField,context);
+                                              },
+                                            ).show();
+                                          }
+                                        }
+                                      },
+                                      helperText: 'You will be required to sign in and then verify your new phone number address.',
+                                    ),
                                   ),
-                                  const SizedBox(
-                                    height: 24,
-                                  ),
+                                  // const SizedBox(
+                                  //   height: 24,
+                                  // ),
                                 ],
                               ),
                             ),

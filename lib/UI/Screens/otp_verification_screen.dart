@@ -21,6 +21,8 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
   TextEditingController smsField = TextEditingController();
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   late BuildContext dialogContext;
+  bool? isReauthenticate;
+  bool? isUpdateNumber;
 
   void progressView() async
   {
@@ -38,13 +40,38 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
   void _continueCallback() {
     if(formKey.currentState!.validate()){
       progressView();
-      Authentication.instance.phoneSignIn(context,smsField.text);
+      if(isReauthenticate!=null && isReauthenticate!){
+        Authentication.instance.phoneReauthenticate(context,smsField.text);
+      }
+      else if(isUpdateNumber!=null && isUpdateNumber!){
+        Authentication.instance.updateNumber(context,phoneNumber,smsField.text);
+      }
+      else{
+        Authentication.instance.phoneSignIn(context,smsField.text);
+
+      }
     }
   }
 
   void _resendCodeCallback() {
     progressView();
-    Authentication.instance.resendOTPCode(context, phoneNumber);
+    Authentication.instance.resendOTPCode(context, phoneNumber,isReauthenticate,isUpdateNumber);
+  }
+
+  @override
+  void initState() {
+
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    List<bool?> args = ModalRoute.of(context)!.settings.arguments as List<bool?>;
+    isReauthenticate = args[0];
+    isUpdateNumber = args[1];
+    super.didChangeDependencies();
   }
   @override
   void dispose() {
@@ -53,13 +80,18 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
   }
   @override
   Widget build(BuildContext context) {
+    if(isUpdateNumber!=null&&isUpdateNumber!){
+      phoneNumber = Provider.of<SignupProvider>(context,listen: false).signupPersonalData['new_number'];
+    }
+    else{
     phoneNumber = Provider.of<SignupProvider>(context,listen: false).signupPersonalData['phone_number'];
+    }
 
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
         leadingWidth: MediaQuery.of(context).size.width/2.75,
-        leading: const PageIndicator(activeScreenIndex: 1,steps: 4,),
+        leading: isReauthenticate!=null || isUpdateNumber!=null ? null : const PageIndicator(activeScreenIndex: 1,steps: 4,),
         automaticallyImplyLeading: false,
         bottom: PreferredSize(
             preferredSize: const Size.fromHeight(48),

@@ -8,7 +8,7 @@ import 'package:on_demand/Services/authentication.dart';
 import 'package:on_demand/Services/firebase_database.dart';
 import 'package:on_demand/UI/Components/progress_dialog.dart';
 import 'package:on_demand/Utilities/constants.dart';
-import 'package:path/path.dart';
+// import 'package:path/path.dart';
 
 import '../Components/page_indicator.dart';
 
@@ -26,7 +26,7 @@ class _DocumentUploadScreenState extends State<DocumentUploadScreen> {
   //select content files
   void getContentFile() async {
     //get files
-    FilePickerResult? filePickerResult = await FilePicker.platform.pickFiles(dialogTitle: 'Add document',allowedExtensions: ['jpeg','png','pdf'],allowMultiple: false,type: FileType.custom,withReadStream: true);
+    FilePickerResult? filePickerResult = await FilePicker.platform.pickFiles(dialogTitle: 'Add document',allowedExtensions: ['jpeg','png'],allowMultiple: false,type: FileType.custom,withReadStream: true);
     if(filePickerResult!=null){
 
       setState(() {

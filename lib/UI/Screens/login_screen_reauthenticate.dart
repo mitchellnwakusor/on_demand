@@ -4,6 +4,7 @@ import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:on_demand/Services/authentication.dart';
+import 'package:on_demand/Services/providers/user_details_provider.dart';
 import 'package:on_demand/UI/Components/oauth_divider.dart';
 import 'package:on_demand/UI/Components/progress_dialog.dart';
 import 'package:on_demand/Utilities/constants.dart';
@@ -16,15 +17,15 @@ import '../../Services/providers/signup_provider.dart';
 import '../../Services/providers/start_screen_provider.dart';
 import '../Components/text_field.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
-  static const id = 'login_screen';
+class LoginScreenReauthenticate extends StatefulWidget {
+  const LoginScreenReauthenticate({super.key});
+  static const id = 'login_screen_reauthenticate';
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<LoginScreenReauthenticate> createState() => _LoginScreenReauthenticateState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginScreenReauthenticateState extends State<LoginScreenReauthenticate> {
 
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   TextEditingController phoneField = TextEditingController();
@@ -51,13 +52,16 @@ class _LoginScreenState extends State<LoginScreen> {
 
   }
 
-  void emailSignIn() async {
-    Authentication.instance.emailSignIn(context,emailField.text, passwordField.text);
+  void emailReauthenticate() async {
+    //Todo email reauthenticate
+    Authentication.instance.emailReauthenticate(context, emailField.text, passwordField.text);
+    // Authentication.instance.emailSignIn(context,emailField.text, passwordField.text);
 
   }
 
-  void phoneSignIn() async {
-    Authentication.instance.sendOTPCode(context:context, number:phoneField.text);
+  void phoneReauthenticate() async {
+    //Todo phone reauthenticate
+    Authentication.instance.sendOTPCode(context:context, number:phoneField.text,isReauthenticate: true);
   }
 
   void _signIn() async {
@@ -65,21 +69,20 @@ class _LoginScreenState extends State<LoginScreen> {
     if (formKey.currentState!.validate()) {
       progressView();
       try {
-        UserType userType = Provider.of<StartScreenProvider>(context,listen: false).userType;
+        String userType = Provider.of<UserDetailsProvider>(context,listen: false).userType;
         bool doesUserTypeExists =
-        await FirebaseDatabase.userTypeExists(phoneField.text, emailField.text, userType.name).timeout(const Duration(seconds: 5));
+        await FirebaseDatabase.userTypeExists(phoneField.text, emailField.text, userType).timeout(const Duration(seconds: 5));
         if (doesUserTypeExists) {
           //sign in
-
           if (context.mounted) {
             //save phone number in provider, specifically for use by otp screen
             Provider.of<SignupProvider>(context,listen: false).addDataSignup(key: 'phone_number', value: phoneField.text);
             switch (isEmailPasswordSignIn) {
               case true:
-                emailSignIn();
+                emailReauthenticate();
                 break;
               case false:
-                phoneSignIn();
+                phoneReauthenticate();
                 break;
             }
           }
@@ -114,21 +117,12 @@ class _LoginScreenState extends State<LoginScreen> {
                 padding: kMobileBodyPadding,
                 alignment: Alignment.topLeft,
                 child: const Text(
-                  'Welcome back, ',
+                  'Log in to your account, ',
                   textAlign: TextAlign.start,
                   style: TextStyle(
                     fontSize: 24,
                   ),
                 ))),
-        actions: [
-          TextButton(
-            onPressed: () =>
-                Navigator.pushReplacementNamed(context, registerScreen),
-            child: const Text(
-              'Register',
-            ),
-          ),
-        ],
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -154,7 +148,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               ElevatedButton(onPressed:(){
                 _signIn();
-                },
+              },
                 child: const Text('Continue'),
 
               ),

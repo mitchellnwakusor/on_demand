@@ -13,7 +13,7 @@ enum TextFieldType {
 
 //validators
 String? _requiredValidator(String? value) {
-  if (value != null) {
+  if (value != null && value.isNotEmpty) {
     if (value.isEmpty) {
       return 'This field is required';
     }
@@ -71,7 +71,7 @@ String? _passwordValidator(String? value) {
   return null;
 }
 String? _emailValidator(String? value) {
-  if (value != null) {
+  if (value != null && value.isNotEmpty) {
     if (_requiredValidator(value) != null) {
       return 'This field is required';
     }
@@ -109,7 +109,7 @@ class CustomTextField extends StatefulWidget {
       required this.type,
       this.label,
       this.helperText,
-      this.hint});
+      this.hint,this.onEditingComplete});
 
   //config options
   final TextEditingController controller;
@@ -117,6 +117,7 @@ class CustomTextField extends StatefulWidget {
   final String? label;
   final String? hint;
   final String? helperText;
+  final VoidCallback? onEditingComplete;
 
   @override
   State<CustomTextField> createState() => _CustomTextFieldState();
@@ -327,11 +328,13 @@ class _CustomTextFieldState extends State<CustomTextField> {
                keyboardType: TextInputType.emailAddress,
                textCapitalization: TextCapitalization.none,
                textInputAction: TextInputAction.next,
+               onEditingComplete: widget.onEditingComplete,
                decoration: InputDecoration(
                  // labelText: widget.label,
                  errorMaxLines: 2,
                  hintText: widget.hint,
                  helperText: widget.helperText,
+                 helperMaxLines: 3,
                  contentPadding: const EdgeInsets.all(16),
                  filled: true,
                  border: const OutlineInputBorder(),
@@ -352,6 +355,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
                autovalidateMode: AutovalidateMode.onUserInteraction,
                inputFormatters: _phoneFormatter,
                keyboardType: TextInputType.phone,
+               onEditingComplete: widget.onEditingComplete,
                textCapitalization: TextCapitalization.none,
                textInputAction: TextInputAction.next,
                decoration: InputDecoration(
@@ -359,6 +363,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
                  // labelText: widget.label,
                  hintText: widget.hint,
                  helperText: widget.helperText,
+                 helperMaxLines: 3,
                  contentPadding: const EdgeInsets.all(16),
                  filled: true,
                  border: const OutlineInputBorder(),
@@ -490,7 +495,7 @@ class NumericTextFormatter extends TextInputFormatter {
       if (newValue.text.length > 2) {
         value = value.replaceAll(RegExp(r'\D'), '');
         value = value.replaceAll(RegExp(r'\B(?=(\d{3})+(?!\d))'), ', ');
-        print("Value ---- $value");
+        // print("Value ---- $value");
       }
       return TextEditingValue(
         text: value,

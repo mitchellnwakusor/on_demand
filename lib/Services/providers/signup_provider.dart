@@ -5,6 +5,7 @@ class SignupProvider {
     'last_name': null,
     'email': null,
     'phone_number': null,
+    'new_number': null,
     'password': null,
     'user_type': null,
     // 'location': null,

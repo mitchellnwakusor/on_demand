@@ -123,6 +123,11 @@ class FirebaseDatabase {
     await FirebaseFirestore.instance.collection(userCollectionPath).doc(uid).set(userData);
 
   }
+  static Future<void> updateUserDetails({required Map<String, dynamic> data,required String uid}) async{
+    String collectionPath = 'user detail';
+    await FirebaseFirestore.instance.collection(collectionPath).doc(uid).update(data);
+
+  }
 
   static Future<void> saveBusinessDetails(BuildContext context,{required Map<String, dynamic> data,required String uid}) async{
     String collectionPath = 'business detail';

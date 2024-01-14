@@ -61,7 +61,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             //save data in provider for later use
             Provider.of<SignupProvider>(context,listen: false).addMultipleDataSignup(firstName: fNameField.text, lastName: lNameField.text, email: emailField.text, phoneNumber: phoneField.text,password: passwordField.text,userType: userType.name);
             //start phone authentication process
-            Authentication.instance.sendOTPCode(context, phoneField.text);
+            Authentication.instance.sendOTPCode(context:context,number:phoneField.text);
           }
         }
         else{
