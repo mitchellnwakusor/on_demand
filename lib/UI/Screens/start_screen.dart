@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:on_demand/UI/Components/progress_dialog.dart';
 
 import '../../Core/routes.dart';
 import '../../Utilities/constants.dart';

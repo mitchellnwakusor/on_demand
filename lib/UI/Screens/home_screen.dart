@@ -6,9 +6,15 @@ import 'package:on_demand/Services/providers/user_details_provider.dart';
 import 'package:provider/provider.dart';
 
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
   static const id = 'home_screen';
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
@@ -19,11 +25,24 @@ class HomeScreen extends StatelessWidget {
 class ArtisanHomeScreen extends StatefulWidget {
   const ArtisanHomeScreen({super.key});
 
+
   @override
   State<ArtisanHomeScreen> createState() => _ArtisanHomeScreenState();
 }
 
 class _ArtisanHomeScreenState extends State<ArtisanHomeScreen> {
+
+  String? profilePicture;
+
+  @override
+  void initState() {
+    // var profilePic = Provider.of<UserDetailsProvider>(context,listen: false).profilePicture;
+    // profilePicture='$profilePic';
+    // print('$profilePicture');
+    super.initState();
+  }
+
+
   late Map<String,dynamic> map;
   final GlobalKey<ScaffoldState> _key = GlobalKey<ScaffoldState>();
   int navItem = 0;
@@ -35,9 +54,19 @@ class _ArtisanHomeScreenState extends State<ArtisanHomeScreen> {
         future: UserDetailsProvider.getAllData(),
         builder: (context,snapshot){
           if(snapshot.hasData){
+
             //provider store
             map = snapshot.data!;
             context.read<UserDetailsProvider>().initProperties(map);
+            var profilePic = Provider.of<UserDetailsProvider>(context,listen: false).profilePicture;
+
+            if(profilePic == null){
+              profilePicture = "https://static.vecteezy.com/system/resources/thumbnails/020/765/399/small/default-profile-account-unknown-icon-black-silhouette-free-vector.jpg";
+            }else{
+              profilePicture='$profilePic';
+            }
+
+
             return Scaffold(
               key: _key,
               appBar: AppBar(
@@ -48,7 +77,7 @@ class _ArtisanHomeScreenState extends State<ArtisanHomeScreen> {
                     clipBehavior: Clip.hardEdge,
                     alignment: Alignment.topRight,
                     children: [
-                      const CircleAvatar(radius: 24,backgroundImage: null,),
+                       CircleAvatar(radius: 24,backgroundImage: NetworkImage('$profilePicture') ),
                       Visibility(
                           visible: isPending,
                           child: Positioned(
@@ -72,10 +101,10 @@ class _ArtisanHomeScreenState extends State<ArtisanHomeScreen> {
                   children: [
                     DrawerHeader(
                       padding: const EdgeInsets.only(left: 16,bottom: 16),
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                           // color: Colors.grey[400]
                       ),
-                      child: Align(alignment: Alignment.centerLeft,child: GestureDetector(onTap: ()=>_key.currentState?.closeDrawer(),child: const CircleAvatar(radius: 24,backgroundImage: null,)),),),
+                      child: Align(alignment: Alignment.centerLeft,child: GestureDetector(onTap: ()=>_key.currentState?.closeDrawer(),child:  CircleAvatar(radius: 24,backgroundImage:NetworkImage('$profilePicture') ,)),),),
                     ListTile(
                       leading: const Icon(Icons.person_outline),
                       title: const Text('Profile'),

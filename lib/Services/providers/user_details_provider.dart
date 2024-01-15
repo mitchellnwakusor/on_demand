@@ -75,6 +75,8 @@ class UserDetailsProvider{
   String? _businessType;
   String? _location;
   String? _documentPath;
+  String? _profilePicture;
+  String? _rate;
 
   get firstName => _firstName;
   get lastName => _lastName;
@@ -85,6 +87,8 @@ class UserDetailsProvider{
   get businessType => _businessType;
   get location => _location;
   get documentPath => _documentPath;
+  get profilePicture => _profilePicture;
+  get rate => _rate;
 
   void initProperties( Map<String, dynamic>? value) async{
       if(value!=null){
@@ -97,6 +101,8 @@ class UserDetailsProvider{
         _businessType = value['business_type'];
         _occupation = value['occupation'];
         _userType = value['user_type'];
+        _profilePicture = value['profile_picture'];
+        _rate = value['rate'];
       }
     }
 }

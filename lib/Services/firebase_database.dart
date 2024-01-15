@@ -175,6 +175,55 @@ class FirebaseDatabase {
     }
   }
 
+  static Future<void> saveProfilePicture({required Map<String, dynamic> data,required String uid}) async{
+    String collectionPath = 'user detail';
+    await FirebaseFirestore.instance.collection(collectionPath).doc(uid).set(data,SetOptions(merge: true));
+    Fluttertoast.showToast(msg: "Profile Updated.");
+  }
+
+  static Future<void> updateLocation({required Map<String, dynamic> data,required String uid}) async{
+    String collectionPath = 'business detail';
+    await FirebaseFirestore.instance.collection(collectionPath).doc(uid).set(data,SetOptions(merge: true));
+    Fluttertoast.showToast(msg: "Profile Updated.");
+  }
+
+  static Future<void> updateRate({required Map<String, dynamic> data,required String uid}) async{
+    String collectionPath = 'business detail';
+    await FirebaseFirestore.instance.collection(collectionPath).doc(uid).set(data,SetOptions(merge: true));
+    Fluttertoast.showToast(msg: "Profile Updated.");
+  }
+
+
+
+  static void uploadProfilePicture(BuildContext context, File file,String uid) async{
+    if (await InternetChecker.checkInternet() == true) {
+      FirebaseStorage.instance
+          .ref("artisan")
+          .child("profile picture/$uid/file.jpg")
+          .putFile(file)
+          .snapshotEvents
+          .listen((taskSnapShot) async {
+        if (taskSnapShot.state == TaskState.success) {
+          final path = FirebaseStorage.instance
+              .ref("artisan")
+              .child("profile picture/$uid/file.jpg");
+          String imageURL= await path.getDownloadURL();
+          Map<String, dynamic> data = {'profile_picture': imageURL};
+          saveProfilePicture(data: data, uid: uid);
+          if (context.mounted) Navigator.of(context).pop();
+
+        }
+      });
+    }else {
+      if (!context.mounted) return;
+      Navigator.pop(context);
+      // TODO
+      Fluttertoast.showToast(msg: "No internet connection, please try again.");
+    }
+  }
+
+
+
 
 }
 

@@ -23,6 +23,8 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
   String location = 'blank';
   String priceRate = '0000';
   double rating = 4;
+  String? rate;
+  String? profilePicture;
 
   @override
   void initState() {
@@ -31,6 +33,21 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
     name = '$fName $lName';
     occupation = Provider.of<UserDetailsProvider>(context,listen: false).occupation;
     location = Provider.of<UserDetailsProvider>(context,listen: false).location;
+    var rAte = Provider.of<UserDetailsProvider>(context,listen: false).rate;
+    var profilePic = Provider.of<UserDetailsProvider>(context,listen: false).profilePicture;
+
+    if(profilePic == null){
+      profilePicture = "https://static.vecteezy.com/system/resources/thumbnails/020/765/399/small/default-profile-account-unknown-icon-black-silhouette-free-vector.jpg";
+    }else{
+      profilePicture='$profilePic';
+    }
+
+    if(rAte == null){
+      rate = priceRate;
+    }else{
+      rate='$rAte';
+    }
+
 
     tabController = TabController(length: 2, vsync: this);
     tabController.addListener(() {
@@ -86,7 +103,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                const CircleAvatar(radius: 40,backgroundImage: null,),
+                                 CircleAvatar(radius: 40,backgroundImage: NetworkImage('$profilePicture'),),
                                 const SizedBox(height: 8,),
                                 Column(
                                   children: [
@@ -131,7 +148,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                               crossAxisAlignment: CrossAxisAlignment.center,
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text("₦$priceRate.00",style: const TextStyle(letterSpacing: 0,fontWeight: FontWeight.w600,fontSize: 18),),
+                                Text("₦$rate.00",style: const TextStyle(letterSpacing: 0,fontWeight: FontWeight.w600,fontSize: 18),),
                                 const SizedBox(height: 48,),
                                 ElevatedButton(onPressed: () => Navigator.pushNamed(context, editProfileScreen), child: const Text('Edit')),
                               ],

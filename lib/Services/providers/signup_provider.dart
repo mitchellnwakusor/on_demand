@@ -8,14 +8,14 @@ class SignupProvider {
     'new_number': null,
     'password': null,
     'user_type': null,
-    // 'location': null,
-    // 'occupation': null,
-    // 'plan': null,
+     // 'location': null,
+     // 'occupation': null,
+     // 'rate': null,
+
   };
   final Map<String, dynamic> _signupBusinessData = {
     'business_type': null,
     'location': null,
-    'occupation': null,
   };
   final Map<String, dynamic> _signupDocumentData = {
     'document_type': null,

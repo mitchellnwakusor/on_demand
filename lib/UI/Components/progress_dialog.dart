@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class ProgressDialog extends StatelessWidget
 {
   String? message;
-  ProgressDialog({this.message});
+  ProgressDialog({super.key, this.message});
 
 
   @override
@@ -31,11 +31,13 @@ class ProgressDialog extends StatelessWidget
 
               const SizedBox(width: 26.0,),
 
-              Text(
-                message!,
-                style: const TextStyle(
-                  color: Colors.black,
-                  fontSize: 12,
+              Expanded(
+                child: Text(
+                  message!,
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontSize: 12,
+                  ),
                 ),
               ),
 

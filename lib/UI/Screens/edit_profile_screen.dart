@@ -7,9 +7,12 @@ import 'package:image_picker/image_picker.dart';
 import 'package:on_demand/Services/authentication.dart';
 import 'package:provider/provider.dart';
 
+import '../../Core/routes.dart';
+import '../../Services/firebase_database.dart';
 import '../../Services/providers/signup_provider.dart';
 import '../../Services/providers/user_details_provider.dart';
 import '../Components/location_drop_down.dart';
+import '../Components/progress_dialog.dart';
 import '../Components/text_field.dart';
 
 
@@ -46,6 +49,8 @@ class _EditProfileScreenState extends State<EditProfileScreen>  {
   double rating = 4;
   String? email ;
   String? phone;
+  String? rate;
+  String? profilePicture;
 
   @override
   void initState() {
@@ -53,17 +58,31 @@ class _EditProfileScreenState extends State<EditProfileScreen>  {
     var lName = Provider.of<UserDetailsProvider>(context,listen: false).lastName;
     var eMail = Provider.of<UserDetailsProvider>(context,listen: false).email;
     var phoneNumber = Provider.of<UserDetailsProvider>(context,listen: false).phoneNumber;
+    var rAte = Provider.of<UserDetailsProvider>(context,listen: false).rate;
+    var profilePic = Provider.of<UserDetailsProvider>(context,listen: false).profilePicture;
+
+    if(profilePic == null){
+      profilePicture = "https://static.vecteezy.com/system/resources/thumbnails/020/765/399/small/default-profile-account-unknown-icon-black-silhouette-free-vector.jpg";
+    }else{
+      profilePicture='$profilePic';
+    }
+
+
     email ='$eMail';
     name = '$fName $lName';
     phone = '$phoneNumber';
     occupation = Provider.of<UserDetailsProvider>(context,listen: false).occupation;
     location = Provider.of<UserDetailsProvider>(context,listen: false).location;
+    rate ="$rAte";
+
+
+
 
     super.initState();
   }
 
    File? _selectedImagePath;
-  ImageProvider? _selectedImage;
+
 
   @override
   Widget build(BuildContext context) {
@@ -99,7 +118,7 @@ class _EditProfileScreenState extends State<EditProfileScreen>  {
                               children: [
                                 Stack(
                                   children: [
-                                     CircleAvatar(radius: 40,backgroundImage: _selectedImage ?? const AssetImage("assets/default-image.jpg")),
+                                     CircleAvatar(radius: 40,backgroundImage: NetworkImage('$profilePicture') ),
                                     // _imageFile == null
                                     //     ? AssetImage("assets/profile.jpeg")
                                     //     : FileImage(File(_imageFile.path)),
@@ -109,9 +128,7 @@ class _EditProfileScreenState extends State<EditProfileScreen>  {
                                       top: -2,
                                       child: InkWell(
                                         onTap: () async{
-
                                           showUploadOptions(context);
-
                                         },
                                         child: const Icon(
                                           Icons.edit_outlined,
@@ -193,6 +210,7 @@ class _EditProfileScreenState extends State<EditProfileScreen>  {
                                     controller: rateField,
                                     type: TextFieldType.rate,
                                     label: 'Base rate',
+                                    hint: rate ?? "",
 
                                   ),
 
@@ -288,7 +306,22 @@ class _EditProfileScreenState extends State<EditProfileScreen>  {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 ElevatedButton(
-                                  onPressed: () {}, child: const Text('Continue'),
+                                  onPressed: () {
+                                    if (rateField.text != ""){
+                                      progressView();
+                                      FirebaseDatabase.updateRate(data: {'rate': rateField.text}, uid: Authentication.instance.currentUser!.uid);
+                                      Navigator.pop(context);
+                                      Navigator.pushReplacementNamed(context, authHandlerScreen);
+                                    }
+                                    if (Provider.of<SignupProvider>(context,listen: false).signupBusinessData['location'].toString() != location  ){
+                                      progressView();
+                                      FirebaseDatabase.updateLocation(
+                                          data: {'location': Provider.of<SignupProvider>(context,listen: false).signupBusinessData['location'].toString()},
+                                          uid: Authentication.instance.currentUser!.uid);
+                                      Navigator.pop(context);
+                                      Navigator.pushReplacementNamed(context, authHandlerScreen);
+                                    }
+                                  }, child: const Text('Continue'),
                                 ),
                                 const SizedBox(height: 24,),
 
@@ -321,8 +354,13 @@ class _EditProfileScreenState extends State<EditProfileScreen>  {
     if (returnedImage == null) return;
      setState(() {
        _selectedImagePath = File(returnedImage.path) ;
-       _selectedImage = FileImage(File(_selectedImagePath!.path));
+       // _selectedImage = FileImage(File(_selectedImagePath!.path));
+       progressView();
+       FirebaseDatabase.uploadProfilePicture(
+           context, _selectedImagePath!, Authentication.instance.currentUser!.uid);
+
      });
+
   }
 
 
@@ -335,16 +373,16 @@ class _EditProfileScreenState extends State<EditProfileScreen>  {
           ElevatedButton.icon(
             icon: const Icon(Icons.camera),
             onPressed: () {
-              _picImageInGallery(ImageSource.camera);
               Navigator.of(context).pop();
+              _picImageInGallery(ImageSource.camera);
             },
             label: const Text("Camera"),
           ),
           ElevatedButton.icon(
             icon: const Icon(Icons.image),
-            onPressed: () {
-              _picImageInGallery(ImageSource.gallery);
+            onPressed: () async {
               Navigator.of(context).pop();
+              _picImageInGallery(ImageSource.gallery);
             },
             label: const Text("Gallery"),
           ),
@@ -352,6 +390,19 @@ class _EditProfileScreenState extends State<EditProfileScreen>  {
       );
     }
     );
+  }
+
+  void progressView() async
+  {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        context = context;
+        return ProgressDialog(message: "Uploading Profile, Please wait...",);
+      },
+    );
+
   }
 
 }
