@@ -51,6 +51,7 @@ class _EditProfileScreenState extends State<EditProfileScreen>  {
   String? phone;
   String? rate;
   String? profilePicture;
+  String defaultImageUrl ="https://static.vecteezy.com/system/resources/thumbnails/020/765/399/small/default-profile-account-unknown-icon-black-silhouette-free-vector.jpg";
 
   @override
   void initState() {
@@ -62,7 +63,7 @@ class _EditProfileScreenState extends State<EditProfileScreen>  {
     var profilePic = Provider.of<UserDetailsProvider>(context,listen: false).profilePicture;
 
     if(profilePic == null){
-      profilePicture = "https://static.vecteezy.com/system/resources/thumbnails/020/765/399/small/default-profile-account-unknown-icon-black-silhouette-free-vector.jpg";
+      profilePicture = defaultImageUrl;
     }else{
       profilePicture='$profilePic';
     }
@@ -118,10 +119,17 @@ class _EditProfileScreenState extends State<EditProfileScreen>  {
                               children: [
                                 Stack(
                                   children: [
-                                     CircleAvatar(radius: 40,backgroundImage: NetworkImage('$profilePicture') ),
-                                    // _imageFile == null
-                                    //     ? AssetImage("assets/profile.jpeg")
-                                    //     : FileImage(File(_imageFile.path)),
+                                     InkWell(
+                                       child: CircleAvatar(radius: 40,
+                                           backgroundImage: NetworkImage('$profilePicture')
+                                       ),
+                                       onTap: (){
+                                         if (profilePicture != defaultImageUrl){
+                                           showProfilePicture();
+                                         }
+                                       },
+                                     ),
+
 
                                     Positioned(
                                       right: -5,
@@ -359,6 +367,7 @@ class _EditProfileScreenState extends State<EditProfileScreen>  {
        FirebaseDatabase.uploadProfilePicture(
            context, _selectedImagePath!, Authentication.instance.currentUser!.uid);
 
+
      });
 
   }
@@ -403,6 +412,23 @@ class _EditProfileScreenState extends State<EditProfileScreen>  {
       },
     );
 
+  }
+
+  void showProfilePicture () {
+  showDialog( builder: (BuildContext context) => AlertDialog(
+    backgroundColor: Colors.transparent,
+    insetPadding: const EdgeInsets.all(2),
+    title: Container(
+      decoration: const BoxDecoration(),
+      width:  MediaQuery.of(context).size.width,
+      child: Image(
+          image: NetworkImage('$profilePicture'),
+        fit: BoxFit.fitWidth,
+      ),
+    ),
+  ),
+      context: context
+  );
   }
 
 }

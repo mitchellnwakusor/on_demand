@@ -175,10 +175,11 @@ class FirebaseDatabase {
     }
   }
 
-  static Future<void> saveProfilePicture({required Map<String, dynamic> data,required String uid}) async{
+  static Future<void> saveProfilePicture({required Map<String, dynamic> data,required String uid, required BuildContext context}) async{
     String collectionPath = 'user detail';
     await FirebaseFirestore.instance.collection(collectionPath).doc(uid).set(data,SetOptions(merge: true));
     Fluttertoast.showToast(msg: "Profile Updated.");
+    if (context.mounted) Navigator.pushReplacementNamed(context, authHandlerScreen);
   }
 
   static Future<void> updateLocation({required Map<String, dynamic> data,required String uid}) async{
@@ -209,7 +210,7 @@ class FirebaseDatabase {
               .child("profile picture/$uid/file.jpg");
           String imageURL= await path.getDownloadURL();
           Map<String, dynamic> data = {'profile_picture': imageURL};
-          saveProfilePicture(data: data, uid: uid);
+          if (context.mounted) saveProfilePicture(data: data, uid: uid, context: context);
           if (context.mounted) Navigator.of(context).pop();
 
         }
