@@ -1,11 +1,9 @@
 import 'dart:io';
 
-import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:on_demand/Services/authentication.dart';
-import 'package:on_demand/Services/providers/edit_profile_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../../Core/routes.dart';

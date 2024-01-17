@@ -74,7 +74,7 @@ class _AppSettingsScreenState extends State<AppSettingsScreen> {
                       controller: emailField,
                       type: TextFieldType.email,
                       label: 'Change email Address',
-                      hint: email,
+                      hint: 'New email address',
                       onEditingComplete: () {
                         if(emailField.text.isNotEmpty){
                           if(updateEmailFormKey.currentState!.validate()) {
@@ -106,7 +106,7 @@ class _AppSettingsScreenState extends State<AppSettingsScreen> {
                       controller: phoneField,
                       type: TextFieldType.phone,
                       label: 'Change phone number',
-                      hint: phone,
+                      hint: 'New number',
                       onEditingComplete: () {
                         if(phoneField.text.isNotEmpty){
                           if(updatePhoneFormKey.currentState!.validate()) {
@@ -140,10 +140,8 @@ class _AppSettingsScreenState extends State<AppSettingsScreen> {
                       label: 'Change password',
                       hint: 'New password',
                       onEditingComplete: () {
-                        print('hello');
                         if(passwordField.text.isNotEmpty){
                           if(updatePasswordFormKey.currentState!.validate()) {
-                            print('hello');
                             //dismiss keyboard
                             dismissKeyboard();
                             AwesomeDialog(
@@ -195,9 +193,6 @@ class _AppSettingsScreenState extends State<AppSettingsScreen> {
             const ListTile(
               title: Text('Leave feedback'),
               subtitle: Text('Leave a message or suggestion on how we can serve you better.'),
-            ),
-            const SizedBox(
-              height: 24,
             ),
             Padding(
               padding: const EdgeInsets.all(16.0),
