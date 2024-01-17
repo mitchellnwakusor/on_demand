@@ -9,6 +9,7 @@ import '../../Core/routes.dart';
 
 class EmailVerificationScreen extends StatefulWidget {
   const EmailVerificationScreen({super.key});
+  static const id = 'email_verification_screen';
 
   @override
   State<EmailVerificationScreen> createState() => _EmailVerificationScreenState();

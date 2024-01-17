@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:on_demand/Core/routes.dart';
 import 'package:on_demand/Services/firebase_database.dart';
+import 'package:on_demand/Services/providers/edit_profile_provider.dart';
+import 'package:provider/provider.dart';
 
 class Authentication {
 
@@ -33,6 +35,7 @@ class Authentication {
    codeAutoRetrievalTimeout: (timeout){},
   );
  }
+
  void resendOTPCode(BuildContext context,String number,bool? isReauthenticate, bool? isUpdateNumber) async{
   await _authInstance.verifyPhoneNumber(
    phoneNumber: '+234$number',
@@ -64,23 +67,6 @@ class Authentication {
    }
  }
 
- void emailReauthenticate(BuildContext context, String email,String password) async{
-   try {
-     AuthCredential authCredential = EmailAuthProvider.credential(email: email, password: password);
-     await _authInstance.currentUser!.reauthenticateWithCredential(authCredential);
-     bool isAuthenticated = true;
-     if(context.mounted){
-       Navigator.pop(context);
-       Navigator.pop(context,isAuthenticated);
-     }
-   } on FirebaseAuthException catch (exception) {
-     bool isAuthenticated = false;
-     if (!context.mounted) return;
-     Navigator.pop(context,isAuthenticated);
-     Fluttertoast.showToast(msg: '${exception.message}');
-   }
- }
-
  void phoneSignIn(BuildContext context,String smsCode) async{
    try {
      PhoneAuthCredential credential = PhoneAuthProvider.credential(verificationId: _verificationID!, smsCode: smsCode);
@@ -92,25 +78,6 @@ class Authentication {
    } on FirebaseAuthException catch (exception) {
      if (!context.mounted) return;
      Navigator.pop(context);
-     Fluttertoast.showToast(msg: '${exception.message}');
-   }
- }
- void phoneReauthenticate(BuildContext context,String smsCode) async{
-   try {
-     PhoneAuthCredential credential = PhoneAuthProvider.credential(verificationId: _verificationID!, smsCode: smsCode);
-     await _authInstance.currentUser!.reauthenticateWithCredential(credential);
-     bool isAuthenticated = true;
-     //close previous pages
-     if(context.mounted){
-       Navigator.pop(context);
-       Navigator.pop(context);
-       Navigator.pop(context,isAuthenticated);
-       print(isAuthenticated);
-     }
-   } on FirebaseAuthException catch (exception) {
-     bool isAuthenticated = false;
-     if (!context.mounted) return;
-     Navigator.pop(context,isAuthenticated);
      Fluttertoast.showToast(msg: '${exception.message}');
    }
  }
@@ -139,38 +106,63 @@ class Authentication {
   }
  }
 
- void updateEmail(TextEditingController valueController,BuildContext context) async {
+ //***** Change Email *********//
+
+ void changeEmailAddress(TextEditingController valueController,BuildContext context) async {
    try{
-     bool? result = await Navigator.pushNamed(context, loginScreenReauthenticate) as bool?;
-     if(result!=null && result == true){
-       Map<String,dynamic> data = {'email': valueController.text};
-       await _authInstance.currentUser!.updateEmail(valueController.text);
-       // update database
+     Provider.of<EditProfileProvider>(context,listen: false).setNewEmail(valueController.text);
+     //reauthenticate user
+     bool isDone = await Navigator.pushNamed(context, loginScreenReauthenticate) as bool;
+     //update email
+     if(isDone){
+       if(context.mounted){
+         _updateEmail(context);
+       }
+     }
+   }
+   on FirebaseException catch(exception){
+     Fluttertoast.showToast(msg: exception.code);
+   }
+ }
+
+ void _updateEmail(BuildContext context) async {
+   //get email value
+   try {
+     String? email = Provider.of<EditProfileProvider>(context,listen: false).newEmail;
+     if(email!=null){
+       Map<String,dynamic> data = {'email': email};
+       //update auth email
+       await _authInstance.currentUser!.updateEmail(email);
+       // update database email
        await FirebaseDatabase.updateUserDetails(data: data, uid: _authInstance.currentUser!.uid);
-
        _authInstance.currentUser!.reload();
+       // pop reauthenticate progress indicator
        if(context.mounted){
+         Fluttertoast.showToast(msg: 'updated email');
          Navigator.popUntil(context, ModalRoute.withName('/'));
+         Navigator.pushNamed(context, authHandlerScreen);
        }
-       Fluttertoast.showToast(msg: 'updated email');
      }
-   }
-   on FirebaseException catch(exception){
-     Fluttertoast.showToast(msg: exception.code);
+   } on FirebaseException catch (exception) {
+     if (!context.mounted) return;
+     Navigator.pop(context);
+     Fluttertoast.showToast(msg: '${exception.message}');
    }
  }
 
- void updatePhoneNumber(TextEditingController valueController,BuildContext context) async{
+ //***** Change Number *********//
+
+ void changePhoneNumber(String number,BuildContext context) async{
    try{
-     //start login flow and return bool value
-     bool? isAuthenticated  = await Navigator.pushNamed(context, loginScreenReauthenticate) as bool?;
-     if(isAuthenticated!=null && isAuthenticated == true){
+     //save new number in provider for otp screen and database
+     Provider.of<EditProfileProvider>(context,listen: false).setNewNumber(number);
+     //reauthenticate user
+     bool isAuthenticated = await Navigator.pushNamed(context, loginScreenReauthenticate) as bool;
+     //update number
+     if(isAuthenticated){
        if(context.mounted){
-         sendOTPCode(context: context, number: valueController.text,isUpdateNumber: true);
+         sendOTPCode(context: context, number: number,isUpdateNumber: true);
        }
-       // if(context.mounted){
-       //   Navigator.popUntil(context, ModalRoute.withName('/'));
-       // }
      }
    }
    on FirebaseException catch(exception){
@@ -178,22 +170,23 @@ class Authentication {
    }
  }
 
-void updateNumber(BuildContext context,String phoneNumber,String smsCode) async{
+ void updateNumberOTPCallBack(BuildContext context,String smsCode) async{
   try {
-    Map<String,dynamic> data = {'phone_number': phoneNumber};
-
-    PhoneAuthCredential credential = PhoneAuthProvider.credential(verificationId: _verificationID!, smsCode: smsCode);
-
-    await _authInstance.currentUser!.updatePhoneNumber(credential);
-    // update database
-    await FirebaseDatabase.updateUserDetails(data: data, uid: _authInstance.currentUser!.uid);
-    _authInstance.currentUser!.reload();
-    Fluttertoast.showToast(msg: 'updated phone');
-    //close previous pages
-    if(context.mounted){
-      Navigator.pop(context);
-      Navigator.pop(context);
-      // Navigator.popUntil(context, ModalRoute.withName('/'));
+    String? number = Provider.of<EditProfileProvider>(context,listen: false).newNumber;
+    Map<String,dynamic> data;
+    if(number!=null){
+      data = {'phone_number': number};
+      PhoneAuthCredential credential = PhoneAuthProvider.credential(verificationId: _verificationID!, smsCode: smsCode);
+      await _authInstance.currentUser!.updatePhoneNumber(credential);
+      // update database
+      await FirebaseDatabase.updateUserDetails(data: data, uid: _authInstance.currentUser!.uid);
+      _authInstance.currentUser!.reload();
+      Fluttertoast.showToast(msg: 'updated phone');
+      //close previous pages
+      if(context.mounted){
+        Navigator.popUntil(context, ModalRoute.withName('/'));
+        Navigator.pushNamed(context, authHandlerScreen);
+      }
     }
   } on FirebaseAuthException catch (exception) {
     if (!context.mounted) return;
@@ -201,4 +194,92 @@ void updateNumber(BuildContext context,String phoneNumber,String smsCode) async{
     Fluttertoast.showToast(msg: '${exception.message}');
   }
 }
+
+ //***** Change Password *********//
+
+ void changePassword(BuildContext context,String newPassword) async{
+   try {
+     //reauthenticate user
+     bool isAuthenticated = await Navigator.pushNamed(context, loginScreenReauthenticate) as bool;
+     //update number
+     if(isAuthenticated){
+       if(context.mounted){
+         _updatePassword(context, newPassword);
+       }
+     }
+   } on FirebaseAuthException catch (exception) {
+     if (!context.mounted) return;
+     Navigator.pop(context);
+     Fluttertoast.showToast(msg: '${exception.message}');
+   }
+
+ }
+
+ void _updatePassword(BuildContext context,String newPassword) async {
+   try {
+     await _authInstance.currentUser!.updatePassword(newPassword);
+     _authInstance.currentUser!.reload();
+     _authInstance.signOut();
+     // pop reauthenticate progress indicator
+     if(context.mounted){
+       Fluttertoast.showToast(msg: 'updated password');
+       Navigator.popUntil(context, ModalRoute.withName('/'));
+       Navigator.pushNamed(context, authHandlerScreen);
+     }
+
+   } on FirebaseException catch (exception) {
+     if (!context.mounted) return;
+     Navigator.pop(context);
+     Fluttertoast.showToast(msg: '${exception.message}');
+   }
+ }
+
+//reauthenticate methods
+ void reauthenticateEmailPassword(BuildContext context, String email,String password) async{
+   try {
+     AuthCredential authCredential = EmailAuthProvider.credential(email: email, password: password);
+     UserCredential credential = await _authInstance.currentUser!.reauthenticateWithCredential(authCredential);
+     if(credential.user!=null){
+       if(context.mounted){
+         Navigator.pop(context);//progress view
+         Navigator.pop(context,true);
+         // Navigator.pop(context);// edit profile screen
+         // Navigator.pop(context);// profile screen
+         // Navigator.pop(context);// drawer
+       }
+     }
+   } on FirebaseAuthException catch (exception) {
+     if (!context.mounted) return;
+     Navigator.pop(context);
+     Fluttertoast.showToast(msg: '${exception.message}');
+   }
+ }
+
+ void reauthenticatePhone(BuildContext context,String number){
+   sendOTPCode(context: context, number: number,isReauthenticate: true);
+ }
+
+ void reauthenticatePhoneCredential(BuildContext context,String smsCode) {
+   try{
+     PhoneAuthCredential credential = PhoneAuthProvider.credential(verificationId: _verificationID!, smsCode: smsCode);
+     if(currentUser!=null){
+       currentUser!.reauthenticateWithCredential(credential);
+       currentUser!.reload();
+       if(context.mounted){
+         Navigator.pop(context); //otp progress screen
+         Navigator.pop(context);  //otp screen
+         Navigator.pop(context); //progress view screen
+         Navigator.pop(context,true);  //reauthenticate screen
+       }
+     }
+   } on FirebaseAuthException catch (exception) {
+     if (!context.mounted) return;
+     Navigator.pop(context);
+     Fluttertoast.showToast(msg: '${exception.message}');
+   }
+ }
+
+
+
+
 }

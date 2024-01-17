@@ -41,10 +41,10 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
     if(formKey.currentState!.validate()){
       progressView();
       if(isReauthenticate!=null && isReauthenticate!){
-        Authentication.instance.phoneReauthenticate(context,smsField.text);
+        Authentication.instance.reauthenticatePhoneCredential(context,phoneNumber);
       }
       else if(isUpdateNumber!=null && isUpdateNumber!){
-        Authentication.instance.updateNumber(context,phoneNumber,smsField.text);
+        Authentication.instance.updateNumberOTPCallBack(context,smsField.text);
       }
       else{
         Authentication.instance.phoneSignIn(context,smsField.text);
@@ -56,13 +56,6 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
   void _resendCodeCallback() {
     progressView();
     Authentication.instance.resendOTPCode(context, phoneNumber,isReauthenticate,isUpdateNumber);
-  }
-
-  @override
-  void initState() {
-
-    // TODO: implement initState
-    super.initState();
   }
 
   @override

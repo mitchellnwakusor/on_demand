@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:on_demand/Services/authentication.dart';
+import 'package:on_demand/Services/providers/edit_profile_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../../Core/routes.dart';
@@ -31,13 +32,8 @@ class _EditProfileScreenState extends State<EditProfileScreen>  {
 
 
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  GlobalKey<FormState> updateEmailFormKey = GlobalKey<FormState>();
-  GlobalKey<FormState> updatePhoneFormKey = GlobalKey<FormState>();
   TextEditingController fNameField = TextEditingController();
   TextEditingController lNameField = TextEditingController();
-  TextEditingController emailField = TextEditingController();
-  TextEditingController phoneField = TextEditingController();
-  TextEditingController passwordField = TextEditingController();
   TextEditingController rateField = TextEditingController();
 
 
@@ -226,82 +222,6 @@ class _EditProfileScreenState extends State<EditProfileScreen>  {
                                     height: 24,
                                   ),
 
-
-                                  Form(
-                                    key: updateEmailFormKey,
-                                    child: CustomTextField(
-                                      controller: emailField,
-                                      type: TextFieldType.email,
-                                      label: 'Update email Address',
-                                      hint: email,
-                                      onEditingComplete: () {
-                                        if(emailField.text.isNotEmpty){
-                                          if(updateEmailFormKey.currentState!.validate()) {
-                                            //dismiss keyboard
-                                            FocusScopeNode currentFocus = FocusScope.of(context);
-                                            if (!currentFocus.hasPrimaryFocus) {
-                                              currentFocus.unfocus();
-                                            }
-                                            AwesomeDialog(
-                                              context: context,
-                                              dialogType: DialogType.question,
-                                              title: 'Change email address',
-                                              desc: 'Are you sure you want to change your email address?',
-                                              btnCancelOnPress: (){
-
-                                                // Navigator.pop(context);
-                                              },
-                                              btnOkOnPress: (){
-                                                //call update function
-                                                Authentication.instance.updateEmail(emailField,context);
-                                              },
-                                            ).show();
-                                          }
-                                        }
-                                      },
-                                      helperText: 'You will be required to sign in and then verify your new email address.',
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    height: 24,
-                                  ),
-                                  Form(
-                                    key: updatePhoneFormKey,
-                                    child: CustomTextField(
-                                      controller: phoneField,
-                                      type: TextFieldType.phone,
-                                      label: 'Change phone number',
-                                      hint: phone,
-                                      onEditingComplete: () {
-                                        if(phoneField.text.isNotEmpty){
-                                          if(updatePhoneFormKey.currentState!.validate()) {
-                                            //dismiss keyboard
-                                            FocusScopeNode currentFocus = FocusScope.of(context);
-                                            if (!currentFocus.hasPrimaryFocus) {
-                                              currentFocus.unfocus();
-                                            }
-                                            AwesomeDialog(
-                                              context: context,
-                                              dialogType: DialogType.question,
-                                              title: 'Change phone number',
-                                              desc: 'Are you sure you want to change your phone number?',
-                                              btnCancelOnPress: (){
-
-                                                // Navigator.pop(context);
-                                              },
-                                              btnOkOnPress: (){
-                                                //save new number in provider for otp screen and database
-                                                Provider.of<SignupProvider>(context,listen: false).addDataSignup(key: 'new_number', value: phoneField.text);
-                                                //call update function
-                                                Authentication.instance.updatePhoneNumber(phoneField,context);
-                                              },
-                                            ).show();
-                                          }
-                                        }
-                                      },
-                                      helperText: 'You will be required to sign in and then verify your new phone number address.',
-                                    ),
-                                  ),
                                   // const SizedBox(
                                   //   height: 24,
                                   // ),
@@ -429,6 +349,13 @@ class _EditProfileScreenState extends State<EditProfileScreen>  {
   ),
       context: context
   );
+  }
+
+  void dismissKeyboard() {
+    FocusScopeNode currentFocus = FocusScope.of(context);
+    if (!currentFocus.hasPrimaryFocus) {
+      currentFocus.unfocus();
+    }
   }
 
 }

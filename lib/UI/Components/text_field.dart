@@ -286,6 +286,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
          );
      }
    }
+   //label
    else{
      switch (widget.type) {
      //name
@@ -407,12 +408,15 @@ class _CustomTextFieldState extends State<CustomTextField> {
                validator: _passwordValidator,
                keyboardType: TextInputType.visiblePassword,
                textInputAction: TextInputAction.next,
+               onEditingComplete: widget.onEditingComplete,
                obscureText: isVisible ? false : true,
                decoration: InputDecoration(
                  // labelText: widget.label,
                  hintText: widget.hint,
                  contentPadding: const EdgeInsets.all(16),
                  filled: true,
+                 helperText: widget.helperText,
+                 helperMaxLines: 3,
                  suffixIcon: IconButton(onPressed: toggleVisibility, icon: isVisible ? const Icon(Icons.visibility) : const Icon(Icons.visibility_off),),
                  border: const OutlineInputBorder(),
                ),

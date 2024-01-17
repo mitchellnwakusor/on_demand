@@ -9,12 +9,10 @@ import 'package:on_demand/UI/Components/oauth_divider.dart';
 import 'package:on_demand/UI/Components/progress_dialog.dart';
 import 'package:on_demand/Utilities/constants.dart';
 import 'package:provider/provider.dart';
-
 import '../../Core/ids.dart';
 import '../../Core/routes.dart';
 import '../../Services/firebase_database.dart';
 import '../../Services/providers/signup_provider.dart';
-import '../../Services/providers/start_screen_provider.dart';
 import '../Components/text_field.dart';
 
 class LoginScreenReauthenticate extends StatefulWidget {
@@ -33,11 +31,15 @@ class _LoginScreenReauthenticateState extends State<LoginScreenReauthenticate> {
   TextEditingController passwordField = TextEditingController();
   bool isEmailPasswordSignIn = false;
 
+  // late bool? isChangeEmail;
+  // late bool? isChangeNumber;
+
   void toggleSignInMethod() {
     setState(() {
       isEmailPasswordSignIn = !isEmailPasswordSignIn;
     });
   }
+
   late BuildContext dialogContext;
   void progressView() async
   {
@@ -49,23 +51,9 @@ class _LoginScreenReauthenticateState extends State<LoginScreenReauthenticate> {
         return ProgressDialog(message: "Processing, Please wait...",);
       },
     );
-
-  }
-
-  void emailReauthenticate() async {
-    //Todo email reauthenticate
-    Authentication.instance.emailReauthenticate(context, emailField.text, passwordField.text);
-    // Authentication.instance.emailSignIn(context,emailField.text, passwordField.text);
-
-  }
-
-  void phoneReauthenticate() async {
-    //Todo phone reauthenticate
-    Authentication.instance.sendOTPCode(context:context, number:phoneField.text,isReauthenticate: true);
   }
 
   void _signIn() async {
-
     if (formKey.currentState!.validate()) {
       progressView();
       try {
@@ -79,10 +67,10 @@ class _LoginScreenReauthenticateState extends State<LoginScreenReauthenticate> {
             Provider.of<SignupProvider>(context,listen: false).addDataSignup(key: 'phone_number', value: phoneField.text);
             switch (isEmailPasswordSignIn) {
               case true:
-                emailReauthenticate();
+            Authentication.instance.reauthenticateEmailPassword(context, emailField.text, passwordField.text);
                 break;
               case false:
-                phoneReauthenticate();
+                Authentication.instance.reauthenticatePhone(context,phoneField.text);
                 break;
             }
           }
@@ -104,6 +92,16 @@ class _LoginScreenReauthenticateState extends State<LoginScreenReauthenticate> {
       }
     }
   }
+
+  // @override
+  // void didChangeDependencies() {
+  //   List<bool?> args = ModalRoute.of(context)!.settings.arguments as List<bool?>;
+  //   isChangeEmail = args[0];
+  //   isChangeNumber = args[1];
+  //   super.didChangeDependencies();
+  // }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
