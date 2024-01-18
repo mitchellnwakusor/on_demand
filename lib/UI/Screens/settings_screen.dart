@@ -1,5 +1,6 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:on_demand/Core/routes.dart';
 import 'package:provider/provider.dart';
 import '../../Services/authentication.dart';
 import '../../Services/providers/app_theme_provider.dart';
@@ -197,9 +198,10 @@ class _AppSettingsScreenState extends State<AppSettingsScreen> {
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: ElevatedButton(onPressed: (){
-                showDialog(context: context, builder: (context){
-                  return const CustomFeedbackDialog(dialogTitle: 'Leave feedback');
-                });
+                Navigator.pushNamed(context, appFeedbackScreen);
+                // showDialog(context: context, builder: (context){
+                //   return const CustomFeedbackDialog(dialogTitle: 'Leave feedback');
+                // });
               }, child: const Text('Leave feedback')),
             ),
           ],
@@ -217,71 +219,3 @@ class _AppSettingsScreenState extends State<AppSettingsScreen> {
 
 }
 
-
-class CustomFeedbackDialog extends StatefulWidget {
-  const CustomFeedbackDialog({super.key,required this.dialogTitle});
-  final String dialogTitle;
-
-  @override
-  State<CustomFeedbackDialog> createState() => _CustomFeedbackDialogState();
-}
-
-class _CustomFeedbackDialogState extends State<CustomFeedbackDialog> {
-
-  TextEditingController subjectController = TextEditingController();
-  TextEditingController messageController = TextEditingController();
-  @override
-  Widget build(BuildContext context) {
-    return SimpleDialog(
-      title: Text(widget.dialogTitle,textAlign: TextAlign.center,),
-      titlePadding: const EdgeInsets.symmetric(horizontal: 16,vertical: 16),
-      contentPadding: const EdgeInsets.symmetric(horizontal: 16,vertical: 16),
-      children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text('Subject'),
-            const SizedBox(height: 8,),
-            TextFormField(
-              controller: subjectController,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 16,),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text('Message'),
-            const SizedBox(height: 8,),
-            TextFormField(
-              controller: messageController,
-              maxLines: 4,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 32,),
-        Row(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            TextButton(onPressed: (){
-              Navigator.pop(context);
-            }, child: const Text('cancel')),
-            const SizedBox(width: 24,),
-            //Todo:
-            ElevatedButton(onPressed: (){}, child: const Text('Send')),
-
-          ],
-        )
-      ],
-
-    );
-  }
-}

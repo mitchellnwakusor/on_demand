@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:on_demand/UI/Screens/edit_profile_screen.dart';
+import 'package:on_demand/UI/Screens/feedback_screen.dart';
 import 'package:on_demand/UI/Screens/home_screen.dart';
 import 'package:on_demand/UI/Screens/login_screen_reauthenticate.dart';
 import 'package:on_demand/UI/Screens/profile_screen.dart';
@@ -46,6 +47,8 @@ Route<dynamic>? generateRoute (RouteSettings settings) {
       return MaterialPageRoute(builder: (_)=> const EditProfileScreen(),settings: settings);
     case AppSettingsScreen.id:
       return MaterialPageRoute(builder: (_)=> const AppSettingsScreen(),settings: settings);
+    case FeedbackScreen.id:
+      return MaterialPageRoute(builder: (_)=> const FeedbackScreen(),settings: settings);
     case DocumentUploadScreen.id:
       return MaterialPageRoute(builder: (_)=> const DocumentUploadScreen(),settings: settings);
     default:
@@ -69,6 +72,7 @@ String businessDetailScreen = BusinessDetailScreen.id;
 String profileScreen = ProfileScreen.id;
 String editProfileScreen = EditProfileScreen.id;
 String appSettingsScreen = AppSettingsScreen.id;
+String appFeedbackScreen = FeedbackScreen.id;
 // String phoneTextScreen = PhoneTextScreen.id;
 
 
