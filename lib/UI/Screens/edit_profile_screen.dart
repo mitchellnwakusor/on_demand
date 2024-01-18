@@ -114,7 +114,8 @@ class _EditProfileScreenState extends State<EditProfileScreen>  {
                                 Stack(
                                   children: [
                                      InkWell(
-                                       child: CircleAvatar(radius: 40,
+                                       child: CircleAvatar(
+                                           radius: 40,
                                            backgroundImage: NetworkImage('$profilePicture')
                                        ),
                                        onTap: (){
@@ -247,7 +248,7 @@ class _EditProfileScreenState extends State<EditProfileScreen>  {
                                       Navigator.pop(context);
                                       Navigator.pushReplacementNamed(context, authHandlerScreen);
                                     }
-                                  }, child: const Text('Continue'),
+                                  }, child: const Text('Update'),
                                 ),
                                 const SizedBox(height: 24,),
 
