@@ -57,152 +57,193 @@ class _AppSettingsScreenState extends State<AppSettingsScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const Padding(
-              padding: EdgeInsets.only(left: 16.0,right: 16.0,top: 8.0),
-              child: Text('Account',style: TextStyle(fontSize: 16,fontWeight: FontWeight.w500),),
-            ),
-            const SizedBox(
-              height: 8,
-            ),
+            //Customization card
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              margin: const EdgeInsets.only(bottom: 8.0),
+              decoration: BoxDecoration(
+                color: Colors.grey[100],
+                borderRadius: BorderRadius.circular(10),
+              ),
+              margin: const EdgeInsets.only(bottom: 16,right: 16,left: 16),
+              padding: const EdgeInsets.symmetric(vertical: 16,horizontal: 16),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Form(
-                    key: updateEmailFormKey,
-                    child: CustomTextField(
-                      controller: emailField,
-                      type: TextFieldType.email,
-                      label: 'Change email Address',
-                      hint: 'New email address',
-                      onEditingComplete: () {
-                        if(emailField.text.isNotEmpty){
-                          if(updateEmailFormKey.currentState!.validate()) {
-                            //dismiss keyboard
-                            dismissKeyboard();
-                            AwesomeDialog(
-                              context: context,
-                              dialogType: DialogType.question,
-                              title: 'Change email address',
-                              desc: 'Are you sure you want to change your email address?',
-                              btnCancelOnPress: (){},
-                              btnOkOnPress: (){
-                                //call update function
-                                Authentication.instance.changeEmailAddress(emailField,context);
-                              },
-                            ).show();
-                          }
-                        }
-                      },
-                      helperText: 'You will be required to sign in and then verify your new email address.',
-                    ),
+                  const Padding(
+                    padding: EdgeInsets.only(left: 0,right: 0,top: 8.0),
+                    child: Text('Customization',style: TextStyle(fontSize: 16,fontWeight: FontWeight.w500),),
                   ),
-                  const SizedBox(
-                    height: 16,
+                  ListTile(
+                    contentPadding: EdgeInsets.zero,
+                    title: const Text('Enable dark mode'),
+                    subtitle: const Text('Turn dark mode on or off'),
+                    trailing: Switch(value: appTheme.isDarkMode, onChanged: (value){
+                      appTheme.toggleDarkMode(value);
+                    }),
                   ),
-                  Form(
-                    key: updatePhoneFormKey,
-                    child: CustomTextField(
-                      controller: phoneField,
-                      type: TextFieldType.phone,
-                      label: 'Change phone number',
-                      hint: 'New number',
-                      onEditingComplete: () {
-                        if(phoneField.text.isNotEmpty){
-                          if(updatePhoneFormKey.currentState!.validate()) {
-                            //dismiss keyboard
-                            dismissKeyboard();
-                            AwesomeDialog(
-                              context: context,
-                              dialogType: DialogType.question,
-                              title: 'Change phone number',
-                              desc: 'Are you sure you want to change your phone number?',
-                              btnCancelOnPress: (){},
-                              btnOkOnPress: (){
-                                //call update function
-                                Authentication.instance.changePhoneNumber(phoneField.text,context);
-                              },
-                            ).show();
-                          }
-                        }
-                      },
-                      helperText: 'You will be required to sign in and then verify your new phone number.',
-                    ),
+                  ListTile(
+                    contentPadding: EdgeInsets.zero,
+                    title: const Text('Enable push notifications'),
+                    subtitle: const Text('Allow notifications and alerts'),
+                    trailing: Switch(value: tempIsNotificationEnabled, onChanged: (value){setState(() {
+                      tempIsNotificationEnabled = value;
+                    });}),
                   ),
-                  const SizedBox(
-                    height: 16,
-                  ),
-                  Form(
-                    key: updatePasswordFormKey,
-                    child: CustomTextField(
-                      controller: passwordField,
-                      type: TextFieldType.password,
-                      label: 'Change password',
-                      hint: 'New password',
-                      onEditingComplete: () {
-                        if(passwordField.text.isNotEmpty){
-                          if(updatePasswordFormKey.currentState!.validate()) {
-                            //dismiss keyboard
-                            dismissKeyboard();
-                            AwesomeDialog(
-                              context: context,
-                              dialogType: DialogType.question,
-                              title: 'Change password',
-                              desc: 'Are you sure you want to change your password?',
-                              btnCancelOnPress: (){},
-                              btnOkOnPress: (){
-                                //call update function
-                                Authentication.instance.changePassword(context,passwordField.text);
-                              },
-                            ).show();
-                          }
-                        }
-                      },
-                      helperText: 'You will be required to sign in.',
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 16,
-                  ),
-
                 ],
               ),
             ),
-            const Padding(
-              padding: EdgeInsets.only(left: 16.0,right: 16.0,top: 8.0),
-              child: Text('Customization',style: TextStyle(fontSize: 16,fontWeight: FontWeight.w500),),
+            //Account card
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.grey[100],
+                borderRadius: BorderRadius.circular(10),
+              ),
+              margin: const EdgeInsets.only(bottom: 16,right: 16,left: 16),
+              padding: const EdgeInsets.symmetric(vertical: 16,horizontal: 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.only(left: 0,right: 0,top: 8.0),
+                    child: Text('Account',style: TextStyle(fontSize: 16,fontWeight: FontWeight.w500),),
+                  ),
+                  const SizedBox(
+                    height: 8,
+                  ),
+                  Column(
+                    children: [
+                      Form(
+                        key: updateEmailFormKey,
+                        child: CustomTextField(
+                          controller: emailField,
+                          type: TextFieldType.email,
+                          label: 'Change email Address',
+                          hint: 'New email address',
+                          onEditingComplete: () {
+                            if(emailField.text.isNotEmpty){
+                              if(updateEmailFormKey.currentState!.validate()) {
+                                //dismiss keyboard
+                                dismissKeyboard();
+                                AwesomeDialog(
+                                  context: context,
+                                  dialogType: DialogType.question,
+                                  title: 'Change email address',
+                                  desc: 'Are you sure you want to change your email address?',
+                                  btnCancelOnPress: (){},
+                                  btnOkOnPress: (){
+                                    //call update function
+                                    Authentication.instance.changeEmailAddress(emailField,context);
+                                  },
+                                ).show();
+                              }
+                            }
+                          },
+                          helperText: 'You will be required to sign in and then verify your new email address.',
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 16,
+                      ),
+                      Form(
+                        key: updatePhoneFormKey,
+                        child: CustomTextField(
+                          controller: phoneField,
+                          type: TextFieldType.phone,
+                          label: 'Change phone number',
+                          hint: 'New number',
+                          onEditingComplete: () {
+                            if(phoneField.text.isNotEmpty){
+                              if(updatePhoneFormKey.currentState!.validate()) {
+                                //dismiss keyboard
+                                dismissKeyboard();
+                                AwesomeDialog(
+                                  context: context,
+                                  dialogType: DialogType.question,
+                                  title: 'Change phone number',
+                                  desc: 'Are you sure you want to change your phone number?',
+                                  btnCancelOnPress: (){},
+                                  btnOkOnPress: (){
+                                    //call update function
+                                    Authentication.instance.changePhoneNumber(phoneField.text,context);
+                                  },
+                                ).show();
+                              }
+                            }
+                          },
+                          helperText: 'You will be required to sign in and then verify your new phone number.',
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 16,
+                      ),
+                      Form(
+                        key: updatePasswordFormKey,
+                        child: CustomTextField(
+                          controller: passwordField,
+                          type: TextFieldType.password,
+                          label: 'Change password',
+                          hint: 'New password',
+                          onEditingComplete: () {
+                            if(passwordField.text.isNotEmpty){
+                              if(updatePasswordFormKey.currentState!.validate()) {
+                                //dismiss keyboard
+                                dismissKeyboard();
+                                AwesomeDialog(
+                                  context: context,
+                                  dialogType: DialogType.question,
+                                  title: 'Change password',
+                                  desc: 'Are you sure you want to change your password?',
+                                  btnCancelOnPress: (){},
+                                  btnOkOnPress: (){
+                                    //call update function
+                                    Authentication.instance.changePassword(context,passwordField.text);
+                                  },
+                                ).show();
+                              }
+                            }
+                          },
+                          helperText: 'You will be required to sign in.',
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 16,
+                      ),
+
+                    ],
+                  ),
+                ],
+              ),
             ),
-            ListTile(
-              title: const Text('Enable dark mode'),
-              subtitle: const Text('Turn dark mode on or off'),
-              trailing: Switch(value: appTheme.isDarkMode, onChanged: (value){
-                appTheme.toggleDarkMode(value);
-              }),
-            ),
-            ListTile(
-              title: const Text('Enable push notifications'),
-              subtitle: const Text('Allow notifications and alerts'),
-              trailing: Switch(value: tempIsNotificationEnabled, onChanged: (value){setState(() {
-                tempIsNotificationEnabled = value;
-              });}),
-            ),
-            const Padding(
-              padding: EdgeInsets.only(left: 16.0,right: 16.0,top: 8.0),
-              child: Text('Developer',style: TextStyle(fontSize: 16,fontWeight: FontWeight.w500),),
-            ),
-            const ListTile(
-              title: Text('Leave feedback'),
-              subtitle: Text('Leave a message or suggestion on how we can serve you better.'),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: ElevatedButton(onPressed: (){
-                Navigator.pushNamed(context, appFeedbackScreen);
-                // showDialog(context: context, builder: (context){
-                //   return const CustomFeedbackDialog(dialogTitle: 'Leave feedback');
-                // });
-              }, child: const Text('Leave feedback')),
+            //Dev card
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.grey[100],
+                borderRadius: BorderRadius.circular(10),
+              ),
+              margin: const EdgeInsets.only(bottom: 16,right: 16,left: 16),
+              padding: const EdgeInsets.symmetric(vertical: 16,horizontal: 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.only(left:0,right: 0,top: 8.0),
+                    child: Text('Developer',style: TextStyle(fontSize: 16,fontWeight: FontWeight.w500),),
+                  ),
+                  const ListTile(
+                    contentPadding: EdgeInsets.zero,
+                    title: Text('Leave feedback'),
+                    subtitle: Text('Leave a message or suggestion on how we can serve you better.'),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: ElevatedButton(onPressed: (){
+                      Navigator.pushNamed(context, appFeedbackScreen);
+                      // showDialog(context: context, builder: (context){
+                      //   return const CustomFeedbackDialog(dialogTitle: 'Leave feedback');
+                      // });
+                    }, child: const Text('Leave feedback')),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
