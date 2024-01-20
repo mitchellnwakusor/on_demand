@@ -116,7 +116,7 @@ class _DocumentUploadScreenState extends State<DocumentUploadScreen> {
               progressView();
               if(contentFile!=null){
                 try {
-                  FirebaseDatabase.uploadDocument(context,contentFile!,Authentication.instance.currentUser!.uid);
+                  FirebaseDatabase.uploadVerificationDocument(context,contentFile!,Authentication.instance.currentUser!.uid);
                 } on FirebaseException catch (e) {
                   // Caught an exception from Firebase.
                   if (!context.mounted) return;

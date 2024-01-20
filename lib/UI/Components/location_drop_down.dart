@@ -6,8 +6,8 @@ import 'package:provider/provider.dart';
 import '../../Services/providers/signup_provider.dart';
 
 class LocationDropDown extends StatefulWidget {
-   LocationDropDown({super.key, required this.currentLocation});
-   String? currentLocation;
+   const LocationDropDown({super.key, required this.currentLocation});
+   final String? currentLocation;
 
   @override
   State<LocationDropDown> createState() => _LocationDropDownState();

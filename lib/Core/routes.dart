@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:on_demand/UI/Screens/add_portfolio_screen.dart';
 import 'package:on_demand/UI/Screens/edit_profile_screen.dart';
 import 'package:on_demand/UI/Screens/feedback_screen.dart';
 import 'package:on_demand/UI/Screens/home_screen.dart';
@@ -12,6 +13,7 @@ import 'package:on_demand/UI/Screens/document_upload_screen.dart';
 import 'package:on_demand/UI/Screens/otp_verification_screen.dart';
 import 'package:on_demand/UI/Screens/search_input_screen.dart';
 import '../UI/Screens/email_verification_screen.dart';
+import '../UI/Screens/portfolio_screen.dart';
 import 'authentication_handler.dart';
 import '../UI/Screens/login_screen.dart';
 import '../UI/Screens/register_screen.dart';
@@ -43,6 +45,10 @@ Route<dynamic>? generateRoute (RouteSettings settings) {
       return MaterialPageRoute(builder: (_)=> const BusinessDetailScreen(),settings: settings);
     case ProfileScreen.id:
       return MaterialPageRoute(builder: (_)=> const ProfileScreen(),settings: settings);
+    case PortfolioScreen.id:
+      return MaterialPageRoute(builder: (_)=> const PortfolioScreen(),settings: settings);
+    case AddPortfolioScreen.id:
+      return MaterialPageRoute(builder: (_)=> const AddPortfolioScreen(),settings: settings);
     case EditProfileScreen.id:
       return MaterialPageRoute(builder: (_)=> const EditProfileScreen(),settings: settings);
     case AppSettingsScreen.id:
@@ -71,6 +77,8 @@ String documentUploadScreen = DocumentUploadScreen.id;
 String businessDetailScreen = BusinessDetailScreen.id;
 String profileScreen = ProfileScreen.id;
 String editProfileScreen = EditProfileScreen.id;
+String portfolioScreen = PortfolioScreen.id;
+String addPortfolioScreen = AddPortfolioScreen.id;
 String appSettingsScreen = AppSettingsScreen.id;
 String appFeedbackScreen = FeedbackScreen.id;
 // String phoneTextScreen = PhoneTextScreen.id;
