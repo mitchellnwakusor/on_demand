@@ -1,3 +1,4 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:on_demand/Services/firebase_database.dart';
@@ -70,8 +71,20 @@ class _PortfolioScreenState extends State<PortfolioScreen> {
           ),
           IconButton(
               onPressed: () {
-                progressView();
-                FirebaseDatabase.deletePortfolio(context, uploadDate!);
+                AwesomeDialog(
+                  context: context,
+                  dialogType: DialogType.question,
+                  title: 'Delete portfolio',
+                  desc: 'Are you sure you want to delete portfolio?',
+                  btnCancelOnPress: (){
+
+                    // Navigator.pop(context);
+                  },
+                  btnOkOnPress: (){
+                    progressView();
+                    FirebaseDatabase.deletePortfolio(context, uploadDate!);
+                  },
+                ).show();
               },
               icon: const Icon(Icons.delete_outline)),
         ],

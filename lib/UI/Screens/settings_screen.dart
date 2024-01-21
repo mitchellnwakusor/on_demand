@@ -242,6 +242,14 @@ class _AppSettingsScreenState extends State<AppSettingsScreen> {
                       // });
                     }, child: const Text('Leave feedback')),
                   ),
+
+                  ListTile(
+                    contentPadding: EdgeInsets.zero,
+                    title: Text('Test Field'),
+                    subtitle: Text('Playground for unit testing'),
+                    onTap: ()=>Navigator.pushNamed(context, testField),
+                  ),
+
                 ],
               ),
             ),

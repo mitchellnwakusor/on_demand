@@ -12,6 +12,7 @@ import 'package:on_demand/UI/Screens/business_detail_screen.dart';
 import 'package:on_demand/UI/Screens/document_upload_screen.dart';
 import 'package:on_demand/UI/Screens/otp_verification_screen.dart';
 import 'package:on_demand/UI/Screens/search_input_screen.dart';
+import 'package:on_demand/UI/Screens/test_field.dart';
 import '../UI/Screens/email_verification_screen.dart';
 import '../UI/Screens/portfolio_screen.dart';
 import 'authentication_handler.dart';
@@ -57,6 +58,8 @@ Route<dynamic>? generateRoute (RouteSettings settings) {
       return MaterialPageRoute(builder: (_)=> const FeedbackScreen(),settings: settings);
     case DocumentUploadScreen.id:
       return MaterialPageRoute(builder: (_)=> const DocumentUploadScreen(),settings: settings);
+    case TestField.id:
+      return MaterialPageRoute(builder: (_)=> const TestField(),settings: settings);
     default:
       return MaterialPageRoute(builder: (_)=> const AuthenticationHandler(),settings: settings); //initial route
   }
@@ -81,6 +84,7 @@ String portfolioScreen = PortfolioScreen.id;
 String addPortfolioScreen = AddPortfolioScreen.id;
 String appSettingsScreen = AppSettingsScreen.id;
 String appFeedbackScreen = FeedbackScreen.id;
+String testField = TestField.id;
 // String phoneTextScreen = PhoneTextScreen.id;
 
 

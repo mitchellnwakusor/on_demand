@@ -205,49 +205,39 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                                 ],),
                             ),
                             StreamBuilder(
-                              initialData: null,
                               stream: FirebaseDatabase.getPortfolioDataStream(), //get artisan portfolio
                               builder: (context,snapshot){
-                               switch(snapshot.connectionState){
-                                 case ConnectionState.none:
-                                   return const Placeholder(child: Text('No connection'));
-                                   case ConnectionState.active:
-                                     if(snapshot.data!.docs.isNotEmpty){
-                                       List<ArtisanPortfolio> tempPortfolioData= [];
-                                       //get list of documents
-                                       List<QueryDocumentSnapshot<Map<String,dynamic>>> documents = snapshot.data!.docs;
-                                       for(QueryDocumentSnapshot<Map<String,dynamic>> doc in documents){
-                                         Map<String,dynamic> dataMap = doc.data();
-                                         tempPortfolioData.add(ArtisanPortfolio(title: dataMap['title'], imageURL: dataMap['image url'], uploadDate: dataMap['time']));
-                                        }
-                                       portfolioData = tempPortfolioData;
-                                     }
-                                     else{
-                                       //Add portfolio notice widget
-                                       return Row(
-                                         mainAxisAlignment: MainAxisAlignment.center,
-                                         crossAxisAlignment: CrossAxisAlignment.center,
-                                         children: [
-                                           const Text('Add a portfolio.',style: TextStyle(fontSize: 18),),
-                                           IconButton(onPressed: ()=>Navigator.pushNamed(context, addPortfolioScreen), icon: const Icon(Icons.add))
-                                         ],
-                                       );
-                                     }
-                                   return SingleChildScrollView(
-                                       child: Padding(
-                                         padding: const EdgeInsets.symmetric(vertical: 16),
-                                         child: Wrap(
-                                           alignment: WrapAlignment.spaceBetween,
-                                           runSpacing: 16,
-                                           children: _buildPortfolioWidget(portfolioData),
-                                         ),
-                                       )
-                                   );
-                                 case ConnectionState.waiting:
-                                   return const Placeholder(child: Text('Loading'));
-                                 case ConnectionState.done:
-                                   return const Placeholder(child: Text('Done request'));
-                               }
+                                  if(snapshot.hasData && snapshot.data!.docs.isNotEmpty){
+                                    List<ArtisanPortfolio> tempPortfolioData= [];
+                                    //get list of documents
+                                    List<QueryDocumentSnapshot<Map<String,dynamic>>> documents = snapshot.data!.docs;
+                                    for(QueryDocumentSnapshot<Map<String,dynamic>> doc in documents){
+                                      Map<String,dynamic> dataMap = doc.data();
+                                      tempPortfolioData.add(ArtisanPortfolio(title: dataMap['title'], imageURL: dataMap['image url'], uploadDate: dataMap['time']));
+                                    }
+                                    portfolioData = tempPortfolioData;
+                                    return SingleChildScrollView(
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(vertical: 16),
+                                          child: Wrap(
+                                            alignment: WrapAlignment.spaceBetween,
+                                            runSpacing: 16,
+                                            children: _buildPortfolioWidget(portfolioData),
+                                          ),
+                                        )
+                                    );
+                                  }
+                                  else{
+                                    //Add portfolio notice widget
+                                    return Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        const Text('Add a portfolio.',style: TextStyle(fontSize: 18),),
+                                        IconButton(onPressed: ()=>Navigator.pushNamed(context, addPortfolioScreen), icon: const Icon(Icons.add))
+                                      ],
+                                    );
+                                  }
                               },
                             ),
                           ]),
@@ -292,6 +282,7 @@ class PortfolioWidget extends StatelessWidget {
     );
   }
 }
+
 
 
 
