@@ -104,6 +104,7 @@ class _PortfolioScreenState extends State<PortfolioScreen> {
                     controller: titleController,
                     textInputAction: TextInputAction.done,
                     autofocus: true,
+                    style: const TextStyle(fontSize: 24),
                     decoration: InputDecoration(
                       // contentPadding: EdgeInsets.all(16),
                       filled: false,
@@ -126,10 +127,18 @@ class _PortfolioScreenState extends State<PortfolioScreen> {
             ),
             Row(
               children: [
+                const Text(
+                  'Upload date -',
+                  style: TextStyle(
+                      fontSize: 18, fontWeight: FontWeight.w300)
+                ),
+                const SizedBox(
+                  width: 8,
+                ),
                 Text(
                   formattedDate!,
                   style: const TextStyle(
-                      fontSize: 18, fontWeight: FontWeight.w400),
+                      fontSize: 18, fontWeight: FontWeight.w300),
                 ),
                 const SizedBox(
                   width: 8,
@@ -137,7 +146,7 @@ class _PortfolioScreenState extends State<PortfolioScreen> {
                 Text(
                   formattedTime!,
                   style: const TextStyle(
-                      fontSize: 18, fontWeight: FontWeight.w400),
+                      fontSize: 18, fontWeight: FontWeight.w300),
                 ),
               ],
             ),
