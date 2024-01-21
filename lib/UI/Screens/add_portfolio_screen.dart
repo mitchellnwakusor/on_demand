@@ -55,10 +55,13 @@ class _AddPortfolioScreenState extends State<AddPortfolioScreen> {
   }
 
   void saveButtonCallback() {
-    if(titleFormKey.currentState!.validate() && tempFileImage!=null){
+    if(titleFormKey.currentState!.validate() && tempFileImage!=null && portfolioTitle.text.length>3){
       //create portfolio in db
       progressView();
       FirebaseDatabase.createPortfolio(context, portfolioTitle.text, tempFileImage!);
+    }
+    else if(portfolioTitle.text.length<2){
+      Fluttertoast.showToast(msg: 'Title should be more than 2 characters');
     }
   }
 
