@@ -3,24 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:on_demand/Core/routes.dart';
 import 'package:on_demand/Services/providers/user_details_provider.dart';
+import 'package:on_demand/UI/Screens/custom_animated_loading_widget.dart';
 import 'package:provider/provider.dart';
-
-
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
-  static const id = 'home_screen';
-
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-
-  @override
-  Widget build(BuildContext context) {
-    return const Placeholder();
-  }
-}
 
 class ArtisanHomeScreen extends StatefulWidget {
   const ArtisanHomeScreen({super.key});
@@ -65,7 +49,6 @@ class _ArtisanHomeScreenState extends State<ArtisanHomeScreen> {
             }else{
               profilePicture='$profilePic';
             }
-
 
             return Scaffold(
               key: _key,
@@ -161,7 +144,7 @@ class _ArtisanHomeScreenState extends State<ArtisanHomeScreen> {
               appBar: AppBar(
                 automaticallyImplyLeading: false,
                 title: isPending ? GestureDetector(
-                  onTap: ()=>_key.currentState?.openDrawer(),
+                  onTap: (){},
                   child: Stack(
                     clipBehavior: Clip.hardEdge,
                     alignment: Alignment.topRight,
@@ -171,7 +154,7 @@ class _ArtisanHomeScreenState extends State<ArtisanHomeScreen> {
 
                     ],
                   ),
-                ) : GestureDetector(onTap: ()=>_key.currentState?.openDrawer(),child: const CircleAvatar(radius: 24,backgroundImage: null,)),
+                ) : GestureDetector(onTap: (){},child: const CircleAvatar(radius: 24,backgroundImage: null,)),
               ),
               drawer: Drawer(
                 width: 360,
@@ -230,77 +213,15 @@ class _ArtisanHomeScreenState extends State<ArtisanHomeScreen> {
                           fontWeight: FontWeight.w400,
                           fontSize: 18
                       ),),
-                      FutureBuilder(future: null, builder: (context,snapshot){
-                        if(snapshot.hasData){
-                          return const Placeholder();
-                        }
-                        return Container(
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                              color: const Color(0xfff2f2f2),
-                              borderRadius: BorderRadius.circular(10)
-                          ),
-                          height: 80,
-                          margin: const EdgeInsets.symmetric(vertical: 16),
-                          child: const Text('No active job requests yet',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 18
-                            ),),
-                        );
-                      }), // request widget
-                      Container(
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                            color: const Color(0xfff2f2f2),
-                            borderRadius: BorderRadius.circular(10)
-                        ),
-                        height: 136,
-                        margin: const EdgeInsets.symmetric(vertical: 16),
-                        padding: const EdgeInsets.all(16),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Column(
-                              children: [
-                                Container(
-                                  height: 72,
-                                  width: 72,
-                                  alignment: Alignment.center,
-                                  decoration: BoxDecoration(
-                                      color: const Color(0xff83A6FF),
-                                      borderRadius: BorderRadius.circular(10)
-                                  ),
-                                  child: const Icon(Icons.people_outline,color: Color(0xff00247F),),
-                                ),
-                                const SizedBox(height: 8,),
-                                const Text('Refer a friend',style: TextStyle(fontSize: 16),),
-                              ],
-                            ),
-                            Column(
-                              children: [
-                                Container(
-                                  height: 72,
-                                  width: 72,
-                                  alignment: Alignment.center,
-                                  decoration: BoxDecoration(
-                                      color: const Color(0xff83A6FF),
-                                      borderRadius: BorderRadius.circular(10)
-                                  ),
-                                  child: const Icon(Icons.reviews_outlined,color: Color(0xff00247F),),
-                                ),
-                                const SizedBox(height: 8,),
-                                const Text('Reviews',style: TextStyle(fontSize: 16),),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
+                      const SizedBox(height: 16,),
+                      const AnimatedLoadingWidget(height: 80,), // request widget
+                      Container(padding: const EdgeInsets.symmetric(vertical: 16),margin: const EdgeInsets.symmetric(vertical: 16),child: const AnimatedLoadingWidget(height: 136,)),
                       Card(
                         margin: const EdgeInsets.symmetric(vertical: 32),
                         elevation: 4,
                         color: const Color(0xff477BFF),
-                        child: Padding(
+                        child: Container(
+                          height: 240,
                           padding: const EdgeInsets.only(left:16.0,top: 16,bottom: 16),
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -322,7 +243,7 @@ class _ArtisanHomeScreenState extends State<ArtisanHomeScreen> {
                                       ),
                                       softWrap: true,
                                     ),
-                                    const SizedBox(height: 24,),
+                                    const Spacer(),
                                     ElevatedButton(onPressed: (){}, child: const Text('Read'))
 
                                   ],
@@ -389,6 +310,7 @@ class _ArtisanHomeScreenState extends State<ArtisanHomeScreen> {
                   NavigationDestination(icon: navItem==3 ? const Icon(Icons.notifications) : const Icon(Icons.notifications_outlined), label: 'Alerts'),
                 ],),
             ); //loading or blank widgets
+            //loading or blank widgets
           }
         }
     );

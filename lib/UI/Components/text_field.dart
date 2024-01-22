@@ -1,15 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-enum TextFieldType {
-  name,
-  email,
-  phone,
-  number,
-  date,
-  password,
-  rate
-}
+enum TextFieldType { name, email, phone, number, date, password, rate, text }
 
 //validators
 String? _requiredValidator(String? value) {
@@ -21,6 +13,7 @@ String? _requiredValidator(String? value) {
   }
   return null;
 }
+
 String? _dateOfBirthValidator(String? value) {
   if (_requiredValidator(value) != null) {
     return 'This field is required';
@@ -56,6 +49,7 @@ String? _dateOfBirthValidator(String? value) {
   }
   return null;
 }
+
 String? _passwordValidator(String? value) {
   if (value != null) {
     if (_requiredValidator(value) != null) {
@@ -70,6 +64,7 @@ String? _passwordValidator(String? value) {
   }
   return null;
 }
+
 String? _emailValidator(String? value) {
   if (value != null && value.isNotEmpty) {
     if (_requiredValidator(value) != null) {
@@ -82,7 +77,6 @@ String? _emailValidator(String? value) {
   }
   return null;
 }
-
 
 //input formatter
 final List<TextInputFormatter> _nameFormatter = [
@@ -101,7 +95,6 @@ final List<TextInputFormatter> _phoneFormatter = [
   LengthLimitingTextInputFormatter(10)
 ];
 
-
 class CustomTextField extends StatefulWidget {
   const CustomTextField(
       {super.key,
@@ -109,7 +102,8 @@ class CustomTextField extends StatefulWidget {
       required this.type,
       this.label,
       this.helperText,
-      this.hint,this.onEditingComplete});
+      this.hint,
+      this.onEditingComplete});
 
   //config options
   final TextEditingController controller;
@@ -124,376 +118,455 @@ class CustomTextField extends StatefulWidget {
 }
 
 class _CustomTextFieldState extends State<CustomTextField> {
-
   bool isVisible = true;
-  DateTime firstDate = DateTime(1900,1,1);
+  DateTime firstDate = DateTime(1900, 1, 1);
   DateTime lastDate = DateTime.now();
   void toggleVisibility() {
     setState(() {
       isVisible = !isVisible;
     });
   }
+
   void displayDatePicker() async {
-   var date = await showDatePicker(context: context, initialDate: lastDate, firstDate: firstDate, lastDate: lastDate);
-   setState(() {
-     if(date!=null){
-       String formattedDate = '${date.month}/${date.day}/${date.year}';
-       widget.controller.text = formattedDate;
-     }
-   });
+    var date = await showDatePicker(
+        context: context,
+        initialDate: lastDate,
+        firstDate: firstDate,
+        lastDate: lastDate);
+    setState(() {
+      if (date != null) {
+        String formattedDate = '${date.month}/${date.day}/${date.year}';
+        widget.controller.text = formattedDate;
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     //no label
-   if(widget.label==null){
-     switch (widget.type) {
-     //name
-       case TextFieldType.name:
-         return TextFormField(
-           controller: widget.controller,
-           validator: _requiredValidator,
-           inputFormatters: _nameFormatter,
-           keyboardType: TextInputType.name,
-           textCapitalization: TextCapitalization.none,
-           textInputAction: TextInputAction.next,
-           decoration: InputDecoration(
-             labelText: widget.label,
-             hintText: widget.hint,
-             contentPadding: const EdgeInsets.all(16),
-             filled: true,
-             border: const OutlineInputBorder(),
-           ),
-         );
-     //email
-       case TextFieldType.email:
-         return TextFormField(
-           controller: widget.controller,
-           validator: _emailValidator,
-           inputFormatters: _emailFormatter,
-           keyboardType: TextInputType.emailAddress,
-           textCapitalization: TextCapitalization.none,
-           textInputAction: TextInputAction.next,
-           decoration: InputDecoration(
-             labelText: widget.label,
-             hintText: widget.hint,
-             contentPadding: const EdgeInsets.all(16),
-             filled: true,
-             border: const OutlineInputBorder(),
-           ),
-         );
-     //phone
-       case TextFieldType.phone:
-         return TextFormField(
-           controller: widget.controller,
-           validator: _requiredValidator,
-           inputFormatters: _phoneFormatter,
-           keyboardType: TextInputType.phone,
-           textCapitalization: TextCapitalization.none,
-           textInputAction: TextInputAction.next,
-           decoration: InputDecoration(
-             prefixText: '+234',
-             labelText: widget.label,
-             hintText: widget.hint,
-             contentPadding: const EdgeInsets.all(16),
-             filled: true,
-             border: const OutlineInputBorder(),
-           ),
-         );
-     //number
-       case TextFieldType.number:
-         return TextFormField(
-           controller: widget.controller,
-           validator: _requiredValidator,
-           inputFormatters: _phoneFormatter,
-           keyboardType: TextInputType.phone,
-           textCapitalization: TextCapitalization.none,
-           textInputAction: TextInputAction.next,
-           decoration: InputDecoration(
-             labelText: widget.label,
-             hintText: widget.hint,
-             contentPadding: const EdgeInsets.all(16),
-             filled: true,
-             border: const OutlineInputBorder(),
-           ),
-         );
-     //password
-       case TextFieldType.password:
-         return TextFormField(
-           controller: widget.controller,
-           validator: _passwordValidator,
-           keyboardType: TextInputType.visiblePassword,
-           textInputAction: TextInputAction.next,
-           obscureText: isVisible ? false : true,
-           decoration: InputDecoration(
-             labelText: widget.label,
-             hintText: widget.hint,
-             contentPadding: const EdgeInsets.all(16),
-             filled: true,
-             suffixIcon: IconButton(onPressed: toggleVisibility, icon: isVisible ? const Icon(Icons.visibility) : const Icon(Icons.visibility_off),),
-             border: const OutlineInputBorder(),
-           ),
-         );
-       case TextFieldType.rate:
-         return Column(
-           crossAxisAlignment: CrossAxisAlignment.start,
-           children: [
-             Text(widget.label!),
-             const SizedBox(height: 8,),
-             TextFormField(
-               controller: widget.controller,
-               validator: _requiredValidator,
-               autovalidateMode: AutovalidateMode.onUserInteraction,
-               inputFormatters: [
-                 NumericTextFormatter(),
-                 LengthLimitingTextInputFormatter(20),
+    if (widget.label == null) {
+      switch (widget.type) {
+        //name
+        case TextFieldType.name:
+          return TextFormField(
+            controller: widget.controller,
+            validator: _requiredValidator,
+            inputFormatters: _nameFormatter,
+            keyboardType: TextInputType.name,
+            textCapitalization: TextCapitalization.none,
+            textInputAction: TextInputAction.next,
+            decoration: InputDecoration(
+              labelText: widget.label,
+              hintText: widget.hint,
+              contentPadding: const EdgeInsets.all(16),
+              filled: true,
+              border: const OutlineInputBorder(),
+            ),
+          );
+        //text
+        case TextFieldType.text:
+          return TextFormField(
+            controller: widget.controller,
+            validator: _requiredValidator,
+            keyboardType: TextInputType.name,
+            textCapitalization: TextCapitalization.none,
+            textInputAction: TextInputAction.next,
+            decoration: InputDecoration(
+              labelText: widget.label,
+              hintText: widget.hint,
+              contentPadding: const EdgeInsets.all(16),
+              filled: true,
+              border: const OutlineInputBorder(),
+            ),
+          );
+        //email
+        case TextFieldType.email:
+          return TextFormField(
+            controller: widget.controller,
+            validator: _emailValidator,
+            inputFormatters: _emailFormatter,
+            keyboardType: TextInputType.emailAddress,
+            textCapitalization: TextCapitalization.none,
+            textInputAction: TextInputAction.next,
+            decoration: InputDecoration(
+              labelText: widget.label,
+              hintText: widget.hint,
+              contentPadding: const EdgeInsets.all(16),
+              filled: true,
+              border: const OutlineInputBorder(),
+            ),
+          );
+        //phone
+        case TextFieldType.phone:
+          return TextFormField(
+            controller: widget.controller,
+            validator: _requiredValidator,
+            inputFormatters: _phoneFormatter,
+            keyboardType: TextInputType.phone,
+            textCapitalization: TextCapitalization.none,
+            textInputAction: TextInputAction.next,
+            decoration: InputDecoration(
+              prefixText: '+234',
+              labelText: widget.label,
+              hintText: widget.hint,
+              contentPadding: const EdgeInsets.all(16),
+              filled: true,
+              border: const OutlineInputBorder(),
+            ),
+          );
+        //number
+        case TextFieldType.number:
+          return TextFormField(
+            controller: widget.controller,
+            validator: _requiredValidator,
+            inputFormatters: _phoneFormatter,
+            keyboardType: TextInputType.phone,
+            textCapitalization: TextCapitalization.none,
+            textInputAction: TextInputAction.next,
+            decoration: InputDecoration(
+              labelText: widget.label,
+              hintText: widget.hint,
+              contentPadding: const EdgeInsets.all(16),
+              filled: true,
+              border: const OutlineInputBorder(),
+            ),
+          );
+        //password
+        case TextFieldType.password:
+          return TextFormField(
+            controller: widget.controller,
+            validator: _passwordValidator,
+            keyboardType: TextInputType.visiblePassword,
+            textInputAction: TextInputAction.next,
+            obscureText: isVisible ? false : true,
+            decoration: InputDecoration(
+              labelText: widget.label,
+              hintText: widget.hint,
+              contentPadding: const EdgeInsets.all(16),
+              filled: true,
+              suffixIcon: IconButton(
+                onPressed: toggleVisibility,
+                icon: isVisible
+                    ? const Icon(Icons.visibility)
+                    : const Icon(Icons.visibility_off),
+              ),
+              border: const OutlineInputBorder(),
+            ),
+          );
+        case TextFieldType.rate:
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(widget.label!),
+              const SizedBox(
+                height: 8,
+              ),
+              TextFormField(
+                controller: widget.controller,
+                validator: _requiredValidator,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                inputFormatters: [
+                  NumericTextFormatter(),
+                  LengthLimitingTextInputFormatter(20),
                 ],
-               keyboardType: TextInputType.number,
-               textCapitalization: TextCapitalization.none,
-               textInputAction: TextInputAction.next,
-               decoration: InputDecoration(
-                 prefixText: '₦',
-                 // labelText: widget.label,
-                 hintText: widget.hint,
-                 helperText: widget.helperText,
-                 contentPadding: const EdgeInsets.all(16),
-                 filled: true,
-                 border: const OutlineInputBorder(),
-               ),
-             ),
-           ],
-         );
+                keyboardType: TextInputType.number,
+                textCapitalization: TextCapitalization.none,
+                textInputAction: TextInputAction.next,
+                decoration: InputDecoration(
+                  prefixText: '₦',
+                  // labelText: widget.label,
+                  hintText: widget.hint,
+                  helperText: widget.helperText,
+                  contentPadding: const EdgeInsets.all(16),
+                  filled: true,
+                  border: const OutlineInputBorder(),
+                ),
+              ),
+            ],
+          );
 
-     //date
-       case TextFieldType.date:
-         return TextFormField(
-           controller: widget.controller,
-           validator: _dateOfBirthValidator,
-           inputFormatters: _dateFormatter,
-           keyboardType: TextInputType.datetime,
-           textInputAction: TextInputAction.next,
-           decoration: InputDecoration(
-             labelText: widget.label,
-             hintText: widget.hint,
-             contentPadding: const EdgeInsets.all(16),
-             filled: true,
-             suffixIcon: Padding(
-               padding: const EdgeInsets.only(right: 12),
-               child: IconButton(onPressed: displayDatePicker, icon: const Icon(Icons.calendar_month),),
-             ),
-             border: const OutlineInputBorder(),
-           ),
-         );
-     }
-   }
-   //label
-   else{
-     switch (widget.type) {
-     //name
-       case TextFieldType.name:
-         return Column(
-           crossAxisAlignment: CrossAxisAlignment.start,
-           children: [
-             Text(widget.label!),
-             const SizedBox(height: 8,),
-             TextFormField(
-               controller: widget.controller,
-               validator: _requiredValidator,
-               autovalidateMode: AutovalidateMode.onUserInteraction,
-               inputFormatters: _nameFormatter,
-               keyboardType: TextInputType.name,
-               textCapitalization: TextCapitalization.none,
-               textInputAction: TextInputAction.next,
-               decoration: InputDecoration(
-                 // labelText: widget.label,
-                 hintText: widget.hint,
-                 contentPadding: const EdgeInsets.all(16),
-                 filled: true,
-                 border: const OutlineInputBorder(),
-               ),
-             ),
-           ],
-         );
-     //email
-       case TextFieldType.email:
-         return Column(
-           crossAxisAlignment: CrossAxisAlignment.start,
-           children: [
-             Text(widget.label!),
-             const SizedBox(height: 8,),
-             TextFormField(
-               controller: widget.controller,
-               validator: _emailValidator,
-               autovalidateMode: AutovalidateMode.onUserInteraction,
-               inputFormatters: _emailFormatter,
-               keyboardType: TextInputType.emailAddress,
-               textCapitalization: TextCapitalization.none,
-               textInputAction: TextInputAction.next,
-               onEditingComplete: widget.onEditingComplete,
-               decoration: InputDecoration(
-                 // labelText: widget.label,
-                 errorMaxLines: 2,
-                 hintText: widget.hint,
-                 helperText: widget.helperText,
-                 helperMaxLines: 3,
-                 contentPadding: const EdgeInsets.all(16),
-                 filled: true,
-                 border: const OutlineInputBorder(),
-               ),
-             ),
-           ],
-         );
-     //phone
-       case TextFieldType.phone:
-         return Column(
-           crossAxisAlignment: CrossAxisAlignment.start,
-           children: [
-             Text(widget.label!),
-             const SizedBox(height: 8,),
-             TextFormField(
-               controller: widget.controller,
-               validator: _requiredValidator,
-               autovalidateMode: AutovalidateMode.onUserInteraction,
-               inputFormatters: _phoneFormatter,
-               keyboardType: TextInputType.phone,
-               onEditingComplete: widget.onEditingComplete,
-               textCapitalization: TextCapitalization.none,
-               textInputAction: TextInputAction.next,
-               decoration: InputDecoration(
-                 prefixText: '+234',
-                 // labelText: widget.label,
-                 hintText: widget.hint,
-                 helperText: widget.helperText,
-                 helperMaxLines: 3,
-                 contentPadding: const EdgeInsets.all(16),
-                 filled: true,
-                 border: const OutlineInputBorder(),
-               ),
-             ),
-           ],
-         );
-     //number
-       case TextFieldType.number:
-         return Column(
-           crossAxisAlignment: CrossAxisAlignment.start,
-           children: [
-             Text(widget.label!),
-             const SizedBox(height: 8,),
-             TextFormField(
-               controller: widget.controller,
-               validator: _requiredValidator,
-               inputFormatters: _phoneFormatter,
-               keyboardType: TextInputType.phone,
-               textCapitalization: TextCapitalization.none,
-               textInputAction: TextInputAction.next,
-               decoration: InputDecoration(
-                 // labelText: widget.label,
-                 hintText: widget.hint,
-                 contentPadding: const EdgeInsets.all(16),
-                 filled: true,
-                 border: const OutlineInputBorder(),
-               ),
-             ),
-           ],
-         );
-     //password
-       case TextFieldType.password:
-         return Column(
-           crossAxisAlignment: CrossAxisAlignment.start,
-           children: [
-             Text(widget.label!),
-             const SizedBox(height: 8,),
-             TextFormField(
-               controller: widget.controller,
-               validator: _passwordValidator,
-               keyboardType: TextInputType.visiblePassword,
-               textInputAction: TextInputAction.next,
-               onEditingComplete: widget.onEditingComplete,
-               obscureText: isVisible ? false : true,
-               decoration: InputDecoration(
-                 // labelText: widget.label,
-                 hintText: widget.hint,
-                 contentPadding: const EdgeInsets.all(16),
-                 filled: true,
-                 helperText: widget.helperText,
-                 helperMaxLines: 3,
-                 suffixIcon: IconButton(onPressed: toggleVisibility, icon: isVisible ? const Icon(Icons.visibility) : const Icon(Icons.visibility_off),),
-                 border: const OutlineInputBorder(),
-               ),
-             ),
-           ],
-         );
-     //date
-       case TextFieldType.date:
-         return Column(
-           crossAxisAlignment: CrossAxisAlignment.start,
-           children: [
-             Text(widget.label!),
-             const SizedBox(height: 8,),
-             TextFormField(
-               controller: widget.controller,
-               validator: _dateOfBirthValidator,
-               autovalidateMode: AutovalidateMode.onUserInteraction,
-               inputFormatters: _dateFormatter,
-               keyboardType: TextInputType.datetime,
-               textInputAction: TextInputAction.next,
-               decoration: InputDecoration(
-                 // labelText: widget.label,
-                 hintText: widget.hint,
-                 contentPadding: const EdgeInsets.all(16),
-                 filled: true,
-                 suffixIcon: Padding(
-                   padding: const EdgeInsets.only(right: 12),
-                   child: IconButton(onPressed: displayDatePicker, icon: const Icon(Icons.calendar_month),),
-                 ),
-                 border: const OutlineInputBorder(),
-               ),
-             ),
-           ],
-         );
+        //date
+        case TextFieldType.date:
+          return TextFormField(
+            controller: widget.controller,
+            validator: _dateOfBirthValidator,
+            inputFormatters: _dateFormatter,
+            keyboardType: TextInputType.datetime,
+            textInputAction: TextInputAction.next,
+            decoration: InputDecoration(
+              labelText: widget.label,
+              hintText: widget.hint,
+              contentPadding: const EdgeInsets.all(16),
+              filled: true,
+              suffixIcon: Padding(
+                padding: const EdgeInsets.only(right: 12),
+                child: IconButton(
+                  onPressed: displayDatePicker,
+                  icon: const Icon(Icons.calendar_month),
+                ),
+              ),
+              border: const OutlineInputBorder(),
+            ),
+          );
+      }
+    }
+    //label
+    else {
+      switch (widget.type) {
+        //name
+        case TextFieldType.name:
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(widget.label!),
+              const SizedBox(
+                height: 8,
+              ),
+              TextFormField(
+                controller: widget.controller,
+                validator: _requiredValidator,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                inputFormatters: _nameFormatter,
+                keyboardType: TextInputType.name,
+                textCapitalization: TextCapitalization.none,
+                textInputAction: TextInputAction.next,
+                decoration: InputDecoration(
+                  // labelText: widget.label,
+                  hintText: widget.hint,
+                  contentPadding: const EdgeInsets.all(16),
+                  filled: true,
+                  border: const OutlineInputBorder(),
+                ),
+              ),
+            ],
+          );
+        //text
+        case TextFieldType.text:
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(widget.label!),
+              const SizedBox(
+                height: 8,
+              ),
+              TextFormField(
+                controller: widget.controller,
+                validator: _requiredValidator,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                keyboardType: TextInputType.name,
+                textCapitalization: TextCapitalization.none,
+                textInputAction: TextInputAction.next,
+                decoration: InputDecoration(
+                  // labelText: widget.label,
+                  hintText: widget.hint,
+                  contentPadding: const EdgeInsets.all(16),
+                  filled: true,
+                  border: const OutlineInputBorder(),
+                ),
+              ),
+            ],
+          );
+        //email
+        case TextFieldType.email:
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(widget.label!),
+              const SizedBox(
+                height: 8,
+              ),
+              TextFormField(
+                controller: widget.controller,
+                validator: _emailValidator,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                inputFormatters: _emailFormatter,
+                keyboardType: TextInputType.emailAddress,
+                textCapitalization: TextCapitalization.none,
+                textInputAction: TextInputAction.next,
+                onEditingComplete: widget.onEditingComplete,
+                decoration: InputDecoration(
+                  // labelText: widget.label,
+                  errorMaxLines: 2,
+                  hintText: widget.hint,
+                  helperText: widget.helperText,
+                  helperMaxLines: 3,
+                  contentPadding: const EdgeInsets.all(16),
+                  filled: true,
+                  border: const OutlineInputBorder(),
+                ),
+              ),
+            ],
+          );
+        //phone
+        case TextFieldType.phone:
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(widget.label!),
+              const SizedBox(
+                height: 8,
+              ),
+              TextFormField(
+                controller: widget.controller,
+                validator: _requiredValidator,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                inputFormatters: _phoneFormatter,
+                keyboardType: TextInputType.phone,
+                onEditingComplete: widget.onEditingComplete,
+                textCapitalization: TextCapitalization.none,
+                textInputAction: TextInputAction.next,
+                decoration: InputDecoration(
+                  prefixText: '+234',
+                  // labelText: widget.label,
+                  hintText: widget.hint,
+                  helperText: widget.helperText,
+                  helperMaxLines: 3,
+                  contentPadding: const EdgeInsets.all(16),
+                  filled: true,
+                  border: const OutlineInputBorder(),
+                ),
+              ),
+            ],
+          );
+        //number
+        case TextFieldType.number:
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(widget.label!),
+              const SizedBox(
+                height: 8,
+              ),
+              TextFormField(
+                controller: widget.controller,
+                validator: _requiredValidator,
+                inputFormatters: _phoneFormatter,
+                keyboardType: TextInputType.phone,
+                textCapitalization: TextCapitalization.none,
+                textInputAction: TextInputAction.next,
+                decoration: InputDecoration(
+                  // labelText: widget.label,
+                  hintText: widget.hint,
+                  contentPadding: const EdgeInsets.all(16),
+                  filled: true,
+                  border: const OutlineInputBorder(),
+                ),
+              ),
+            ],
+          );
+        //password
+        case TextFieldType.password:
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(widget.label!),
+              const SizedBox(
+                height: 8,
+              ),
+              TextFormField(
+                controller: widget.controller,
+                validator: _passwordValidator,
+                keyboardType: TextInputType.visiblePassword,
+                textInputAction: TextInputAction.next,
+                onEditingComplete: widget.onEditingComplete,
+                obscureText: isVisible ? false : true,
+                decoration: InputDecoration(
+                  // labelText: widget.label,
+                  hintText: widget.hint,
+                  contentPadding: const EdgeInsets.all(16),
+                  filled: true,
+                  helperText: widget.helperText,
+                  helperMaxLines: 3,
+                  suffixIcon: IconButton(
+                    onPressed: toggleVisibility,
+                    icon: isVisible
+                        ? const Icon(Icons.visibility)
+                        : const Icon(Icons.visibility_off),
+                  ),
+                  border: const OutlineInputBorder(),
+                ),
+              ),
+            ],
+          );
+        //date
+        case TextFieldType.date:
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(widget.label!),
+              const SizedBox(
+                height: 8,
+              ),
+              TextFormField(
+                controller: widget.controller,
+                validator: _dateOfBirthValidator,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                inputFormatters: _dateFormatter,
+                keyboardType: TextInputType.datetime,
+                textInputAction: TextInputAction.next,
+                decoration: InputDecoration(
+                  // labelText: widget.label,
+                  hintText: widget.hint,
+                  contentPadding: const EdgeInsets.all(16),
+                  filled: true,
+                  suffixIcon: Padding(
+                    padding: const EdgeInsets.only(right: 12),
+                    child: IconButton(
+                      onPressed: displayDatePicker,
+                      icon: const Icon(Icons.calendar_month),
+                    ),
+                  ),
+                  border: const OutlineInputBorder(),
+                ),
+              ),
+            ],
+          );
 
-       case TextFieldType.rate:
-         return Column(
-           crossAxisAlignment: CrossAxisAlignment.start,
-           children: [
-             Text(widget.label!),
-             const SizedBox(height: 8,),
-             TextFormField(
-               controller: widget.controller,
-               validator: _requiredValidator,
-               autovalidateMode: AutovalidateMode.onUserInteraction,
-               inputFormatters:[
-                 NumericTextFormatter(),
-                 LengthLimitingTextInputFormatter(20),
-               ],
-               keyboardType: TextInputType.number,
-               textCapitalization: TextCapitalization.none,
-               textInputAction: TextInputAction.next,
-               decoration: InputDecoration(
-                 prefixText: '₦',
-                 // labelText: widget.label,
-                 hintText: widget.hint,
-                 helperText: widget.helperText,
-                 contentPadding: const EdgeInsets.all(16),
-                 filled: true,
-                 border: const OutlineInputBorder(),
-               ),
-             ),
-           ],
-         );
-     }
-   }
+        case TextFieldType.rate:
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(widget.label!),
+              const SizedBox(
+                height: 8,
+              ),
+              TextFormField(
+                controller: widget.controller,
+                validator: _requiredValidator,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                inputFormatters: [
+                  NumericTextFormatter(),
+                  LengthLimitingTextInputFormatter(20),
+                ],
+                keyboardType: TextInputType.number,
+                textCapitalization: TextCapitalization.none,
+                textInputAction: TextInputAction.next,
+                decoration: InputDecoration(
+                  prefixText: '₦',
+                  // labelText: widget.label,
+                  hintText: widget.hint,
+                  helperText: widget.helperText,
+                  contentPadding: const EdgeInsets.all(16),
+                  filled: true,
+                  border: const OutlineInputBorder(),
+                ),
+              ),
+            ],
+          );
+      }
+    }
   }
 }
 
 class NumericTextFormatter extends TextInputFormatter {
   @override
-  TextEditingValue formatEditUpdate(TextEditingValue oldValue,
-      TextEditingValue newValue) {
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
     if (newValue.text.isEmpty) {
       return newValue.copyWith(text: '');
     } else if (newValue.text.compareTo(oldValue.text) != 0) {
-      final int selectionIndexFromTheRight = newValue.text.length -newValue.selection.end;
+      final int selectionIndexFromTheRight =
+          newValue.text.length - newValue.selection.end;
 
       var value = newValue.text;
       if (newValue.text.length > 2) {
@@ -503,10 +576,11 @@ class NumericTextFormatter extends TextInputFormatter {
       }
       return TextEditingValue(
         text: value,
-        selection: TextSelection.collapsed(offset: value.length  -selectionIndexFromTheRight),);
+        selection: TextSelection.collapsed(
+            offset: value.length - selectionIndexFromTheRight),
+      );
     } else {
       return newValue;
     }
-  }}
-
-
+  }
+}

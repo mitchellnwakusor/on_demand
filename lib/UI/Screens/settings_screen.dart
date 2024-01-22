@@ -63,7 +63,7 @@ class _AppSettingsScreenState extends State<AppSettingsScreen> {
                 color: Colors.grey[100],
                 borderRadius: BorderRadius.circular(10),
               ),
-              margin: const EdgeInsets.only(bottom: 16,right: 16,left: 16),
+              margin: const EdgeInsets.only(bottom: 16,right: 16,left: 16,top: 8),
               padding: const EdgeInsets.symmetric(vertical: 16,horizontal: 16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -231,7 +231,7 @@ class _AppSettingsScreenState extends State<AppSettingsScreen> {
                   const ListTile(
                     contentPadding: EdgeInsets.zero,
                     title: Text('Leave feedback'),
-                    subtitle: Text('Leave a message or suggestion on how we can serve you better.'),
+                    subtitle: Text('Leave a message on how we can serve you better, or report a bug.'),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(16.0),
@@ -242,6 +242,14 @@ class _AppSettingsScreenState extends State<AppSettingsScreen> {
                       // });
                     }, child: const Text('Leave feedback')),
                   ),
+
+                  ListTile(
+                    contentPadding: EdgeInsets.zero,
+                    title: Text('Test Field'),
+                    subtitle: Text('Playground for unit testing'),
+                    onTap: ()=>Navigator.pushNamed(context, testField),
+                  ),
+
                 ],
               ),
             ),

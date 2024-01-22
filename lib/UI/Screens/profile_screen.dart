@@ -1,7 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:on_demand/Core/routes.dart';
+import 'package:on_demand/Services/firebase_database.dart';
 import 'package:on_demand/Services/providers/user_details_provider.dart';
+import 'package:on_demand/portfolio_model.dart';
 import 'package:provider/provider.dart';
 
 
@@ -25,6 +28,9 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
   double rating = 4;
   String? rate;
   String? profilePicture;
+
+  List<ArtisanPortfolio> portfolioData = [];
+
 
   @override
   void initState() {
@@ -65,6 +71,16 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
     super.initState();
   }
 
+  List<Widget> _buildPortfolioWidget(List<ArtisanPortfolio> portfolioList) {
+    List<Widget> widgetList = [];
+    for(ArtisanPortfolio p in portfolioList){
+      widgetList.add(
+        PortfolioWidget(title: p.title, imageURL: p.imageURL, uploadDate: p.uploadDate)
+      );
+    }
+    return widgetList;
+  }
+
   @override
   void dispose() {
       tabController.dispose();
@@ -76,7 +92,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
       appBar: AppBar(
         automaticallyImplyLeading: true,
         title: const Text('Profile'),
-        actions: [Visibility(visible: isPortfolio,child: IconButton(onPressed: (){}, icon: const Icon(Icons.add)))],
+        actions: [Visibility(visible: isPortfolio,child: IconButton(onPressed: ()=>Navigator.pushNamed(context, addPortfolioScreen), icon: const Icon(Icons.add)))],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -97,7 +113,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                       child: Row(
                         mainAxisSize: MainAxisSize.max,
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           Flexible(
                             child: Column(
@@ -148,7 +164,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                               crossAxisAlignment: CrossAxisAlignment.center,
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text("₦$rate.00",style: const TextStyle(letterSpacing: 0,fontWeight: FontWeight.w600,fontSize: 18),),
+                                Text("₦$rate",style: const TextStyle(letterSpacing: 0,fontWeight: FontWeight.w600,fontSize: 18),),
                                 const SizedBox(height: 48,),
                                 ElevatedButton(onPressed: () => Navigator.pushNamed(context, editProfileScreen), child: const Text('Edit')),
                               ],
@@ -188,47 +204,42 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                                   ),
                                 ],),
                             ),
-                            SingleChildScrollView(
-                              child: Padding(
-                                padding: const EdgeInsets.only(top: 16),
-                                child: Wrap(
-                                  alignment: WrapAlignment.spaceBetween,
-                                  runSpacing: 16,
-                                  children: [
-                                    Container(
-                                      height: 176,
-                                      width: 176,
-                                      decoration: BoxDecoration(
-                                          color: const Color(0xffD9D9D9),
-                                          borderRadius: BorderRadius.circular(16),
-                                          image: null
-                                      ),
-                                    ),
-                                    Container(
-                                      height: 176,
-                                      width: 176,
-                                      decoration: BoxDecoration(
-                                          color: const Color(0xffD9D9D9),
-                                          borderRadius: BorderRadius.circular(16),
-                                          image: null
-                                      ),
-                                    ),
-                                    Container(
-                                      height: 176,
-                                      width: 176,
-                                      decoration: BoxDecoration(
-                                          color: const Color(0xffD9D9D9),
-                                          borderRadius: BorderRadius.circular(16),
-                                          image: null
-                                      ),
-                                    ),
-
-                                  ],
-                                ),
-                              ),
+                            StreamBuilder(
+                              stream: FirebaseDatabase.getPortfolioDataStream(), //get artisan portfolio
+                              builder: (context,snapshot){
+                                  if(snapshot.hasData && snapshot.data!.docs.isNotEmpty){
+                                    List<ArtisanPortfolio> tempPortfolioData= [];
+                                    //get list of documents
+                                    List<QueryDocumentSnapshot<Map<String,dynamic>>> documents = snapshot.data!.docs;
+                                    for(QueryDocumentSnapshot<Map<String,dynamic>> doc in documents){
+                                      Map<String,dynamic> dataMap = doc.data();
+                                      tempPortfolioData.add(ArtisanPortfolio(title: dataMap['title'], imageURL: dataMap['image url'], uploadDate: dataMap['time']));
+                                    }
+                                    portfolioData = tempPortfolioData;
+                                    return SingleChildScrollView(
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(vertical: 16),
+                                          child: Wrap(
+                                            alignment: WrapAlignment.spaceBetween,
+                                            runSpacing: 16,
+                                            children: _buildPortfolioWidget(portfolioData),
+                                          ),
+                                        )
+                                    );
+                                  }
+                                  else{
+                                    //Add portfolio notice widget
+                                    return Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        const Text('Add a portfolio.',style: TextStyle(fontSize: 18),),
+                                        IconButton(onPressed: ()=>Navigator.pushNamed(context, addPortfolioScreen), icon: const Icon(Icons.add))
+                                      ],
+                                    );
+                                  }
+                              },
                             ),
-
-
                           ]),
                     )
                   ],
@@ -241,3 +252,37 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
     );
   }
 }
+
+
+class PortfolioWidget extends StatelessWidget {
+  const PortfolioWidget({super.key,required this.title,required this.imageURL, required this.uploadDate});
+  final String title;
+  final String imageURL;
+  final String uploadDate;
+
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: (){
+        Navigator.pushNamed(context, portfolioScreen,arguments: [title,imageURL,uploadDate]);
+      },
+      child: Container(
+        height: 176,
+        width: 176,
+        decoration: BoxDecoration(
+          color: Colors.grey[200],
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Image.network(
+          imageURL,
+          fit: BoxFit.contain,
+        ),
+      ),
+    );
+  }
+}
+
+
+
+
