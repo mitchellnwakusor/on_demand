@@ -119,7 +119,11 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                 CircleAvatar(radius: 40,backgroundImage: NetworkImage('$profilePicture'),),
+                                 InkWell(
+                                     child: CircleAvatar(radius: 40,backgroundImage: NetworkImage('$profilePicture'),),
+                                   onTap: showProfilePicture,
+
+                                 ),
                                 const SizedBox(height: 8,),
                                 Column(
                                   children: [
@@ -251,6 +255,27 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
       ),
     );
   }
+
+  void showProfilePicture () {
+    showDialog( builder: (BuildContext context) => AlertDialog(
+      backgroundColor: Colors.transparent,
+      insetPadding: const EdgeInsets.all(2),
+      title: Container(
+        decoration: const BoxDecoration(),
+        width:  MediaQuery.of(context).size.width,
+        child: SingleChildScrollView(
+          child: Image(
+            image: NetworkImage('$profilePicture'),
+            fit: BoxFit.fitWidth,
+          ),
+        ),
+      ),
+    ),
+        context: context
+    );
+  }
+
+
 }
 
 
@@ -282,6 +307,7 @@ class PortfolioWidget extends StatelessWidget {
     );
   }
 }
+
 
 
 
