@@ -111,39 +111,32 @@ class _EditProfileScreenState extends State<EditProfileScreen>  {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                Stack(
-                                  children: [
-                                     InkWell(
-                                       child: CircleAvatar(
+                                InkWell(
+                                  child: Stack(
+                                    children: [
+                                       CircleAvatar(
                                            radius: 40,
                                            backgroundImage: NetworkImage('$profilePicture')
                                        ),
-                                       onTap: (){
-                                         if (profilePicture != defaultImageUrl){
-                                           showProfilePicture();
-                                         }
-                                       },
-                                     ),
 
 
-                                    Positioned(
-                                      right: -5,
-                                      top: -2,
-                                      child: InkWell(
-                                        onTap: () async{
-                                          showUploadOptions(context);
-                                        },
-                                        child: const Icon(
+                                      const Positioned(
+                                        right: -5,
+                                        top: -2,
+                                        child: Icon(
                                           Icons.edit_outlined,
                                           color: Colors.teal,
                                           size: 28.0,
                                         ),
                                       ),
-                                    ),
 
-                                    const SizedBox(height: 8,),
+                                      const SizedBox(height: 8,),
 
-                                  ],
+                                    ],
+                                  ),
+                                  onTap: () async{
+                                    showUploadOptions(context);
+                                  },
                                 ),
                                 const SizedBox(height: 8,),
                                 Column(
@@ -327,7 +320,7 @@ class _EditProfileScreenState extends State<EditProfileScreen>  {
       barrierDismissible: false,
       builder: (BuildContext context) {
         context = context;
-        return ProgressDialog(message: "Uploading Profile, Please wait...",);
+        return const ProgressDialog(message: "Uploading Profile, Please wait...",);
       },
     );
 
@@ -340,9 +333,11 @@ class _EditProfileScreenState extends State<EditProfileScreen>  {
     title: Container(
       decoration: const BoxDecoration(),
       width:  MediaQuery.of(context).size.width,
-      child: Image(
-          image: NetworkImage('$profilePicture'),
-        fit: BoxFit.fitWidth,
+      child: SingleChildScrollView(
+        child: Image(
+            image: NetworkImage('$profilePicture'),
+          fit: BoxFit.fitWidth,
+        ),
       ),
     ),
   ),
