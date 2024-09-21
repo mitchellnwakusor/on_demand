@@ -1,3 +1,7 @@
+import 'dart:developer';
+
+import '';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -20,6 +24,21 @@ class UserDetailsProvider{
     return docMap;
   }
 
+  static Future<String?> getUserType() async {
+    String collectionPath = 'user detail';
+    Map<String,dynamic>? docMap;
+    String? userType;
+    User? user = FirebaseAuth.instance.currentUser;
+    if(user!=null){
+      var docSnapshot = await firestore.collection(collectionPath).doc(user.uid).get();
+      if(docSnapshot.exists){
+        docMap = docSnapshot.data()!;
+        userType = docMap['user_type'];
+      }
+    }
+    return userType;
+  }
+
 
   static Future<Map<String, dynamic>?> getAllData() async{
     String userCollectionPath = 'user detail';
@@ -27,8 +46,10 @@ class UserDetailsProvider{
     String verificationCollectionPath = 'verification detail';
     Map<String,dynamic>? docMap;
     User? user = FirebaseAuth.instance.currentUser;
-    
+
+
     if(user!=null){
+
       Map<String,dynamic> tempMap = {};
       var userDetails = await firestore.collection(userCollectionPath).doc(user.uid).get();
       if(userDetails.exists){
@@ -36,6 +57,8 @@ class UserDetailsProvider{
         var businessDetails = await firestore.collection(businessCollectionPath).doc(user.uid).get();
         if(businessDetails.exists){
           tempMap.addAll(businessDetails.data()!);
+        }
+        else {
           var verificationDetails = await firestore.collection(verificationCollectionPath).doc(user.uid).get();
           if(verificationDetails.exists){
             tempMap.addAll(verificationDetails.data()!);

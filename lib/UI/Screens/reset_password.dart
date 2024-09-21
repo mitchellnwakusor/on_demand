@@ -26,7 +26,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
       barrierDismissible: false,
       builder: (BuildContext context) {
         dialogContext = context;
-        return ProgressDialog(message: "Processing, Please wait...",);
+        return const ProgressDialog(message: "Processing, Please wait...",);
       },
     );
 

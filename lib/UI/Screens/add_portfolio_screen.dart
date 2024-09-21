@@ -48,7 +48,7 @@ class _AddPortfolioScreenState extends State<AddPortfolioScreen> {
       barrierDismissible: false,
       builder: (BuildContext context) {
         dialogContext = context;
-        return ProgressDialog(message: "Processing, Please wait...",);
+        return const ProgressDialog(message: "Processing, Please wait...",);
       },
     );
 
@@ -97,12 +97,16 @@ class _AddPortfolioScreenState extends State<AddPortfolioScreen> {
                         label: 'Title',
                       ),
                     ),
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Colors.grey[100],
-                        borderRadius: BorderRadius.circular(16.0),
+                    Expanded(
+                      child: Container(
+                        margin: const EdgeInsets.all(8),
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: Colors.grey[100],
+                          borderRadius: BorderRadius.circular(16.0),
+                        ),
+                        child: tempFileImage!=null ? Image.file(tempFileImage!) : Image.asset('assets/images/blank_image.png'),
                       ),
-                      child: tempFileImage!=null ? Image.file(tempFileImage!) : Image.asset('assets/images/blank_image.png'),
                     ),
                     ElevatedButton(
                         onPressed: () {

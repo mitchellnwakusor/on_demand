@@ -30,7 +30,7 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
       barrierDismissible: false,
       builder: (BuildContext context) {
         dialogContext = context;
-        return ProgressDialog(message: "Processing, Please wait...",);
+        return const ProgressDialog(message: "Processing, Please wait...",);
       },
     );
 
@@ -125,7 +125,7 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
                     const SizedBox(
                       height: 24,
                     ),
-                     LocationDropDown(currentLocation:  'Current Location'),
+                     const LocationDropDown(currentLocation:  'Current Location'),
                   ],
                 ),
               ),

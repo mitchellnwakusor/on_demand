@@ -78,7 +78,6 @@ class _AuthenticationHandlerState extends State<AuthenticationHandler> {
               data.remove('password');
               FirebaseDatabase.saveSignUpDetails(data: data, uid: user.data!.uid);
             }
-
             //if internet connection
             screen = FutureBuilder(
               future: FirebaseDatabase.getCurrentUserType(user.data!.uid),
@@ -149,13 +148,8 @@ class _AuthenticationHandlerState extends State<AuthenticationHandler> {
                               if (!user.data!.emailVerified) {
                                 secondScreen = const EmailVerificationScreen();
                               } else {
-                                secondScreen = Center(
-                                  child: ElevatedButton(
-                                    onPressed: () {
-                                      FirebaseAuth.instance.signOut();
-                                    },
-                                    child: const Text('Client Log out'),
-                                  ),
+                                secondScreen = const Center(
+                                  child: ClientHomeScreen(),
                                 );
                               }
 

@@ -48,7 +48,7 @@ class _LoginScreenReauthenticateState extends State<LoginScreenReauthenticate> {
       barrierDismissible: false,
       builder: (BuildContext context) {
         dialogContext = context;
-        return ProgressDialog(message: "Processing, Please wait...",);
+        return const ProgressDialog(message: "Processing, Please wait...",);
       },
     );
   }

@@ -43,7 +43,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       barrierDismissible: false,
       builder: (BuildContext context) {
         dialogContext = context;
-        return ProgressDialog(message: "Processing, Please wait...",);
+        return const ProgressDialog(message: "Processing, Please wait...",);
       },
     );
 
@@ -54,12 +54,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
       progressView();
       //Todo internet connection check
       try {
-        UserType userType = Provider.of<StartScreenProvider>(context,listen: false).userType;
+        UserType? userType = Provider.of<StartScreenProvider>(context,listen: false).userType;
         bool doesUserExists = await FirebaseDatabase.userExists(phoneField.text, emailField.text).timeout(const Duration(seconds: 5));
         if(!doesUserExists){
           if(context.mounted){
             //save data in provider for later use
-            Provider.of<SignupProvider>(context,listen: false).addMultipleDataSignup(firstName: fNameField.text, lastName: lNameField.text, email: emailField.text, phoneNumber: phoneField.text,password: passwordField.text,userType: userType.name);
+            Provider.of<SignupProvider>(context,listen: false).addMultipleDataSignup(firstName: fNameField.text, lastName: lNameField.text, email: emailField.text, phoneNumber: phoneField.text,password: passwordField.text,userType: userType?.name);
             //start phone authentication process
             Authentication.instance.sendOTPCode(context:context,number:phoneField.text);
           }

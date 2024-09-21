@@ -6,8 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:on_demand/Services/authentication.dart';
 import 'package:on_demand/Services/firebase_database.dart';
+import 'package:on_demand/Services/providers/start_screen_provider.dart';
 import 'package:on_demand/UI/Components/progress_dialog.dart';
 import 'package:on_demand/Utilities/constants.dart';
+import 'package:provider/provider.dart';
 // import 'package:path/path.dart';
 
 import '../Components/page_indicator.dart';
@@ -52,83 +54,89 @@ class _DocumentUploadScreenState extends State<DocumentUploadScreen> {
         barrierDismissible: false,
         builder: (BuildContext context) {
           dialogContext = context;
-          return ProgressDialog(message: "Processing, Please wait...",);
+          return const ProgressDialog(message: "Processing, Please wait...",);
         },
       );
 
     }
 
+    UserType? user = Provider.of<StartScreenProvider>(context).userType;
+    String userType = '';
+    if(user!=null) {
+      userType = user.name;
+    }
 
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        leadingWidth: MediaQuery.of(context).size.width/2.75,
-        leading: const PageIndicator(activeScreenIndex: 3,steps: 4,),
-        automaticallyImplyLeading: false,
-        bottom: PreferredSize(
-            preferredSize: const Size.fromHeight(48),
-            child: Container(
-                padding: kMobileBodyPadding,
-                alignment: Alignment.topLeft,
-                child: const Text(
-                  'Upload identity card',
-                  textAlign: TextAlign.start,
-                  style: TextStyle(fontSize: 24, color: Colors.white),
-                ))),
-        actions: const [
-          // TextButton(
-          //   onPressed: () => Navigator.pop(context),
-          //   child: const Text(
-          //     'Skip',
-          //     style: TextStyle(color: Colors.white),
-          //   ),
-          // ),
-        ],
-      ),
-      body: Padding(
-        padding: kMobileBodyPadding,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Expanded(
-              child: Column(
-                children: [
-                  Container(
-                    height: 256,
-                    color: Colors.grey,
-                    child: contentFile!=null ? Image.file(contentFile!) : null,
-                  ),
-                  const SizedBox(height: 24,),
-                  const Text(
-                    'Upload either your drivers license or National Identity Number slip or card',
-                    style: TextStyle(
-                      fontSize: 18,
-                      letterSpacing: 0.5,
-                      height: 1.4
-                    ),
-                  ),
-                  const SizedBox(height: 24,),
-                  ElevatedButton(onPressed: getContentFile, child: const Text('Choose document')),
-                ],
-              ),
-            ),
-            ElevatedButton(onPressed: (){
-              progressView();
-              if(contentFile!=null){
-                try {
-                  FirebaseDatabase.uploadVerificationDocument(context,contentFile!,Authentication.instance.currentUser!.uid);
-                } on FirebaseException catch (e) {
-                  // Caught an exception from Firebase.
-                  if (!context.mounted) return;
-                  Navigator.pop(dialogContext);
-                  Fluttertoast.showToast(msg: "Failed with error '${e.code}': ${e.message}.");
-                }
-
-              }
-            }, child: const Text('Done')),
+      return Scaffold(
+        appBar: AppBar(
+          elevation: 0,
+          leadingWidth: MediaQuery.of(context).size.width/2.75,
+          leading: const PageIndicator(activeScreenIndex: 3,steps: 4,),
+          automaticallyImplyLeading: false,
+          bottom: PreferredSize(
+              preferredSize: const Size.fromHeight(48),
+              child: Container(
+                  padding: kMobileBodyPadding,
+                  alignment: Alignment.topLeft,
+                  child: const Text(
+                    'Upload identity card',
+                    textAlign: TextAlign.start,
+                    style: TextStyle(fontSize: 24, color: Colors.white),
+                  ))),
+          actions: const [
+            // TextButton(
+            //   onPressed: () => Navigator.pop(context),
+            //   child: const Text(
+            //     'Skip',
+            //     style: TextStyle(color: Colors.white),
+            //   ),
+            // ),
           ],
         ),
-      ),
-    );
+        body: Padding(
+          padding: kMobileBodyPadding,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Expanded(
+                child: Column(
+                  children: [
+                    Container(
+                      height: 256,
+                      color: Colors.grey,
+                      child: contentFile!=null ? Image.file(contentFile!) : null,
+                    ),
+                    const SizedBox(height: 24,),
+                    const Text(
+                      'Upload either your drivers license or National Identity Number slip or card',
+                      style: TextStyle(
+                          fontSize: 18,
+                          letterSpacing: 0.5,
+                          height: 1.4
+                      ),
+                    ),
+                    const SizedBox(height: 24,),
+                    ElevatedButton(onPressed: getContentFile, child: const Text('Choose document')),
+                  ],
+                ),
+              ),
+              ElevatedButton(onPressed: (){
+                progressView();
+                if(contentFile!=null){
+                  try {
+                    FirebaseDatabase.uploadVerificationDocument(context:context,file:contentFile!,userType: userType,uid:Authentication.instance.currentUser!.uid);
+                  } on FirebaseException catch (e) {
+                    // Caught an exception from Firebase.
+                    if (!context.mounted) return;
+                    Navigator.pop(dialogContext);
+                    Fluttertoast.showToast(msg: "Failed with error '${e.code}': ${e.message}.");
+                  }
+
+                }
+              }, child: const Text('Done')),
+            ],
+          ),
+        ),
+      );
+    }
   }
-}
+

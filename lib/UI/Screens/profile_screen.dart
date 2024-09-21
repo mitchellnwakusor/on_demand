@@ -1,22 +1,28 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:on_demand/Core/routes.dart';
+import 'package:on_demand/Services/authentication.dart';
 import 'package:on_demand/Services/firebase_database.dart';
+import 'package:on_demand/Services/providers/signup_provider.dart';
 import 'package:on_demand/Services/providers/user_details_provider.dart';
+import 'package:on_demand/UI/Components/location_drop_down.dart';
+import 'package:on_demand/UI/Components/text_field.dart';
+import 'package:on_demand/Utilities/constants.dart';
 import 'package:on_demand/portfolio_model.dart';
 import 'package:provider/provider.dart';
 
 
-class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({super.key});
-  static const id = 'profile_screen';
+class ArtisanProfileScreen extends StatefulWidget {
+  const ArtisanProfileScreen({super.key});
 
   @override
-  State<ProfileScreen> createState() => _ProfileScreenState();
+  State<ArtisanProfileScreen> createState() => _ArtisanProfileScreenState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProviderStateMixin{
+class _ArtisanProfileScreenState extends State<ArtisanProfileScreen> with SingleTickerProviderStateMixin{
   late TabController tabController;
 
   bool isPortfolio = false;
@@ -120,8 +126,8 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                  InkWell(
+                                     onTap: showProfilePicture,
                                      child: CircleAvatar(radius: 40,backgroundImage: NetworkImage('$profilePicture'),),
-                                   onTap: showProfilePicture,
 
                                  ),
                                 const SizedBox(height: 8,),
@@ -308,7 +314,194 @@ class PortfolioWidget extends StatelessWidget {
   }
 }
 
+class ProfileScreen extends StatelessWidget {
+  const ProfileScreen({super.key});
+  static const id = 'profile_screen';
 
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+        future: UserDetailsProvider.getUserType(),
+        builder: (context,userType) {
+          if(userType.hasData){
+            if(userType.data! == UserType.artisan.name){
+              log(userType.data!);
+              return const ArtisanProfileScreen();
+            }
+            else if (userType.data! == UserType.client.name) {
+              return const ClientProfileScreen();
+            }
+          }
+
+          return const Center(child: CircularProgressIndicator());
+        });
+  }
+}
+
+class ClientProfileScreen extends StatefulWidget {
+  const ClientProfileScreen({super.key});
+
+  @override
+  State<ClientProfileScreen> createState() => _ClientProfileScreenState();
+}
+
+class _ClientProfileScreenState extends State<ClientProfileScreen> with SingleTickerProviderStateMixin {
+
+  bool isVerified = false;
+  String name = 'blank';
+  late String location;
+  String email = 'blank';
+  String? profilePicture;
+  // List<ArtisanPortfolio> portfolioData = [];
+
+
+  @override
+  void initState() {
+    var fName = Provider.of<UserDetailsProvider>(context,listen: false).firstName;
+    var lName = Provider.of<UserDetailsProvider>(context,listen: false).lastName;
+    email = Provider.of<UserDetailsProvider>(context,listen: false).email;
+    location = Provider.of<UserDetailsProvider>(context,listen: false).location ?? 'Set location';
+    name = '$fName $lName';
+    var profilePic = Provider.of<UserDetailsProvider>(context,listen: false).profilePicture;
+
+    if(profilePic == null){
+      profilePicture = "https://static.vecteezy.com/system/resources/thumbnails/020/765/399/small/default-profile-account-unknown-icon-black-silhouette-free-vector.jpg";
+    }else{
+      profilePicture='$profilePic';
+    }
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+
+    return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: true,
+        title: const Text('Profile'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: LayoutBuilder(
+          builder: (context,constraints){
+            return ConstrainedBox(
+              constraints: constraints,
+              child: SizedBox(
+                width: constraints.maxWidth,
+                height: constraints.maxHeight,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: const BoxDecoration(
+                          color: Color(0xffF2F2F2)
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.max,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Flexible(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                InkWell(
+                                  onTap: showProfilePicture,
+                                  child: CircleAvatar(radius: 40,backgroundImage: NetworkImage('$profilePicture'),),
+
+                                ),
+                                const SizedBox(height: 8,),
+                                Column(
+                                  children: [
+                                    isVerified ? const Icon(Icons.verified,color: Colors.green,) : const Icon(Icons.verified_outlined,color: Colors.red,),
+                                    const SizedBox(width: 8,),
+                                    isVerified ? const Text('Verified') : const Text('Unverified')
+                                  ],
+                                )
+                              ],
+                            ),
+                          ),
+                          const SizedBox(width: 8,),
+                          Expanded(
+                            flex: 2,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Text(name,style: const TextStyle(fontWeight: FontWeight.w600,fontSize: 18,),),
+                                const SizedBox(height: 8,),
+                                Text(email,style: const TextStyle(fontWeight: FontWeight.w600,fontSize: 14,),),
+                                const SizedBox(height: 8,),
+                                Text(location,style: const TextStyle(fontWeight: FontWeight.w600,fontSize: 14,),),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 16.0,),
+                    ClientLocationDropDown(currentLocation: location),
+                    const SizedBox(height: 16.0,),
+                    FilledButton(onPressed: (){
+                      if(location!='Set location') {
+                        location = Provider.of<SignupProvider>(context,listen: false).signupPersonalData['location'] ?? 'Set location';
+                        FirebaseDatabase.updateUserDetails(data: {
+                          'location': location,
+                        }, uid: Authentication.instance.currentUser!.uid).then((value) {
+                          Navigator.pop(context);
+                          Navigator.pushReplacementNamed(context, authHandlerScreen);
+                        });
+                      }
+                    }, child: const Text('Update location')),
+                    const SizedBox(height: 16.0,),
+                    const Text('Verification Status',),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            isVerified ? const Icon(Icons.verified,color: Colors.green,) : const Icon(Icons.verified_outlined,color: Colors.red,),
+                            const SizedBox(width: 8,),
+                            isVerified ? const Text('Verified') : const Text('Unverified')
+                          ],
+                        ),
+                        isVerified ? FilledButton(style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(Colors.grey[300])
+                        ),onPressed: (){}, child: const Text('Verify account')) : FilledButton(onPressed: (){}, child: const Text('Verify account'))
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+  void showProfilePicture () {
+    showDialog( builder: (BuildContext context) => AlertDialog(
+      backgroundColor: Colors.transparent,
+      insetPadding: const EdgeInsets.all(2),
+      title: Container(
+        decoration: const BoxDecoration(),
+        width:  MediaQuery.of(context).size.width,
+        child: SingleChildScrollView(
+          child: Image(
+            image: NetworkImage('$profilePicture'),
+            fit: BoxFit.fitWidth,
+          ),
+        ),
+      ),
+    ),
+        context: context
+    );
+  }
+
+
+}
 
 
 

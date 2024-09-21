@@ -245,8 +245,8 @@ class _AppSettingsScreenState extends State<AppSettingsScreen> {
 
                   ListTile(
                     contentPadding: EdgeInsets.zero,
-                    title: Text('Test Field'),
-                    subtitle: Text('Playground for unit testing'),
+                    title: const Text('Test Field'),
+                    subtitle: const Text('Playground for unit testing'),
                     onTap: ()=>Navigator.pushNamed(context, testField),
                   ),
 

@@ -8,7 +8,7 @@ class SignupProvider {
     'new_number': null,
     'password': null,
     'user_type': null,
-     // 'location': null,
+     'location': null,
      // 'occupation': null,
      // 'rate': null,
 

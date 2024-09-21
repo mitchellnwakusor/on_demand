@@ -161,6 +161,7 @@ class FirebaseDatabase {
         .collection(collectionPath)
         .doc(uid)
         .update(data);
+    Fluttertoast.showToast(msg: "Profile Updated.");
   }
 
   static Future<void> saveBusinessDetails(BuildContext context,
@@ -189,17 +190,20 @@ class FirebaseDatabase {
   }
 
   static void uploadVerificationDocument(
-      BuildContext context, File file, String uid) async {
+      {required BuildContext context,
+      required File file,
+      required String userType,
+      required String uid}) async {
     if (await InternetChecker.checkInternet() == true) {
       FirebaseStorage.instance
-          .ref("artisan")
+          .ref(userType)
           .child("verification documents/$uid/file.jpg")
           .putFile(file)
           .snapshotEvents
           .listen((taskSnapShot) {
         if (taskSnapShot.state == TaskState.success) {
           var path = FirebaseStorage.instance
-              .ref("artisan")
+              .ref(userType)
               .child("verification documents/$uid/file.jpg")
               .fullPath;
           Map<String, dynamic> data = {'document_path': path};
@@ -225,8 +229,9 @@ class FirebaseDatabase {
         .doc(uid)
         .set(data, SetOptions(merge: true));
     Fluttertoast.showToast(msg: "Profile Updated.");
-    if (context.mounted)
+    if (context.mounted) {
       Navigator.pushReplacementNamed(context, authHandlerScreen);
+    }
   }
 
   static Future<void> updateLocation(
@@ -264,8 +269,9 @@ class FirebaseDatabase {
               .child("profile picture/$uid/file.jpg");
           String imageURL = await path.getDownloadURL();
           Map<String, dynamic> data = {'profile_picture': imageURL};
-          if (context.mounted)
+          if (context.mounted) {
             saveProfilePicture(data: data, uid: uid, context: context);
+          }
           if (context.mounted) Navigator.of(context).pop();
         }
       });
@@ -381,7 +387,6 @@ class FirebaseDatabase {
               Fluttertoast.showToast(msg: 'Edit saved');
               Navigator.pop(context); //progress view
               Navigator.pop(context); //progress view
-
         });
 
       }

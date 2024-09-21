@@ -31,7 +31,7 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
       barrierDismissible: false,
       builder: (BuildContext context) {
         dialogContext = context;
-        return ProgressDialog(message: "Processing, Please wait...",);
+        return const ProgressDialog(message: "Processing, Please wait...",);
       },
     );
 

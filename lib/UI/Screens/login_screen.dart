@@ -45,7 +45,7 @@ class _LoginScreenState extends State<LoginScreen> {
       barrierDismissible: false,
       builder: (BuildContext context) {
         dialogContext = context;
-        return ProgressDialog(message: "Processing, Please wait...",);
+        return const ProgressDialog(message: "Processing, Please wait...",);
       },
     );
 
@@ -65,9 +65,9 @@ class _LoginScreenState extends State<LoginScreen> {
     if (formKey.currentState!.validate()) {
       progressView();
       try {
-        UserType userType = Provider.of<StartScreenProvider>(context,listen: false).userType;
+        UserType? userType = Provider.of<StartScreenProvider>(context,listen: false).userType;
         bool doesUserTypeExists =
-        await FirebaseDatabase.userTypeExists(phoneField.text, emailField.text, userType.name).timeout(const Duration(seconds: 5));
+        await FirebaseDatabase.userTypeExists(phoneField.text, emailField.text, userType!.name).timeout(const Duration(seconds: 5));
         if (doesUserTypeExists) {
           //sign in
 

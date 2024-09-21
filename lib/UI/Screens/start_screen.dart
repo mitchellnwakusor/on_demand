@@ -71,7 +71,6 @@ class CTAButtons extends StatelessWidget {
         ),
         OutlinedButton(
             onPressed: () {
-
               navigateTo(route: loginScreen);
 
               },
