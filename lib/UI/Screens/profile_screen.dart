@@ -9,7 +9,6 @@ import 'package:on_demand/Services/firebase_database.dart';
 import 'package:on_demand/Services/providers/signup_provider.dart';
 import 'package:on_demand/Services/providers/user_details_provider.dart';
 import 'package:on_demand/UI/Components/location_drop_down.dart';
-import 'package:on_demand/UI/Components/text_field.dart';
 import 'package:on_demand/Utilities/constants.dart';
 import 'package:on_demand/portfolio_model.dart';
 import 'package:provider/provider.dart';
